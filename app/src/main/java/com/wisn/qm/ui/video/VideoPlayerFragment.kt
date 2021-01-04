@@ -55,6 +55,27 @@ class VideoPlayerFragment(var videourl: String, var thumbUrl: String,var title: 
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        videoview?.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoview?.pause()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        videoview?.stop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+    }
+
     override fun translucentFull(): Boolean {
         return true
     }
@@ -75,6 +96,7 @@ class VideoPlayerFragment(var videourl: String, var thumbUrl: String,var title: 
 
     override fun onDestroy() {
         super.onDestroy()
+        videoview?.release()
         QMUIStatusBarHelper.setStatusBarLightMode(activity)
     }
 }

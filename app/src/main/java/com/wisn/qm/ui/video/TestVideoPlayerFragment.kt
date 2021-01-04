@@ -137,6 +137,33 @@ class TestVideoPlayerFragment : QMUIFragment(), View.OnClickListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        videoview?.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoview?.pause()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        videoview?.stop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        videoview?.release()
+    }
+
+
     var index: Int = 0;
 
     override fun onBackPressed() {

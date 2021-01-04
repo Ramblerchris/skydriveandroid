@@ -124,7 +124,7 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
     override fun start() {
         if (PlayStatus.isPlayingStatus(currentState)) {
             mAPlayer?.start()
-            setPlayStatus(PlayStatus.STATE_PLAYING)
+//            setPlayStatus(PlayStatus.STATE_PLAYING)
         } else {
             //todo 检查网络，是否提示
             mAPlayer = mediaPlayer?.createPlayer(BaseApp.app)
@@ -149,6 +149,15 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
             }
         }
 
+    }
+
+    override fun resume() {
+        mAPlayer?.let {
+            if (PlayStatus.isPlayingStatus(currentState) && !it.isPlaying()) {
+                it?.start()
+                setPlayStatus(PlayStatus.STATE_PLAYING)
+            }
+        }
 
     }
 

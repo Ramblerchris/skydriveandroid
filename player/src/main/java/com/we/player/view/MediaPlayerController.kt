@@ -63,6 +63,8 @@ interface MediaPlayerController {
 
     fun stop()
 
+    fun resume()
+
     fun release()
 
 

@@ -8,14 +8,40 @@ package com.we.player.player
  */
 object PlayStatus {
 
-
-    fun isPlayingStatus(currentState:Int?): Boolean {
-        when(currentState){
-            STATE_ERROR,STATE_IDLE,STATE_START_ABORT,STATE_PREPARING,STATE_PLAYBACK_COMPLETED->{
+    /**
+     * 是否是播放状态
+     */
+    fun isPlayingStatus(currentState: Int?): Boolean {
+        when (currentState) {
+            STATE_ERROR, STATE_IDLE, STATE_START_ABORT, STATE_PREPARING, STATE_PLAYBACK_COMPLETED -> {
                 return false
             }
         }
         return true
+    }
+
+    /**
+     * 是否是空闲状态
+     */
+    fun isInIdleState(currentState: Int?): Boolean {
+        when (currentState) {
+            STATE_IDLE -> {
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * 是否是中止播放
+     */
+    fun isInStartAbortState(currentState: Int?): Boolean {
+        when (currentState) {
+            STATE_START_ABORT -> {
+                return true
+            }
+        }
+        return false
     }
 
 
