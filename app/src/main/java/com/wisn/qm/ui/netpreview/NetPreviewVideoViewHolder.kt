@@ -8,7 +8,7 @@ import com.library.base.utils.GlideUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.mode.db.beans.UserDirBean
-import com.wisn.qm.ui.preview.view.PreviewLocalControlView
+import com.wisn.qm.ui.previewloc.view.PreviewLocalControlView
 
 class NetPreviewVideoViewHolder(var context: Context, var view: View, var previewCallback: PreviewCallback) : BaseNetPreviewHolder(view) {
     val TAG: String = "PreviewVideoViewHolder"

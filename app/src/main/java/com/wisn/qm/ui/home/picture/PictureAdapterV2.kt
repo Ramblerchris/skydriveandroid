@@ -10,7 +10,7 @@ import com.wisn.qm.databinding.RvItemPictureTitleBinding
 import com.wisn.qm.mode.bean.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
-import com.wisn.qm.ui.preview.PreviewFragment
+import com.wisn.qm.ui.previewloc.PreviewFragment
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.

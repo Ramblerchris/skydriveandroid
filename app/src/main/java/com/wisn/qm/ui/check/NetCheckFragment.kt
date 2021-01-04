@@ -20,7 +20,6 @@ import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.user.LoginFragment
-import com.wisn.qm.ui.video.TestVideoPlayerFragment
 
 import kotlinx.android.synthetic.main.fragment_netcheck.*
 
@@ -60,8 +59,6 @@ class NetCheckFragment : BaseFragment<NetCheckViewModel>() {
                 return@onClick
             }
             viewModel.setServerIp("$sp1.$sp2.$sp3.$sp4")
-
-            startFragment(TestVideoPlayerFragment())
         }
         viewModel.getResult().observe(this, Observer {
             val text = result?.text;

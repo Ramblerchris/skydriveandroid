@@ -2,7 +2,6 @@ package com.we.player.player.exo
 
 import android.app.Application
 import android.os.Handler
-import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
 import com.blankj.utilcode.util.LogUtils
@@ -76,7 +75,6 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
 
     override fun start() {
         simpleExoPlayer?.playWhenReady = true
-
     }
 
     override fun pause() {
@@ -102,6 +100,9 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
                 simpleExoPlayer?.release()
             }
         }
+        mMediaSource=null
+        simpleExoPlayer=null
+        parameters=null
     }
 
     override fun setSpeed(speed: Float) {
@@ -136,14 +137,23 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
     }
 
     override fun getBufferedPercentage(): Int {
+        if(simpleExoPlayer==null){
+            return 0;
+        }
         return simpleExoPlayer?.bufferedPercentage!!
     }
 
     override fun getDuration(): Long {
+        if(simpleExoPlayer==null){
+            return 0;
+        }
         return simpleExoPlayer?.duration!!
     }
 
     override fun getCurrentPosition(): Long {
+        if(simpleExoPlayer==null){
+            return 0;
+        }
         return simpleExoPlayer?.currentPosition!!
     }
 

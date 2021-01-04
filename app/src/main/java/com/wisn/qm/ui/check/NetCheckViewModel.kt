@@ -37,13 +37,14 @@ class NetCheckViewModel : BaseViewModel() {
             })
             //            WifiManager wifiManager = (WifiManager) App.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             val wifiManager = BaseApp.app.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
-            var multicastLock = wifiManager.createMulticastLock("multicast.test")
             fixedRateTimer = fixedRateTimer("", false, 100, 2000) {
+                var multicastLock = wifiManager.createMulticastLock("multicast.test")
                 multicastLock!!.acquire()
                 broadCastGroup!!.sendBackMessage(UdpConfig.groupIp, UdpConfig.Group_ServerportRecevie, "group broadcast request ping")
                 LogUtils.d(TAG, "发送 探针 ${Thread.currentThread().name}")
                 getResult().postValue("${System.currentTimeMillis()} 发送 探针...")
                 broadCastAll!!.sendBackMessage(UdpConfig.groupALL, UdpConfig.All_ServerportRecevie, "broadcast request ping")
+                multicastLock.release();
             }
         } catch (e: Exception) {
             e.printStackTrace()

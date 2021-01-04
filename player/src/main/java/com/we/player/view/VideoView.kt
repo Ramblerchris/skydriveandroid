@@ -154,7 +154,7 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
 
     override fun pause() {
         if(PlayStatus.STATE_PAUSED==currentState){
-            return ;
+            return
         }
         mAPlayer?.let {
             if (PlayStatus.isPlayingStatus(currentState) && it.isPlaying()) {
@@ -176,6 +176,7 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
         }
         mIRenderView = null
         setPlayStatus(PlayStatus.STATE_IDLE)
+
     }
 
     override fun getDuration(): Long {

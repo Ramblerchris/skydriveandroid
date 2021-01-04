@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.preview
+package com.wisn.qm.ui.previewloc
 
 
 /**

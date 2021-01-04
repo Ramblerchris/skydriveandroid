@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.preview
+package com.wisn.qm.ui.previewloc
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,7 @@ import com.library.base.utils.GlideUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.mode.db.beans.MediaInfo
-import com.wisn.qm.ui.preview.view.PreviewLocalControlView
+import com.wisn.qm.ui.previewloc.view.PreviewLocalControlView
 
 class PreviewVideoViewHolder(var context: Context, var view: View, var previewCallback: PreviewCallback) : BasePreviewHolder(view) {
     val TAG: String = "PreviewVideoViewHolder"

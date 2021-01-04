@@ -45,12 +45,10 @@ open class PictureController(context: Context, mhomeFragment: HomeFragment, home
     private val titleStr = "照片"
 
     init {
-        LogUtils.d(" PictureController .init")
-
         title = topbar.setTitle(titleStr)
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        leftCancel = topbar.addLeftTextButton("取消 ", R.id.topbar_right_add_button)
+        leftCancel = topbar.addRightTextButton("取消 ", R.id.topbar_right_add_button)
         leftCancel.setTextColor(Color.BLACK)
         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         leftCancel.visibility = View.GONE

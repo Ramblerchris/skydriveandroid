@@ -36,6 +36,7 @@ import com.wisn.qm.ui.home.HomeViewModel
 import com.wisn.qm.ui.upload.UploadListFragment
 import com.wisn.qm.ui.user.SettingFragment
 import com.wisn.qm.ui.user.UserInfoFragment
+import com.wisn.qm.ui.video.TestVideoPlayerFragment
 import java.io.File
 
 /**
@@ -74,7 +75,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
         mHomeViewModel.getUserInfo().observe(mHomeFragment, Observer {
             GlobalUser.userinfo?.photo_file_sha1?.let {
                 val imageUrl = Constant.getImageUrl(GlobalUser.userinfo!!.photo_file_sha1)
-                imageUrl?.let{
+                imageUrl?.let {
                     Glide.with(context!!).load(imageUrl)
                             .apply(RequestOptions())
                             .into(iv_header)
@@ -117,11 +118,13 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
             }
         } else if (v == collection) {
             ToastUtils.showShort("开发中")
-        }else if (v == uploadlist) {
+        } else if (v == uploadlist) {
             val uploadListFragment = UploadListFragment()
             mHomeControlListener.startFragmentByView(uploadListFragment)
         } else if (v == delete) {
             ToastUtils.showShort("开发中")
+        } else if (v == localvideo) {
+            mHomeControlListener.startFragmentByView(TestVideoPlayerFragment())
         } else if (v == tv_username) {
             val builder = EditTextDialogBuilder(context)
             builder.setTitle("修改昵称")

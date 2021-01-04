@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.preview
+package com.wisn.qm.ui.previewloc
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

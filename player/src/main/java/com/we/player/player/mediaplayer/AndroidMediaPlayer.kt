@@ -191,14 +191,23 @@ class AndroidMediaPlayer(var app: Application) : APlayer() {
     }
 
     override fun getDuration(): Long {
+        if(mediaPlayer==null){
+            return 0;
+        }
         return mediaPlayer?.duration!!.toLong()
     }
 
     override fun getCurrentPosition(): Long {
+        if(mediaPlayer==null){
+            return 0;
+        }
         return mediaPlayer?.currentPosition!!.toLong()
     }
 
     override fun isPlaying(): Boolean {
+        if(mediaPlayer==null){
+            return false;
+        }
         return mediaPlayer?.isPlaying!!
     }
 

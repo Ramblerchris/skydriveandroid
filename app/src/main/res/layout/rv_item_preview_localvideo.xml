@@ -7,7 +7,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.wisn.qm.ui.preview.view.PreviewLocalControlView
+    <com.wisn.qm.ui.previewloc.view.PreviewLocalControlView
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

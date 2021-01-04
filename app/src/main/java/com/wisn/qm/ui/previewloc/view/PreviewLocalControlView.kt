@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.preview.view
+package com.wisn.qm.ui.previewloc.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -29,9 +29,6 @@ class PreviewLocalControlView : FrameLayout, IViewItemController, View.OnClickLi
     var thumb: ImageView? = null
     var start_play: ImageView? = null
 
-
-
-    var playClick: PlayClick? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
@@ -117,17 +114,11 @@ class PreviewLocalControlView : FrameLayout, IViewItemController, View.OnClickLi
 
             }
             R.id.start_play -> {
-                if (playClick != null && playClick!!.click()) {
-                    return
-                }
                 //开始播放
                 mediaPlayerController?.togglePlay()
             }
         }
     }
 
-    interface PlayClick {
-        fun click(): Boolean
-    }
 
 }
