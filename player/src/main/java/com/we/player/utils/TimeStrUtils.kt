@@ -14,6 +14,9 @@ object TimeStrUtils {
      * 格式化时间
      */
     fun stringForTime(timeMs: Long): String? {
+        if(timeMs<=0){
+          return   String.format(Locale.getDefault(), "%02d:%02d", 0, 0)
+        }
         val totalSeconds = timeMs / 1000
         val seconds = totalSeconds % 60
         val minutes = totalSeconds / 60 % 60

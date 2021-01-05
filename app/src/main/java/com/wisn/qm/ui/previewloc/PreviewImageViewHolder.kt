@@ -40,7 +40,7 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
         if (ImageUtils.isGifImageWithMime(mediainfo.filePath!!, mediainfo.filePath!!)) {
             iv_image.visibility = View.GONE
             gif_view.visibility = View.VISIBLE
-            GlideUtils.load(mediainfo.filePath!!, gif_view)
+            GlideUtils.loadFile(mediainfo.filePath!!, gif_view)
         } else {
             iv_image.visibility = View.VISIBLE
             gif_view.visibility = View.GONE

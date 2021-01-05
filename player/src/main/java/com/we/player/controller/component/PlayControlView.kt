@@ -39,16 +39,19 @@ class PlayControlView : FrameLayout, IViewItemController, View.OnClickListener, 
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
     constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
         LayoutInflater.from(getContext()).inflate(R.layout.item_controller_play, this, true)
-        bottom_container = this.findViewById<LinearLayout>(R.id.bottom_container)
-        fullscreen = this.findViewById<ImageView>(R.id.fullscreen)
-        iv_play = this.findViewById<ImageView>(R.id.iv_play)
-        curr_time = this.findViewById<TextView>(R.id.curr_time)
-        seekBar = this.findViewById<SeekBar>(R.id.seekBar)
-        total_time = this.findViewById<TextView>(R.id.total_time)
-        bottom_progress = this.findViewById<ProgressBar>(R.id.bottom_progress)
+        bottom_container = this.findViewById(R.id.bottom_container)
+        fullscreen = this.findViewById(R.id.fullscreen)
+        iv_play = this.findViewById(R.id.iv_play)
+        curr_time = this.findViewById(R.id.curr_time)
+        seekBar = this.findViewById(R.id.seekBar)
+        total_time = this.findViewById(R.id.total_time)
+        bottom_progress = this.findViewById(R.id.bottom_progress)
         iv_play?.setOnClickListener(this)
         fullscreen?.setOnClickListener(this)
         seekBar?.setOnSeekBarChangeListener(this)
+        val stringForTime = TimeStrUtils.stringForTime(0);
+        total_time?.setText(stringForTime)
+        curr_time?.setText(stringForTime)
     }
 
     override fun attach(mediaPlayerController: MediaPlayerController?, iViewController: IViewController) {
@@ -71,7 +74,6 @@ class PlayControlView : FrameLayout, IViewItemController, View.OnClickListener, 
                 bottom_container?.visibility = GONE
             } else {
                 bottom_progress?.visibility = GONE
-//            bottom_container?.startAnimation(anim)
                 bottom_container?.visibility = VISIBLE
             }
         } else {
@@ -170,7 +172,7 @@ class PlayControlView : FrameLayout, IViewItemController, View.OnClickListener, 
         }
         var max = seekBar?.max
         if (max != null && max > 0) {
-            val duration = mediaPlayerController?.getDuration();
+            val duration = mediaPlayerController?.getDuration()
             duration?.let {
                 var target = duration * progress / max
                 curr_time?.setText(TimeStrUtils.stringForTime(target))

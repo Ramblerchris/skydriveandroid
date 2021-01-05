@@ -18,7 +18,7 @@ class PreviewVideoViewHolder(var context: Context, var view: View, var previewCa
 
     override fun loadVideo(position: Int, mediainfo: MediaInfo) {
         preview.let {
-            GlideUtils.load(mediainfo.filePath!!, preview.thumb!!)
+            GlideUtils.loadFile(mediainfo.filePath!!, preview.thumb!!)
         }
         this.pos = position
         view.tag = this

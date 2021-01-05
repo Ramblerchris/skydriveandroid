@@ -97,7 +97,6 @@ class TitleControlView : FrameLayout, IViewItemController, View.OnClickListener 
             R.id.back -> {
                 if(mediaPlayerController?.isFullScreen()!!){
                     mediaPlayerController?.onBackPressed()
-
                 }else{
                     backListener?.back()
                 }
@@ -106,7 +105,6 @@ class TitleControlView : FrameLayout, IViewItemController, View.OnClickListener 
     }
     interface BackListener{
         fun back(){
-
         }
     }
 

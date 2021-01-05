@@ -18,7 +18,7 @@ object GlideUtils {
 //   error    //  如果请求失败的时候展示的图片 （如果没有设置，还是展示placeholder的占位符）
 //   fallback //  如果请求的url/model为 null 的时候展示的图片 （如果没有设置，还是展示placeholder的占位符）
     val option= RequestOptions().error(R.drawable.ic_no_media).placeholder(R.drawable.ic_no_media).fallback(R.drawable.ic_no_media)
-    fun load(path: String, imageView: ImageView) {
+    fun loadFile(path: String, imageView: ImageView) {
         Glide.with(BaseApp.app)
                 .load(File(path))
                 .apply(option)
@@ -34,4 +34,11 @@ object GlideUtils {
                 .apply(option)
                 .into(imageView)
     }
+    fun loadUrlNoOP(url: String, imageView: ImageView) {
+        Glide.with(BaseApp.app)
+                .load(url)
+                .into(imageView)
+    }
+
+
 }

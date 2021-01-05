@@ -66,7 +66,7 @@ class PictureAdapterV2(pictureController: PictureCallBack?) : BaseMultiItemQuick
             val dataBinding = holder.getDataBinding<RvItemPictureImageBinding>()
 //            LogUtils.d(item.filePath)
             dataBinding?.image?.let {
-                GlideUtils.load(item.filePath!!,it)
+                GlideUtils.loadFile(item.filePath!!,it)
 //                Glide.with(context).load(File(item.filePath!!))
 //                        .apply(RequestOptions())
 //                        .into(it)

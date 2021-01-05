@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import com.blankj.utilcode.util.LogUtils
 import com.qmuiteam.qmui.arch.QMUIFragment
+import com.we.player.controller.component.TitleControlView
 import com.we.player.controller.controller.StandardController
 import com.we.player.player.ScreenConfig
 import com.we.player.player.exo.ExoPlayerFactory
@@ -51,7 +52,12 @@ class TestVideoPlayerFragment : QMUIFragment(), View.OnClickListener {
         rootView.findViewById<View>(R.id.nextV).setOnClickListener(this)
         speedsBt = rootView.findViewById(R.id.Speeds)
         speedsBt?.setOnClickListener(this)
-
+        standardController.titleControlView?.backListener = object : TitleControlView.BackListener {
+            override fun back() {
+                super.back()
+                popBackStack()
+            }
+        }
 
     }
 

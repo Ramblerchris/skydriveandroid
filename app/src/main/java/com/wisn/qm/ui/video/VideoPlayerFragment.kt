@@ -28,7 +28,7 @@ class VideoPlayerFragment(var videourl: String, var thumbUrl: String,var title: 
     override fun onViewCreated(rootView: View) {
         super.onViewCreated(rootView)
         QMUIStatusBarHelper.setStatusBarDarkMode(requireActivity())
-        videoview = rootView.findViewById<VideoView>(R.id.videoview)
+        videoview = rootView.findViewById(R.id.videoview)
         videoview?.setUrl(videourl)
         videoview?.renderViewFactory = TextureRenderViewFactory()
 //        videoview?.mIRenderView = SurfaceRenderView(requireContext())
@@ -40,7 +40,7 @@ class VideoPlayerFragment(var videourl: String, var thumbUrl: String,var title: 
         videoview?.iViewController = standardController
         videoview?.setLooping(true)
         preViewImage?.let {
-            GlideUtils.loadUrl(thumbUrl, it)
+            GlideUtils.loadUrlNoOP(thumbUrl, it)
             it.visibility=View.VISIBLE
         }
         if (isplayAuto) {
@@ -69,11 +69,6 @@ class VideoPlayerFragment(var videourl: String, var thumbUrl: String,var title: 
     override fun onStop() {
         super.onStop()
         videoview?.stop()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-
     }
 
     override fun translucentFull(): Boolean {
