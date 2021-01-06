@@ -191,7 +191,7 @@ class AndroidMediaPlayer(var app: Application) : APlayer() {
     }
 
     override fun getDuration(): Long {
-        if(mediaPlayer==null){
+        if(mediaPlayer==null|| mediaPlayer?.duration==null){
             return 0;
         }
         return mediaPlayer?.duration!!.toLong()

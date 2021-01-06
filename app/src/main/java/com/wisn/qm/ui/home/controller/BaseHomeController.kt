@@ -3,7 +3,6 @@ package com.wisn.qm.ui.home.controller
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import com.blankj.utilcode.util.LogUtils
 import com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
@@ -24,7 +23,7 @@ abstract class BaseHomeController(context: Context?, mhomeFragment: HomeFragment
     init {
         itemView = LayoutInflater.from(context).inflate(layoutId, this)
         mHomeControlListener = mhomeFragment as HomeControlListener
-        mHomeFragment = mhomeFragment as HomeFragment
+        mHomeFragment = mhomeFragment
         mHomeViewModel = homeViewModel!!
     }
 

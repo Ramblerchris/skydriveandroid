@@ -30,7 +30,7 @@ import com.wisn.qm.ui.home.picture.PictureCallBack
 /**
  * Created by Wisn on 2020/6/5 下午11:26.
  */
-open class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewModel: HomeViewModel?) : BaseHomeController(context, mhomeFragment, homeViewModel), PictureCallBack, SwipeRefreshLayout.OnRefreshListener {
+class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewModel: HomeViewModel?) : BaseHomeController(context, mhomeFragment, homeViewModel), PictureCallBack, SwipeRefreshLayout.OnRefreshListener {
     private val topbar: QMUITopBarLayout = findViewById(R.id.topbar)
     private val mAdapter by lazy { PictureAdapterV2(this) }
     private var gridLayoutManager: GridLayoutManager
@@ -157,7 +157,6 @@ open class PictureController(context: Context, mhomeFragment: HomeFragment, home
 
     override fun onRefresh() {
         LogUtils.d(" PictureController .onRefresh")
-
         UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildMediaScanWorkerRequest())
 
     }

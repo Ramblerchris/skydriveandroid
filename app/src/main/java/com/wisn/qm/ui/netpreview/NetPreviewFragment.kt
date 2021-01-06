@@ -1,5 +1,6 @@
 package com.wisn.qm.ui.netpreview
 
+import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Px
@@ -68,6 +69,7 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
                 }
                 val get = data.get(position)
                 if (get.itemType != FileType.VideoViewItem) {
+                    videoView.pause()
                     return
                 }
                 vp_content?.post {
@@ -82,17 +84,19 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
                     ViewPager2.SCROLL_STATE_IDLE -> {
                         //空闲状态
                         if (SelectPosition == playPosition) {
-                            videoView.start()
+                            if(!videoView.isPlaying()){
+                                videoView.resume()
+                            }
                         }
                     }
                     ViewPager2.SCROLL_STATE_DRAGGING -> {
                         //滑动状态
-                        videoView.pause()
+//                        videoView.pause()
 
                     }
                     ViewPager2.SCROLL_STATE_SETTLING -> {
                         //滑动后自然沉降的状态
-                        videoView.pause()
+//                        videoView.pause()
 
                     }
                 }
@@ -189,9 +193,26 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
     override fun onDestroy() {
         super.onDestroy()
         videoView?.release()
-        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
+//        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        videoView?.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoView?.pause()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        videoView?.stop()
+    }
+
 
 
 }

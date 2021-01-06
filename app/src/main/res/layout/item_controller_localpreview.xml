@@ -11,13 +11,4 @@
         android:layout_gravity="center"
         android:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/start_play"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_gravity="center"
-        android:padding="10dp"
-        android:background="@drawable/we_play_buttom_bg"
-        android:src="@drawable/we_selector_play_button" />
-
 </FrameLayout>

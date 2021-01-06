@@ -37,7 +37,8 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
     }
 
     override fun loadImage(position: Int, mediainfo: MediaInfo) {
-        if (ImageUtils.isGifImageWithMime(mediainfo.filePath!!, mediainfo.filePath!!)) {
+//        if (ImageUtils.isGifImageWithMime(mediainfo.filePath!!, mediainfo.filePath!!)) {
+        if ( mediainfo.filePath!!.endsWith("gif")) {
             iv_image.visibility = View.GONE
             gif_view.visibility = View.VISIBLE
             GlideUtils.loadFile(mediainfo.filePath!!, gif_view)

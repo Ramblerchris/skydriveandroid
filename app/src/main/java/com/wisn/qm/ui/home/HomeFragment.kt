@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.Utils
 import com.blankj.utilcode.util.VibrateUtils
 import com.library.base.BaseFragment
 import androidx.lifecycle.Observer
+import com.blankj.utilcode.util.LogUtils
 import com.library.base.utils.DownloadUtils
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.kotlin.onClick
@@ -30,11 +31,12 @@ import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
  * Created by Wisn on 2020/4/30 下午8:03.
  */
 class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
-    val addablum: String = "addablum"
+    val TAG: String = "HomeFragment"
     var pictureController: PictureController? = null
 
     override fun initView(views: View) {
         super.initView(views)
+        LogUtils.d(TAG," HomeFragment.initView")
         item_photo_select_bottom.tv_upload.onClick {
             viewModel.saveMedianInfo(0)
             pictureController?.onBackPressedExit()
@@ -93,6 +95,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
     }
 
     override fun onBackPressed() {
+        LogUtils.d(TAG," HomeFragment.onBackPressed")
         if (item_photo_select_bottom?.visibility == View.VISIBLE) {
             showPictureControl(false)
             pictureController?.onBackPressedExit();
@@ -186,7 +189,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                 pager?.setSwipeable(!isShow)
             }
             if (isShow) {
-                VibrateUtils.vibrate(100)
+                VibrateUtils.vibrate(10)
             }
             tabs?.visibility = if (isShow) View.INVISIBLE else View.VISIBLE
 

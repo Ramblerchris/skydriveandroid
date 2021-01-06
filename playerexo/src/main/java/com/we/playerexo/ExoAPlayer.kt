@@ -95,6 +95,8 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
     }
 
     override fun release() {
+        mMediaSource?.removeEventListener(mMediaSourceEventListener)
+        simpleExoPlayer?.removeListener(this)
         simpleExoPlayer?.let {
             GlobalScope.launch {
                 simpleExoPlayer?.release()

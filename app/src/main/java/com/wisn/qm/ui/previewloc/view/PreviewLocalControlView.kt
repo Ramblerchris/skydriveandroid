@@ -84,7 +84,9 @@ class PreviewLocalControlView : FrameLayout, IViewItemController, View.OnClickLi
                 thumb?.visibility = View.GONE
             }
 
-            PlayStatus.STATE_ERROR,
+            PlayStatus.STATE_ERROR->{
+                visibility=View.GONE
+            }
             PlayStatus.STATE_PREPARED,
             PlayStatus.STATE_PLAYBACK_COMPLETED,
             PlayStatus.STATE_BUFFERING -> {

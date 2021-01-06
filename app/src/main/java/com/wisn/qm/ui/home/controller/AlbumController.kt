@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemLongClickListener
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -18,7 +19,6 @@ import com.qmuiteam.qmui.widget.QMUITopBarLayout
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
-import com.wisn.qm.ui.album.details.AlbumDetailsFragment
 import com.wisn.qm.ui.album.details.AlbumDetailsPageingFragment
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeFragment
@@ -81,6 +81,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
             mAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
                 override fun onItemLongClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int): Boolean {
                     val item = mAdapter.getItem(position)
+                    VibrateUtils.vibrate(10)
                     QMUIDialog.MessageDialogBuilder(context)
                             .setTitle("删除文件夹")
                             .setSkinManager(QMUISkinManager.defaultInstance(context))

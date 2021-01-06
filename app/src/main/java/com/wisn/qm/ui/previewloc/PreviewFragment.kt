@@ -17,8 +17,7 @@ import com.library.base.base.ViewModelFactory
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
-import com.wisn.qm.ui.previewloc.view.ListVideoController
-import com.we.player.player.exo.ExoPlayerFactory
+import com.we.player.player.exo.AndroidMediaPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.wisn.qm.R
@@ -27,6 +26,7 @@ import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.task.UploadTaskUitls
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeViewModel
+import com.wisn.qm.ui.previewloc.view.ListVideoController
 import kotlinx.android.synthetic.main.fragment_preview.*
 
 
@@ -40,8 +40,9 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
     val videoView by lazy {
         var videoview = VideoView(BaseApp.app)
         videoview.renderViewFactory = TextureRenderViewFactory()
-        videoview?.mediaPlayer = ExoPlayerFactory()
-        videoview?.iViewController = ListVideoController(BaseApp.app)
+//        videoview.mediaPlayer = ExoPlayerFactory()
+        videoview.mediaPlayer = AndroidMediaPlayerFactory()
+        videoview.iViewController = ListVideoController(BaseApp.app)
         videoview.setLooping(true)
         videoview
     }
@@ -72,11 +73,11 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
                 }
                 val get = data.get(position)
                 if (get.itemType != FileType.VideoViewItem) {
+                    videoView.pause()
+//                    recycleVideoView()
                     return
                 }
-                vp_content?.post {
-                    startPlay(position)
-                }
+                startPlay(position)
             }
 
 
@@ -86,17 +87,19 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
                     ViewPager2.SCROLL_STATE_IDLE -> {
                         //空闲状态
                         if (SelectPosition == playPosition) {
-                            videoView.start()
+                            if(!videoView.isPlaying()){
+                                videoView.resume()
+                            }
                         }
                     }
                     ViewPager2.SCROLL_STATE_DRAGGING -> {
                         //滑动状态
-                        videoView.pause()
+//                        videoView.pause()
 
                     }
                     ViewPager2.SCROLL_STATE_SETTLING -> {
                         //滑动后自然沉降的状态
-                        videoView.pause()
+//                        videoView.pause()
 
                     }
                 }
@@ -105,7 +108,7 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
         })
 
         tv_addto?.onClick {
-            val values = mHomeViewModel.getUserDirlist().value;
+            val values = mHomeViewModel.getUserDirlist().value
             var addItem = View.inflate(context, R.layout.item_album_new_album, null)
             values?.let {
                 val builder = QMUIBottomSheet.BottomListSheetBuilder(activity)
@@ -144,10 +147,13 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
 
         recyclerView = vp_content?.getChildAt(0) as RecyclerView?
 
-        vp_content?.post(Runnable {
-            vp_content?.adapter = PreviewAdapter(data, this@PreviewFragment)
+        vp_content?.adapter = PreviewAdapter(data, this@PreviewFragment)
 
-            vp_content?.setCurrentItem(position, false)
+        vp_content?.setCurrentItem(position, false)
+
+        vp_content?.post(Runnable {
+
+            startPlay(position)
         })
     }
 
@@ -175,18 +181,16 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
         val get = data.get(position)
         videoView.setUrl(get.filePath!!)
         videoView.iViewController?.addIViewItemControllerOne(viewholder.preview, true)
-        viewholder?.content.addView(videoView, 0)
+        viewholder.content.addView(videoView, 0)
         videoView.start()
         playPosition = position
     }
 
 
     fun recycleVideoView() {
-        if (videoView != null) {
-            videoView.parent?.let {
-                it as ViewGroup
-                it.removeView(videoView)
-            }
+        videoView.parent?.let {
+            it as ViewGroup
+            it.removeView(videoView)
         }
     }
 
@@ -205,8 +209,25 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
     override fun onDestroy() {
         super.onDestroy()
         videoView?.release()
-        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
+//        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
 
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        videoView?.resume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoView?.pause()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        videoView?.stop()
     }
 
 

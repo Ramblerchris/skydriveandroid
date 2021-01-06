@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import com.blankj.utilcode.util.VibrateUtils
 import com.library.base.config.Constant
 import com.library.base.utils.GlideUtils
 import com.qmuiteam.qmui.kotlin.onClick
@@ -69,6 +70,7 @@ class AlbumDetailsPageingAdapter(var editAlbumDetails: EditAlbumDetails, var alb
                         notifyDataSetChanged()
                         editAlbumDetails.isShowEdit(true)
                         editAlbumDetails.changeSelectData(true, true, item)
+                        VibrateUtils.vibrate(10)
                     }
                     return@OnLongClickListener false
                 })

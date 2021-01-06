@@ -24,9 +24,9 @@ class NetPreviewVideoViewHolder(var context: Context, var view: View, var previe
         this.pos = position
         view.tag = this
 
-        content.onClick {
-            previewCallback.onContentClick(it)
-        }
+//        content.onClick {
+//            previewCallback.onContentClick(it)
+//        }
     }
 
     override fun releaseVideo(position: Int) {

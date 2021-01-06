@@ -8,6 +8,7 @@ import android.hardware.SensorManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.OrientationEventListener
+import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.FrameLayout
@@ -39,15 +40,16 @@ abstract class BaseViewController : FrameLayout, IViewController, OrientationEve
     var runProgress: Runnable = object : Runnable {
         override fun run() {
             LogUtils.d(TAG, "runProgress!!! ${iviewItemControllers.size} ")
-
             iviewItemControllers.forEach {
                 if (mediaPlayerController != null) {
-//                    LogUtils.d(TAG, "runProgress ${mediaPlayerController!!.getDuration()}, ${mediaPlayerController!!.getCurrentPosition()}")
+                    //                    LogUtils.d(TAG, "runProgress ${mediaPlayerController!!.getDuration()}, ${mediaPlayerController!!.getCurrentPosition()}")
                     it.setProgress(mediaPlayerController!!.getDuration(), mediaPlayerController!!.getCurrentPosition())
                 }
             }
-            if (mediaPlayerController!!.isPlaying()) {
-                postDelayed(this, mediaPlayerController!!.getRefreshTime())
+            mediaPlayerController?.let {
+                if (it.isPlaying()) {
+                    postDelayed(this, it.getRefreshTime())
+                }
             }
         }
     }
@@ -279,9 +281,16 @@ abstract class BaseViewController : FrameLayout, IViewController, OrientationEve
     }
 
     fun addIViewItemControllerOne(iviewItemController: IViewItemController,isPrivate:Boolean) {
+        this.iviewItemControllers.remove(iviewItemController)
         this.iviewItemControllers.add(iviewItemController)
         removeView(iviewItemController.getView())
+        iviewItemController.getView().parent?.let {
+            it as ViewGroup
+            it.removeView(iviewItemController.getView());
+        }
         if(!isPrivate){
+            addView(iviewItemController.getView(),0)
+        }else{
             addView(iviewItemController.getView())
         }
         iviewItemController.attach(mediaPlayerController, this)

@@ -18,14 +18,14 @@ class PreviewVideoViewHolder(var context: Context, var view: View, var previewCa
 
     override fun loadVideo(position: Int, mediainfo: MediaInfo) {
         preview.let {
-            GlideUtils.loadFile(mediainfo.filePath!!, preview.thumb!!)
+            GlideUtils.loadUrlNoOP(mediainfo.filePath!!, preview.thumb!!)
         }
         this.pos = position
         view.tag = this
 
-        content.onClick {
-            previewCallback.onContentClick(it)
-        }
+//        content.onClick {
+//            previewCallback.onContentClick(it)
+//        }
     }
 
     override fun releaseVideo(position: Int) {

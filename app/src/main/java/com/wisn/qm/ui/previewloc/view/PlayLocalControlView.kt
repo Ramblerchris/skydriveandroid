@@ -32,6 +32,7 @@ class PlayLocalControlView : FrameLayout, IViewItemController, View.OnClickListe
     var seekBar: SeekBar? = null
     var total_time: TextView? = null
     var bottom_progress: ProgressBar? = null
+    var isCanChage: Boolean = true
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
@@ -110,18 +111,24 @@ class PlayLocalControlView : FrameLayout, IViewItemController, View.OnClickListe
 
 
     override fun setProgress(duration: Long?, position: Long?) {
+        LogUtils.d(TAG, "setProgress ${duration}  ${position}")
+
         duration?.let {
-            total_time?.setText(TimeStrUtils.stringForTime(it))
-            bottom_progress?.max = it.toInt()
-            seekBar?.max = it.toInt()
+            if (bottom_progress?.max != it.toInt()) {
+                total_time?.setText(TimeStrUtils.stringForTime(it))
+                bottom_progress?.max = it.toInt()
+                seekBar?.max = it.toInt()
+            }
         }
         position?.let {
-            curr_time?.setText(TimeStrUtils.stringForTime(it))
-            bottom_progress?.progress = it.toInt()
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                seekBar?.setProgress(it.toInt(), true)
-            } else {
-                seekBar?.progress = it.toInt()
+            if (isCanChage) {
+                curr_time?.setText(TimeStrUtils.stringForTime(it))
+                bottom_progress?.progress = it.toInt()
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    seekBar?.setProgress(it.toInt(), true)
+                } else {
+                    seekBar?.progress = it.toInt()
+                }
             }
         }
 
@@ -161,7 +168,7 @@ class PlayLocalControlView : FrameLayout, IViewItemController, View.OnClickListe
     }
 
     override fun onStartTrackingTouch(p0: SeekBar?) {
-
+        isCanChage=false
     }
 
     override fun onStopTrackingTouch(p0: SeekBar?) {
@@ -171,6 +178,7 @@ class PlayLocalControlView : FrameLayout, IViewItemController, View.OnClickListe
             var target = duration!! * p0?.progress!! / max
             mediaPlayerController?.seekTo(target)
         }
+        isCanChage=true
     }
 
 
