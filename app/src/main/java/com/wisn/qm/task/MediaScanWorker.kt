@@ -8,7 +8,7 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.net.ExceptionHandle
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.DataRepository
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.net.ApiNetWork

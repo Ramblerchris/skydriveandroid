@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.library.base.BaseFragment
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 
 import kotlinx.android.synthetic.main.fragment_selectfile.*

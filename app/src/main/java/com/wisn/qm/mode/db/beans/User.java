@@ -1,4 +1,4 @@
-package com.wisn.qm.mode.db.test;
+package com.wisn.qm.mode.db.beans;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

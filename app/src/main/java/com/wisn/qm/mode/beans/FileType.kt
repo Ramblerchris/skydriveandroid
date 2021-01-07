@@ -1,4 +1,4 @@
-package com.wisn.qm.mode.bean
+package com.wisn.qm.mode.beans
 
 
 object FileType {

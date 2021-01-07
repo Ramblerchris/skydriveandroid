@@ -1,6 +1,5 @@
 package com.wisn.qm.ui.netpreview
 
-import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Px
@@ -8,7 +7,6 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ScrollState
-import com.blankj.utilcode.util.Utils
 import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
@@ -17,9 +15,8 @@ import com.we.player.player.exo.ExoPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.wisn.qm.R
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.UserDirBean
-import com.wisn.qm.task.UploadTaskUitls
 import com.wisn.qm.ui.netpreview.view.NetListVideoController
 import kotlinx.android.synthetic.main.fragment_netpreview.*
 

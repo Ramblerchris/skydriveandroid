@@ -7,7 +7,7 @@ import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.databinding.RvItemPictureImageBinding
 import com.wisn.qm.databinding.RvItemPictureTitleBinding
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
 import com.wisn.qm.ui.previewloc.PreviewFragment

@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.google.gson.annotations.SerializedName
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import java.io.Serializable
 
 @Entity(tableName = "userdirlist")

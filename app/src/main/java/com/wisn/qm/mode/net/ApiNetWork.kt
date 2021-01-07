@@ -2,15 +2,13 @@ package com.wisn.qm.mode.net
 
 import com.library.base.config.UserBean
 import com.library.base.net.RetrofitClient
-import com.wisn.qm.mode.bean.BaseResult
-import com.wisn.qm.mode.bean.MultiPartInfo
-import com.wisn.qm.mode.bean.PageBean
-import com.wisn.qm.mode.bean.Update
+import com.wisn.qm.mode.beans.BaseResult
+import com.wisn.qm.mode.beans.MultiPartInfo
+import com.wisn.qm.mode.beans.PageBean
+import com.wisn.qm.mode.beans.Update
 import com.wisn.qm.mode.db.beans.UserDirBean
 import okhttp3.MultipartBody
-import retrofit2.http.Field
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 class ApiNetWork {
 

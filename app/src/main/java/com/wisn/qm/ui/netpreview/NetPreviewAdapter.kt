@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wisn.qm.R
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.UserDirBean
 
 class NetPreviewAdapter(var data: MutableList<UserDirBean>, var previewCallback: PreviewCallback) : RecyclerView.Adapter<BaseNetPreviewHolder>() {

@@ -11,7 +11,7 @@ import com.wisn.qm.R
 import com.wisn.qm.databinding.RvItemAlbumDetailMediaBinding
 import com.wisn.qm.databinding.RvItemAlbumDetailTimetitleBinding
 import com.wisn.qm.databinding.RvItemAlbumDetailTitleBinding
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.ui.album.EditAlbumDetails
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder

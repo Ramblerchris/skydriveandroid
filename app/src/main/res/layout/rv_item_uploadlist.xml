@@ -8,7 +8,7 @@
             type="com.wisn.qm.mode.db.beans.UploadBean" />
         <variable
             name="FileType"
-            type="com.wisn.qm.mode.bean.FileType" />
+            type="com.wisn.qm.mode.beans.FileType" />
     </data>
 
     <com.library.base.views.QMUIRoundConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

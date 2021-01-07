@@ -56,7 +56,7 @@ class NetCheckViewModel : BaseViewModel() {
         LogUtils.d(TAG, " MESSAGE:$message ip:$ip")
         val handler = Handler(Looper.getMainLooper())
         handler.post {
-            getResult().setValue(" $message ip:$ip   ${Thread.currentThread().name}")
+            getResult().setValue("ip:$ip $message  ")
             setServerIp(ip)
         }
     }
@@ -72,17 +72,18 @@ class NetCheckViewModel : BaseViewModel() {
     fun setServerIp(ip: String) {
         if (ipTemp.isNullOrEmpty()) {
             ipTemp = ip
-            getResult().setValue(" 开始测试 ip:$ip   ${Thread.currentThread().name}")
+            getResult().setValue(" 开始连接 ip:$ip ")
             launchGoLo({
                 LogUtils.d(TAG, Thread.currentThread().name)
                 if (NetCheckUtils.isConnectByIp(ip)) {
-                    getResult().postValue("测试")
+                    getResult().setValue("服务器 ip:$ip 连接成功")
                     ApiNetWork.newInstance().updateBaseUrl(ip)
                     fixedRateTimer?.cancel()
                     LogUtils.d(TAG, Thread.currentThread().name)
                     isSuccess.postValue(true)
                 } else {
                     ipTemp = null
+                    getResult().setValue("服务器 ip:$ip 连接失败")
                 }
             })
         }

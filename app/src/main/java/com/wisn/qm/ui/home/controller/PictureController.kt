@@ -21,7 +21,7 @@ import com.blankj.utilcode.util.Utils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.mode.ConstantKey
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.task.UploadTaskUitls
 import com.wisn.qm.ui.home.picture.PictureCallBack

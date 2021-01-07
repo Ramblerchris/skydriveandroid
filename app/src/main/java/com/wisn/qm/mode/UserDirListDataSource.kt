@@ -2,7 +2,7 @@ package com.wisn.qm.mode
 
 import android.util.Log
 import androidx.paging.PagingSource
-import com.wisn.qm.mode.bean.PageKey
+import com.wisn.qm.mode.beans.PageKey
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.net.ApiNetWork
 import com.wisn.qm.ui.album.details.LoadDataError

@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.Utils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.utils.SHAMD5Utils
 import com.wisn.qm.mode.ConstantKey
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.UploadBean
 import com.wisn.qm.mode.net.ApiNetWork

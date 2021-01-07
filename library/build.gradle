@@ -64,18 +64,55 @@ dependencies {
     api 'androidx.annotation:annotation:1.1.0'
     api 'com.github.bumptech.glide:glide:4.11.0'
 
+    api 'com.google.android.exoplayer:exoplayer-core:2.12.1'
+    api 'com.google.android.exoplayer:exoplayer-dash:2.12.1'
+    api 'com.google.android.exoplayer:exoplayer-ui:2.12.1'
+    api 'com.google.android.exoplayer:exoplayer-hls:2.12.1'
+    api 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.12.1'
+    api "com.google.android.exoplayer:extension-rtmp:2.12.1"
+
+    api "androidx.work:work-runtime:2.4.0"
+    api 'com.jeremyliao:live-event-bus-x:1.7.2'
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    api "androidx.room:room-ktx:2.2.5"
+    api "androidx.room:room-runtime:2.2.5"
+    api "androidx.room:room-guava:2.2.5"
+    // optional - RxJava support for Room
+    api "androidx.room:room-rxjava2:2.2.5"
+    kapt "androidx.room:room-compiler:2.2.5" // For Kotlin use kapt instead of annotationProcessor
+//    annotationProcessor "androidx.room:room-compiler:2.2.5" // For Kotlin use kapt instead of annotationProcessor
+
+    api 'com.github.chrisbanes:PhotoView:2.3.0'
+    api 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+    api "androidx.paging:paging-runtime:3.0.0-alpha03"
 
     debugApi 'com.squareup.leakcanary:leakcanary-android:1.6.2'
     releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
 
 
-    api 'com.tencent.bugly:crashreport:3.3.1' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+    api 'com.tencent.bugly:crashreport:3.3.3' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
 //    api 'com.tencent.bugly:nativecrashreport:3.7.500' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    debugApi 'io.github.skyhacker2:sqliteonweb:1.0.2'
+    releaseApi 'io.github.skyhacker2:sqliteonweb-no-op:1.0.2'
+
 //    // 查看大图
 //    implementation 'com.github.SherlockGougou:BigImageViewPager:androidx-6.1.0'
+
+
+
     testImplementation 'junit:junit:4.13.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    testImplementation "androidx.paging:paging-common:3.0.0-alpha03"
+
+    // Test helpers
+    testImplementation "androidx.room:room-testing:2.2.5"
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

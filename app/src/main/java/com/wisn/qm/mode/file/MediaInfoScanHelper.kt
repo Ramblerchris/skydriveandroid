@@ -4,7 +4,6 @@ import android.provider.MediaStore
 import com.blankj.utilcode.util.LogUtils
 import com.library.base.BaseApp
 import com.library.base.utils.SHAMD5Utils
-import com.wisn.qm.mode.bean.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

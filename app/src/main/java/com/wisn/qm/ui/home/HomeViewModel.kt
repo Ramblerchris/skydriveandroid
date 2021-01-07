@@ -11,9 +11,8 @@ import com.library.base.config.GlobalUser
 import com.library.base.config.UserBean
 import com.wisn.qm.BuildConfig
 import com.wisn.qm.mode.DataRepository
-import com.wisn.qm.mode.bean.BaseResult
-import com.wisn.qm.mode.bean.FileType
-import com.wisn.qm.mode.bean.Update
+import com.wisn.qm.mode.beans.FileType
+import com.wisn.qm.mode.beans.Update
 import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo

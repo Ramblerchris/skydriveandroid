@@ -1,11 +1,11 @@
 package com.wisn.qm.mode.net
 
-import com.wisn.qm.mode.bean.BaseResult
+import com.wisn.qm.mode.beans.BaseResult
 import com.library.base.config.UserBean
 import com.wisn.qm.mode.ConstantKey
-import com.wisn.qm.mode.bean.MultiPartInfo
-import com.wisn.qm.mode.bean.PageBean
-import com.wisn.qm.mode.bean.Update
+import com.wisn.qm.mode.beans.MultiPartInfo
+import com.wisn.qm.mode.beans.PageBean
+import com.wisn.qm.mode.beans.Update
 import com.wisn.qm.mode.db.beans.UserDirBean
 import okhttp3.MultipartBody
 import retrofit2.http.*

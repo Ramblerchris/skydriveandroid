@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wisn.qm.R
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 
 class PreviewAdapter(var data: MutableList<MediaInfo>, var previewCallback: PreviewCallback) : RecyclerView.Adapter<BasePreviewHolder>() {

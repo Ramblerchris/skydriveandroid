@@ -6,7 +6,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.library.base.utils.FormatStrUtils
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 
 @Entity(tableName = "uploadbean")
 data class UploadBean(

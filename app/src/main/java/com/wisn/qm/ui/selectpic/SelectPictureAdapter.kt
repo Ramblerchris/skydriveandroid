@@ -1,7 +1,6 @@
 package com.wisn.qm.ui.selectpic
 
 import android.view.View
-import android.view.ViewGroup
 import com.blankj.utilcode.util.LogUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -10,7 +9,7 @@ import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.databinding.RvItemPictureImageBinding
 import com.wisn.qm.databinding.RvItemPictureTitleBinding
-import com.wisn.qm.mode.bean.FileType
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
 import java.io.File

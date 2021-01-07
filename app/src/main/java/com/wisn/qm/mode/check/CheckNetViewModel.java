@@ -17,8 +17,8 @@ import com.library.base.net.broadcast.MessageCall;
 import com.library.base.net.broadcast.UdpConfig;
 import com.wisn.qm.App;
 import com.wisn.qm.mode.db.AppDataBase;
-import com.wisn.qm.mode.db.test.User;
-import com.wisn.qm.mode.db.test.UserDao;
+import com.wisn.qm.mode.db.beans.User;
+import com.wisn.qm.mode.db.dao.UserDao;
 
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;

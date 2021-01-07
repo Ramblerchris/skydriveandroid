@@ -1,10 +1,12 @@
-package com.wisn.qm.mode.db.test;
+package com.wisn.qm.mode.db.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.wisn.qm.mode.db.beans.User;
 
 @Dao
 public interface UserDao {
