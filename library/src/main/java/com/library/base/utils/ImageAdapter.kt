@@ -11,7 +11,7 @@ object ImageAdapter {
     @BindingAdapter(value = ["sha1"], requireAll = true)
     @JvmStatic
     fun setImageSha1(imageView: ImageView, sha1: String?) {
-        GlideUtils.loadUrl(Constant.getImageUrl(sha1),imageView, R.mipmap.cloud_album_icon_album_default)
+        GlideUtils.loadUrl(Constant.getImageUrlThumb(sha1),imageView, R.mipmap.cloud_album_icon_album_default)
     }
 
 }

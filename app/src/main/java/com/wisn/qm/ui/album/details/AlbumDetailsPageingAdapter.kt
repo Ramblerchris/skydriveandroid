@@ -61,7 +61,7 @@ class AlbumDetailsPageingAdapter(var editAlbumDetails: EditAlbumDetails, var alb
 //                Glide.with(it.context).load(Constant.getImageUrl(item.sha1!!))
 //                        .apply(RequestOptions())
 //                        .into(it)
-                GlideUtils.loadUrl(Constant.getImageUrl(item.sha1!!),it)
+                GlideUtils.loadUrl(Constant.getImageUrlThumb(item.sha1!!),it)
                 dataBinding?.image?.setOnLongClickListener(View.OnLongClickListener {
                     if (!isSelectModel) {
                         map.clear()
