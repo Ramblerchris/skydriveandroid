@@ -16,11 +16,11 @@ import com.wisn.qm.ui.select.SelectFileViewModel
 
 import kotlinx.android.synthetic.main.fragment_selectfile.*
 
-open class SelectPictureFragment : BaseFragment<SelectFileViewModel>(), SelectPictureCallBack {
+open class SelectPictureFragment : BaseFragment<SelectFileViewModel>(), SelectMediaCallBack {
     lateinit var title: QMUIQQFaceView
     lateinit var leftCancel: Button
     lateinit var rightButton: Button
-    private val mAdapter by lazy { SelectPictureAdapter(this) }
+    private val mAdapter by lazy { SelectMediaAdapter(this) }
     lateinit var gridLayoutManager: GridLayoutManager
 
     override fun layoutId(): Int {
@@ -103,7 +103,7 @@ open class SelectPictureFragment : BaseFragment<SelectFileViewModel>(), SelectPi
     }
 }
 
-open class SelectSpanSizeLookup(var adapterV2: SelectPictureAdapter) : GridLayoutManager.SpanSizeLookup() {
+open class SelectSpanSizeLookup(var adapterV2: SelectMediaAdapter) : GridLayoutManager.SpanSizeLookup() {
     override fun getSpanSize(position: Int): Int {
 
         val get = adapterV2.data[position]

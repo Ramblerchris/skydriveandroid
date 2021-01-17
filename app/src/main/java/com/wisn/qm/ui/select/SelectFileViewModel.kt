@@ -1,17 +1,21 @@
-package com.wisn.qm.ui.select.selectmedia
+package com.wisn.qm.ui.select
 
+import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.LogUtils
 import com.library.base.base.BaseViewModel
 import com.wisn.qm.mode.DataRepository
+import com.wisn.qm.mode.beans.FileBean
 import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.MediaInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
+import java.io.File
 
-class SelectPictureViewModel : BaseViewModel() {
+class SelectFileViewModel : BaseViewModel() {
     var listdata = MutableLiveData<MutableList<MediaInfo>>()
+    var listfilebean = MutableLiveData<MutableList<FileBean>>()
     var selectData = MutableLiveData<ArrayList<MediaInfo>>()
 
     fun getMediaImageList(): MutableLiveData<MutableList<MediaInfo>> {
@@ -59,5 +63,34 @@ class SelectPictureViewModel : BaseViewModel() {
             selectData.value = ArrayList<MediaInfo>()
         }
         return selectData
+    }
+
+    fun getFileBeanList(selectTargFile: File?): MutableLiveData<MutableList<FileBean>> {
+
+        LogUtils.d("getFileBeanList ", Thread.currentThread().name)
+        launchUI {
+            launchFlow {
+                var result: MutableList<FileBean> = ArrayList()
+                LogUtils.d("getFileBeanList ", Thread.currentThread().name)
+                var file: File
+                if (selectTargFile != null) {
+                    file = selectTargFile
+                } else {
+                    file = Environment.getExternalStorageDirectory()
+                }
+                val listFiles = file!!.listFiles()
+                val iterator = listFiles.iterator();
+                while (iterator.hasNext()) {
+                    val next = iterator.next();
+                    result.add(FileBean(next.isDirectory, next.name, next.absolutePath, -1, next.length()))
+
+                }
+                result
+            }.flowOn(Dispatchers.IO).collect {
+                LogUtils.d("getMediaImageList3 BBB", Thread.currentThread().name)
+                listfilebean.value = it
+            }
+        }
+        return listfilebean
     }
 }

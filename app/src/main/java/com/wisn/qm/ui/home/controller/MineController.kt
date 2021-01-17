@@ -33,6 +33,7 @@ import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.ui.album.details.AlbumDetailsFragment
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
+import com.wisn.qm.ui.select.selectfile.SelectFileFragment
 import com.wisn.qm.ui.upload.UploadListFragment
 import com.wisn.qm.ui.user.SettingFragment
 import com.wisn.qm.ui.user.UserInfoFragment
@@ -124,7 +125,8 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
         } else if (v == delete) {
             ToastUtils.showShort("开发中")
         } else if (v == localvideo) {
-            mHomeControlListener.startFragmentByView(TestVideoPlayerFragment())
+            mHomeControlListener.startFragmentByView(SelectFileFragment())
+//            mHomeControlListener.startFragmentByView(TestVideoPlayerFragment())
         } else if (v == tv_username) {
             val builder = EditTextDialogBuilder(context)
             builder.setTitle("修改昵称")

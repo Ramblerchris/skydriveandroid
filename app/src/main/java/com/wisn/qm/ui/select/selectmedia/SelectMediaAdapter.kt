@@ -18,8 +18,8 @@ import java.io.File
  * Created by Wisn on 2020/6/6 下午6:14.
  */
 
-class SelectPictureAdapter(selectPictureCallBack: SelectPictureCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
-    protected var selectPictureCallBack: SelectPictureCallBack
+class SelectMediaAdapter(selectPictureCallBack: SelectMediaCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
+    protected var selectPictureCallBack: SelectMediaCallBack
 
     init {
         addItemType(FileType.TimeTitle, R.layout.rv_item_picture_title)

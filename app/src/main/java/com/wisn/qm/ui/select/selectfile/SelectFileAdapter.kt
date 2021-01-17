@@ -1,47 +1,46 @@
-package com.wisn.qm.ui.netpreview
+package com.wisn.qm.ui.select.selectfile
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.wisn.qm.R
-import com.wisn.qm.mode.beans.FileType
-import com.wisn.qm.mode.db.beans.UserDirBean
+import com.wisn.qm.mode.beans.FileBean
 
-class NetPreviewAdapter(var data: MutableList<UserDirBean>, var previewCallback: PreviewCallback) : RecyclerView.Adapter<BaseNetPreviewHolder>() {
+class SelectFileAdapter(var clickItem:ClickItem,var data: MutableList<FileBean>) : RecyclerView.Adapter<SelectFileViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectFileViewHolder {
+        return SelectFileViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item_selectfile, parent, false))
+    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseNetPreviewHolder {
-        if (viewType == FileType.ImageViewItem) {
-            return NetPreviewImageViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_netimage, parent, false), previewCallback)
-        } else if (viewType == FileType.VideoViewItem) {
-            return NetPreviewVideoViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_netvideo, parent, false), previewCallback)
-        } else {
-            return NetPreviewImageViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_netvideo, parent, false), previewCallback)
+    override fun onBindViewHolder(holder: SelectFileViewHolder, position: Int) {
+        holder.setData(data.get(position))
+        holder.itemView.setOnClickListener {
+            clickItem.click(position,data.get(position))
         }
     }
 
-    override fun onBindViewHolder(holder: BaseNetPreviewHolder, position: Int) {
-        if (getItemViewType(position) == FileType.ImageViewItem) {
-            holder.loadImage(position,data.get(position))
-        } else {
-            holder.loadVideo(position,data.get(position))
-        }
-    }
-
-    override fun onViewDetachedFromWindow(holder: BaseNetPreviewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        if (holder is NetPreviewVideoViewHolder) {
-            holder.releaseVideo(holder.adapterPosition)
-        }
-
-    }
 
     override fun getItemCount(): Int {
         return data.size
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return data.get(position).itemType
+    fun setNewData( data: MutableList<FileBean>){
+        this.data=data
+        notifyDataSetChanged()
     }
 
+}
 
+class SelectFileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    var imageView: ImageView = itemView.findViewById(R.id.imageView)
+    var select: ImageView = itemView.findViewById(R.id.select)
+    var textView: TextView = itemView.findViewById(R.id.textView)
+    fun setData(fileBean: FileBean) {
+        textView.setText(fileBean.fileName)
+    }
+}
+interface ClickItem{
+    fun click(position:Int,fileBean: FileBean)
 }

@@ -26,7 +26,7 @@ import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.AlbumViewModel
 import com.wisn.qm.ui.album.EditAlbumDetails
 import com.wisn.qm.ui.netpreview.NetPreviewFragment
-import com.wisn.qm.ui.selectpic.SelectPictureFragment
+import com.wisn.qm.ui.select.selectmedia.SelectPictureFragment
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
 import kotlinx.coroutines.flow.collectLatest
