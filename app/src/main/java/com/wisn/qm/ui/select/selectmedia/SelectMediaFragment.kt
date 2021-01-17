@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.selectpic
+package com.wisn.qm.ui.select.selectmedia
 
 import android.content.Intent
 import android.graphics.Color
@@ -12,10 +12,11 @@ import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
+import com.wisn.qm.ui.select.SelectFileViewModel
 
 import kotlinx.android.synthetic.main.fragment_selectfile.*
 
-open class SelectPictureFragment : BaseFragment<SelectPictureViewModel>(), SelectPictureCallBack {
+open class SelectPictureFragment : BaseFragment<SelectFileViewModel>(), SelectPictureCallBack {
     lateinit var title: QMUIQQFaceView
     lateinit var leftCancel: Button
     lateinit var rightButton: Button
@@ -23,7 +24,7 @@ open class SelectPictureFragment : BaseFragment<SelectPictureViewModel>(), Selec
     lateinit var gridLayoutManager: GridLayoutManager
 
     override fun layoutId(): Int {
-        return R.layout.fragment_selectfile
+        return R.layout.fragment_selectmedia
     }
 
     override fun initView(views: View) {

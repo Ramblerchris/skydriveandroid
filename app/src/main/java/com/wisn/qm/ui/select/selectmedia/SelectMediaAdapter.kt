@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.selectpic
+package com.wisn.qm.ui.select.selectmedia
 
 import android.view.View
 import com.blankj.utilcode.util.LogUtils

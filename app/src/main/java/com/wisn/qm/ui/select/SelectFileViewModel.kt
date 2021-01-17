@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.selectpic
+package com.wisn.qm.ui.select.selectmedia
 
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.LogUtils

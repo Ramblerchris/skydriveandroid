@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.selectpic
+package com.wisn.qm.ui.select.selectmedia
 
 import com.wisn.qm.mode.db.beans.MediaInfo
  interface SelectPictureCallBack {
