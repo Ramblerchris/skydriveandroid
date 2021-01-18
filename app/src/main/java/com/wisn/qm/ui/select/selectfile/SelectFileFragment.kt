@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.LogUtils
 import com.library.base.BaseFragment
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
@@ -27,6 +28,8 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
     lateinit var rightButton: Button
     private val mAdapter by lazy { SelectFileAdapter(this,ArrayList()) }
     lateinit var linearLayoutManager: LinearLayoutManager
+    var TAG = "SelectFileFragment"
+
 
     override fun layoutId(): Int {
         return R.layout.fragment_selectmedia
@@ -76,6 +79,15 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
 //        })
 
     }
+
+
+    override fun onBackPressed() {
+        LogUtils.d(TAG," AlbumDetailsPageingFragment.onBackPressed")
+       if(viewModel.backFileList()) {
+           super.onBackPressed()
+       }
+    }
+
 
     override fun click(position: Int, fileBean: FileBean) {
         viewModel.getFileBeanList(File(fileBean.filePath))

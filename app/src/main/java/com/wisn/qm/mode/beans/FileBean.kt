@@ -1,5 +1,7 @@
 package com.wisn.qm.mode.beans
 
+import android.text.TextUtils
+
 /**
  *
  * @Description:
@@ -16,6 +18,20 @@ data class FileBean(
         //icon
         val resIcon: Int?,
         //大小
-        val size: Long?) {
+        val size: Long?) :Comparable<FileBean>{
+
+    override fun compareTo(other: FileBean): Int {
+        if (isDir) {
+            return 1
+        }else{
+//            if (!TextUtils.isEmpty(this.fileName) && !TextUtils.isEmpty(other.fileName)) {
+//                return -1
+//            }
+//            //非文件
+//            return 0
+            return -1
+        }
+
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.wisn.qm.ui.select
 
 import android.os.Environment
+import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.LogUtils
 import com.library.base.base.BaseViewModel
@@ -12,11 +13,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SelectFileViewModel : BaseViewModel() {
     var listdata = MutableLiveData<MutableList<MediaInfo>>()
     var listfilebean = MutableLiveData<MutableList<FileBean>>()
     var selectData = MutableLiveData<ArrayList<MediaInfo>>()
+    var  file: File?=null
+    var  rootName: String?=null
 
     fun getMediaImageList(): MutableLiveData<MutableList<MediaInfo>> {
 
@@ -65,6 +70,21 @@ class SelectFileViewModel : BaseViewModel() {
         return selectData
     }
 
+
+    fun backFileList():Boolean{
+        if (file == null || TextUtils.isEmpty(rootName)) {
+            return true
+        }
+        if(rootName.equals(file!!.absolutePath)){
+            return true
+        }
+        val parentFile = file!!.parentFile
+        if (parentFile.isDirectory) {
+            getFileBeanList(parentFile)
+        }
+        return false
+    }
+
     fun getFileBeanList(selectTargFile: File?): MutableLiveData<MutableList<FileBean>> {
 
         LogUtils.d("getFileBeanList ", Thread.currentThread().name)
@@ -72,19 +92,38 @@ class SelectFileViewModel : BaseViewModel() {
             launchFlow {
                 var result: MutableList<FileBean> = ArrayList()
                 LogUtils.d("getFileBeanList ", Thread.currentThread().name)
-                var file: File
                 if (selectTargFile != null) {
                     file = selectTargFile
                 } else {
                     file = Environment.getExternalStorageDirectory()
+                    rootName= file?.absolutePath
                 }
                 val listFiles = file!!.listFiles()
                 val iterator = listFiles.iterator();
                 while (iterator.hasNext()) {
-                    val next = iterator.next();
-                    result.add(FileBean(next.isDirectory, next.name, next.absolutePath, -1, next.length()))
-
+                    val next = iterator.next()
+                    if(!next.isHidden()){
+                        result.add(FileBean(next.isDirectory, next.name, next.absolutePath, -1, next.length()))
+                    }
                 }
+                result?.sortByDescending {
+                    it.isDir
+                }
+//                result?.sorted()
+//                result?.sortWith(Comparator { o1, o2 ->
+//                    try {
+//                        if (o1.isDir) {
+//                            o1.fileName!!.compareTo(o2.fileName!!)
+//                        } else {
+//                            1
+//                        }
+//                    } catch (e: Exception) {
+//                        1
+//                    }
+//                })
+//                result?.sortWith(compareBy({it.fileName}))
+//                result?.sortWith(compareBy({!it.isDir}))
+//                result.sort()
                 result
             }.flowOn(Dispatchers.IO).collect {
                 LogUtils.d("getMediaImageList3 BBB", Thread.currentThread().name)

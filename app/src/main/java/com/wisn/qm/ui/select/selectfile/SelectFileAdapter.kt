@@ -39,6 +39,11 @@ class SelectFileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var textView: TextView = itemView.findViewById(R.id.textView)
     fun setData(fileBean: FileBean) {
         textView.setText(fileBean.fileName)
+        if (fileBean.isDir) {
+            imageView.setImageResource(R.mipmap.icon_select_dir2)
+        } else {
+            imageView.setImageResource(R.mipmap.icon_select_file2)
+        }
     }
 }
 interface ClickItem{

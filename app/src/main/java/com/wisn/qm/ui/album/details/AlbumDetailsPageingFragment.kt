@@ -29,6 +29,7 @@ import com.wisn.qm.ui.netpreview.NetPreviewFragment
 import com.wisn.qm.ui.select.selectmedia.SelectPictureFragment
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
+import kotlinx.android.synthetic.main.item_photo_select_bottom.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -52,6 +53,15 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
 
     override fun layoutId(): Int {
         return R.layout.fragment_albumdetails
+    }
+
+    override fun onBackPressed() {
+        LogUtils.d(TAG," AlbumDetailsPageingFragment.onBackPressed")
+        if (isShowEdit) {
+            albumPictureAdapter.updateSelect(false)
+        } else {
+            super.onBackPressed()
+        }
     }
 
     override fun initView(views: View) {
