@@ -19,6 +19,7 @@ data class FileBean(
         val resIcon: Int?,
         //大小
         val size: Long?) :Comparable<FileBean>{
+    var __isSelect:Boolean=false
 
     override fun compareTo(other: FileBean): Int {
         if (isDir) {

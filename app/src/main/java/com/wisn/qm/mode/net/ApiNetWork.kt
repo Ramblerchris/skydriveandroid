@@ -8,7 +8,7 @@ import com.wisn.qm.mode.beans.PageBean
 import com.wisn.qm.mode.beans.Update
 import com.wisn.qm.mode.db.beans.UserDirBean
 import okhttp3.MultipartBody
-import retrofit2.http.Query
+import retrofit2.http.*
 
 class ApiNetWork {
 
@@ -145,14 +145,14 @@ class ApiNetWork {
     /**
      * 通知分块上传完成
      */
-    suspend fun finishMultipartInfo(@Query("uploadId") uploadId: String, @Query("sha1") sha1: String): BaseResult<MultiPartInfo> {
+    suspend fun finishMultipartInfo( uploadId: String, sha1: String): BaseResult<MultiPartInfo> {
         return getServie().finishMultipartInfo(uploadId, sha1)
     }
 
     /**
      * 分块上传
      */
-    suspend fun uploadMultipartInfo(@Query("pid") pid: Long, @Query("uploadId") uploadId: String, @Query("chunkindex") chunkindex: Int): BaseResult<MultiPartInfo> {
+    suspend fun uploadMultipartInfo( pid: Long, uploadId: String, chunkindex: Int): BaseResult<MultiPartInfo> {
         return getServie().uploadMultipartInfo(pid, uploadId, chunkindex)
     }
 
@@ -168,6 +168,35 @@ class ApiNetWork {
      */
     suspend fun checkUpdate(buildVersion: String, buildBuildVersion: String): BaseResult<Update> {
         return getServie().checkUpdate(buildVersion = buildVersion, buildBuildVersion = buildBuildVersion)
+    }
+
+
+    /**
+     * 单文件上传，秒传
+     */
+    suspend fun uploadDiskFileHitpass(pid: Long, sha1: String): BaseResult<UserDirBean> {
+        return getServie().uploadDiskFileHitpass(pid, sha1)
+    }
+
+    /**
+     * 删除单个文件
+     */
+    suspend fun deleteDiskFile(sha1: String): BaseResult<String> {
+        return getServie().deleteDiskFile(sha1)
+    }
+
+    /**
+     * 获取每个disk目录的文件夹列表
+     */
+    suspend fun getDiskDirlist(pid: Long, pageSize: Long? = 20, lastId: Long? = -1): BaseResult<PageBean<MutableList<UserDirBean>>> {
+        return getServie().getDiskDirlist(pid, pageSize, lastId)
+    }
+
+    /**
+     * 添加文件夹
+     */
+    suspend fun addDiskDir(pid: Long, filename: String): BaseResult<UserDirBean> {
+        return getServie().uploadDiskFileHitpass(pid, filename)
     }
 
 

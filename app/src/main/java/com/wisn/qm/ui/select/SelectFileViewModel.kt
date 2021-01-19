@@ -20,8 +20,8 @@ class SelectFileViewModel : BaseViewModel() {
     var listdata = MutableLiveData<MutableList<MediaInfo>>()
     var listfilebean = MutableLiveData<MutableList<FileBean>>()
     var selectData = MutableLiveData<ArrayList<MediaInfo>>()
-    var  file: File?=null
-    var  rootName: String?=null
+    var file: File? = null
+    var rootName: String? = null
 
     fun getMediaImageList(): MutableLiveData<MutableList<MediaInfo>> {
 
@@ -71,11 +71,11 @@ class SelectFileViewModel : BaseViewModel() {
     }
 
 
-    fun backFileList():Boolean{
+    fun backFileList(): Boolean {
         if (file == null || TextUtils.isEmpty(rootName)) {
             return true
         }
-        if(rootName.equals(file!!.absolutePath)){
+        if (rootName.equals(file!!.absolutePath)) {
             return true
         }
         val parentFile = file!!.parentFile
@@ -96,13 +96,13 @@ class SelectFileViewModel : BaseViewModel() {
                     file = selectTargFile
                 } else {
                     file = Environment.getExternalStorageDirectory()
-                    rootName= file?.absolutePath
+                    rootName = file?.absolutePath
                 }
                 val listFiles = file!!.listFiles()
                 val iterator = listFiles.iterator();
                 while (iterator.hasNext()) {
                     val next = iterator.next()
-                    if(!next.isHidden()){
+                    if (!next.isHidden()) {
                         result.add(FileBean(next.isDirectory, next.name, next.absolutePath, -1, next.length()))
                     }
                 }

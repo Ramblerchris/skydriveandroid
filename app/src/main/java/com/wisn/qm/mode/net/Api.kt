@@ -11,12 +11,7 @@ import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface Api {
-
-    /**
-     * 检查网络
-     */
-    @GET("/check")
-    suspend fun check(): BaseResult<Any>
+    /************************************用户模块******************************************/
 
     /**
      *
@@ -43,6 +38,23 @@ interface Api {
     suspend fun singout(): BaseResult<String>
 
     /**
+     * 修改用户头像
+     */
+    @Multipart
+    @POST("/user/updatePhoto")
+    suspend fun updateUserPhoto(@Part file: MultipartBody.Part): BaseResult<UserDirBean>
+
+
+    /**
+     * 修改用户名
+     */
+    @FormUrlEncoded
+    @POST("/user/updateUserName")
+    suspend fun updateUserName(@Field("name") filename: String): BaseResult<Boolean>
+
+    /************************************文件******************************************/
+
+    /**
      * 单个文件信息
      */
     @GET("/file/getinfo")
@@ -54,6 +66,8 @@ interface Api {
      */
     @DELETE("/file/delete")
     suspend fun deleteFile(@Query("filesha1") sha1: String): BaseResult<String>
+
+    /************************************用户文件******************************************/
 
     /**
      * 删除批量文件
@@ -77,13 +91,6 @@ interface Api {
     suspend fun uploadFile(@Part("sha1") sha1: String, @Part("pid") pid: Long, @Part("isVideo") isVideo: Boolean, @Part("minetype") minetype: String, @Part("videoduration") videoduration: Long, @Part file: MultipartBody.Part): BaseResult<UserDirBean>
 
     /**
-     * 修改用户头像
-     */
-    @Multipart
-    @POST("/user/updatePhoto")
-    suspend fun updateUserPhoto(@Part file: MultipartBody.Part): BaseResult<UserDirBean>
-
-    /**
      * 单文件上传，秒传
      */
     @POST("/userfile/hitpass")
@@ -94,7 +101,7 @@ interface Api {
      * 获取每个目录的文件夹列表
      */
     @GET("/userfile/dirlist")
-    suspend fun getUserDirlist(@Query("pid") pid: Long,@Query("pageSize") pageSize :Long? =20,@Query("lastId") lastId :Long? =-1): BaseResult<PageBean<MutableList<UserDirBean>>>
+    suspend fun getUserDirlist(@Query("pid") pid: Long, @Query("pageSize") pageSize: Long? = 20, @Query("lastId") lastId: Long? = -1): BaseResult<PageBean<MutableList<UserDirBean>>>
 
     /**
      * 获取所有文件sha1
@@ -110,13 +117,53 @@ interface Api {
     @POST("/userfile/adddir")
     suspend fun addUserDir(@Field("pid") pid: Long, @Field("filename") filename: String): BaseResult<UserDirBean>
 
+
     /**
-     * 修改用户名
+     * 删除文件夹
+     * ids=5;17;18;
+     */
+    @POST("/userfile/deleteDir")
+    suspend fun deleteDirs(@Query("ids") ids: String): BaseResult<Boolean>
+
+    /***********************************蒲公英更新*******************************************/
+
+    /**
+     * 蒲公英更新
      */
     @FormUrlEncoded
-    @POST("/user/updateUserName")
-    suspend fun updateUserName(@Field("name") filename: String): BaseResult<Boolean>
+    @POST
+    suspend fun checkUpdate(@Url url: String = ConstantKey.pgyerUpdate, @Field("_api_key") _api_key: String = ConstantKey._api_key, @Field("appKey") appKey: String = ConstantKey.appKey,
+                            @Field("buildVersion") buildVersion: String, @Field("buildBuildVersion") buildBuildVersion: String): BaseResult<Update>
 
+    /************************************disk******************************************/
+
+    /**
+     * 单文件上传，秒传
+     */
+    @POST("/disk/hitpass")
+    suspend fun uploadDiskFileHitpass(@Query("pid") pid: Long, @Query("sha1") sha1: String): BaseResult<UserDirBean>
+
+    /**
+     * 删除单个文件
+     */
+    @DELETE("/disk/delete")
+    suspend fun deleteDiskFile(@Query("filesha1") sha1: String): BaseResult<String>
+
+    /**
+     * 获取每个disk目录的文件夹列表
+     */
+    @GET("/disk/dirlist")
+    suspend fun getDiskDirlist(@Query("pid") pid: Long, @Query("pageSize") pageSize: Long? = 20, @Query("lastId") lastId: Long? = -1): BaseResult<PageBean<MutableList<UserDirBean>>>
+
+    /**
+     * 添加文件夹
+     */
+    @FormUrlEncoded
+    @POST("/disk/adddir")
+    suspend fun addDiskDir(@Field("pid") pid: Long, @Field("filename") filename: String): BaseResult<UserDirBean>
+
+
+    /************************************分块上传******************************************/
     /**
      * 初始化分块上传
      */
@@ -135,23 +182,6 @@ interface Api {
      */
     @POST("/userfile/uploadmultipartinfo")
     suspend fun uploadMultipartInfo(@Query("pid") pid: Long, @Query("uploadId") uploadId: String, @Query("chunkindex") chunkindex: Int): BaseResult<MultiPartInfo>
-
-
-    /**
-     * 删除文件夹
-     * ids=5;17;18;
-     */
-    @POST("/userfile/deleteDir")
-    suspend fun deleteDirs(@Query("ids") ids: String): BaseResult<Boolean>
-
-
-    /**
-     * 蒲公英更新
-     */
-    @FormUrlEncoded
-    @POST
-    suspend fun checkUpdate(@Url url: String = ConstantKey.pgyerUpdate, @Field("_api_key") _api_key: String = ConstantKey._api_key, @Field("appKey") appKey: String = ConstantKey.appKey,
-                            @Field("buildVersion") buildVersion: String, @Field("buildBuildVersion") buildBuildVersion: String): BaseResult<Update>
 
 
 }

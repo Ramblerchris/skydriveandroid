@@ -31,6 +31,7 @@ import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.ui.album.details.AlbumDetailsFragment
+import com.wisn.qm.ui.disk.DiskListFragment
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
 import com.wisn.qm.ui.select.selectfile.SelectFileFragment
@@ -124,6 +125,9 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
             mHomeControlListener.startFragmentByView(uploadListFragment)
         } else if (v == delete) {
             ToastUtils.showShort("开发中")
+        } else if (v == pan) {
+            mHomeControlListener.startFragmentByView(DiskListFragment())
+//            mHomeControlListener.startFragmentByView(TestVideoPlayerFragment())
         } else if (v == localvideo) {
             mHomeControlListener.startFragmentByView(SelectFileFragment())
 //            mHomeControlListener.startFragmentByView(TestVideoPlayerFragment())

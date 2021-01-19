@@ -26,7 +26,7 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
     lateinit var title: QMUIQQFaceView
     lateinit var leftCancel: Button
     lateinit var rightButton: Button
-    private val mAdapter by lazy { SelectFileAdapter(this,ArrayList()) }
+    private val mAdapter by lazy { SelectFileAdapter(this, ArrayList()) }
     lateinit var linearLayoutManager: LinearLayoutManager
     var TAG = "SelectFileFragment"
 
@@ -39,7 +39,7 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
         title = topbar?.setTitle("文件选择")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        leftCancel =topbar?.addLeftTextButton("取消 ", R.id.topbar_right_add_button)!!
+        leftCancel = topbar?.addLeftTextButton("返回 ", R.id.topbar_right_add_button)!!
         leftCancel.setTextColor(Color.BLACK)
         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         leftCancel.visibility = View.VISIBLE
@@ -50,11 +50,11 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
         rightButton.setTextColor(Color.BLACK)
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {
-            var intent= Intent()
+            var intent = Intent()
             val value = viewModel.selectData().value
             value?.let {
-                intent.putExtra("data",value)
-                setFragmentResult(101,intent )
+                intent.putExtra("data", value)
+                setFragmentResult(101, intent)
             }
             popBackStack()
         }
@@ -82,15 +82,17 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
 
 
     override fun onBackPressed() {
-        LogUtils.d(TAG," AlbumDetailsPageingFragment.onBackPressed")
-       if(viewModel.backFileList()) {
-           super.onBackPressed()
-       }
+        LogUtils.d(TAG, " AlbumDetailsPageingFragment.onBackPressed")
+        if (viewModel.backFileList()) {
+            super.onBackPressed()
+        }
     }
 
 
     override fun click(position: Int, fileBean: FileBean) {
-        viewModel.getFileBeanList(File(fileBean.filePath))
+        if (fileBean.isDir) {
+            viewModel.getFileBeanList(File(fileBean.filePath))
+        }
     }
 
 //    override fun changeSelectData(isAdd: Boolean, item: MediaInfo?) {

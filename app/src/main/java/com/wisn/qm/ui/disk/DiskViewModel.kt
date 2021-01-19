@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.album
+package com.wisn.qm.ui.disk
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.Pager
@@ -18,7 +18,7 @@ import com.wisn.qm.task.UploadTaskUitls
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class AlbumViewModel : BaseViewModel() {
+class DiskViewModel : BaseViewModel() {
     val userdir = MutableLiveData<UserDirBean>()
     var result = ArrayList<String>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
@@ -51,23 +51,6 @@ class AlbumViewModel : BaseViewModel() {
 
     }
 
-    /**
-     * 获取数据
-     * prefetchDistance = 10 预加载10条
-     */
-    fun getDirListAll(): ArrayList<UserDirBean> {
-
-        if (userDirListDataSource == null) {
-            return ArrayList()
-        }
-        return userDirListDataSource!!.mutableList!!
-    }
-
-    fun getUserDirListDataSource(pid: Long) = Pager(PagingConfig(pageSize = 1, prefetchDistance = 40), PageKey(pid)) {
-        userDirListDataSource = UserDirListDataSource()
-        return@Pager userDirListDataSource!!
-    }.flow
-
 
     fun addUserDir(filename: String): MutableLiveData<UserDirBean> {
         launchGo({
@@ -80,9 +63,9 @@ class AlbumViewModel : BaseViewModel() {
         return userdir
     }
 
-    fun getUserDirlist(pid: Long): MutableLiveData<MutableList<UserDirBean>> {
+    fun getDiskDirlist(pid: Long): MutableLiveData<MutableList<UserDirBean>> {
         launchGo({
-            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid)
+            val dirlist = ApiNetWork.newInstance().getDiskDirlist(pid)
             if (dirlist.isSuccess()) {
                 dirlistLD.value = dirlist.data.list
             }
@@ -103,7 +86,7 @@ class AlbumViewModel : BaseViewModel() {
             }
             val dirlist = ApiNetWork.newInstance().deletefiles(pid, sb.toString())
             if (dirlist.isSuccess()) {
-                getUserDirlist(pid);
+                getDiskDirlist(pid)
             }
             dirlist
         })
