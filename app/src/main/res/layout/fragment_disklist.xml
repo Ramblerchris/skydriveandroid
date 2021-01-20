@@ -23,7 +23,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <include
-        android:id="@+id/item_empty"
+        android:id="@+id/item_emptya"
         layout="@layout/item_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -8,16 +8,11 @@ import com.google.gson.annotations.SerializedName
 import com.library.base.utils.FormatStrUtils
 import com.wisn.qm.mode.beans.FileType
 
-@Entity(tableName = "uploadbean")
-data class UploadBean(
-
-        @SerializedName("id")
-        var mediainfoid: Long?,
-
+@Entity(tableName = "diskuploadbean")
+data class DiskUploadBean(
         @ColumnInfo(name = "filename")
         @SerializedName("fileName")
         var fileName: String?,
-
 
         @ColumnInfo(name = "filepath")
         @SerializedName("filePath")
@@ -27,36 +22,31 @@ data class UploadBean(
         @SerializedName("fileSize")
         var fileSize: Long?,
 
-        @ColumnInfo(name = "mimetype")
-        @SerializedName("mimeType")
-        var mimeType: String?,
-
-        @ColumnInfo(name = "createtime")
-        @SerializedName("createTime")
-        var createTime: Long?,
-
         @ColumnInfo(name = "pid")
         var pid: Long = 0,
 
         @ColumnInfo(name = "uploadStatus")
-        var uploadStatus: Int = 0,
-
-        @ColumnInfo(name = "sha1")
-        var sha1: String? = "",
-
-        @ColumnInfo(name = "isvideo")
-        @SerializedName("isvideo")
-        var isVideo: Boolean?,
-
-
-        @ColumnInfo(name = "duration")
-        @SerializedName("duration")
-        var duration: Long?
+        var uploadStatus: Int = 0
 ) {
+
+    @ColumnInfo(name = "sha1")
+    var sha1: String? = ""
+
+    @ColumnInfo(name = "isvideo")
+    @SerializedName("isvideo")
+    var isVideo: Boolean? = false
+
+//    @ColumnInfo(name = "duration")
+//    @SerializedName("duration")
+//    var duration: Long? = 0
+
+    @ColumnInfo(name = "mimetype")
+    @SerializedName("mimeType")
+    var mimeType: String? = null
 
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
-    var id: Long = 0;
+    var id: Long = 0
 
     @ColumnInfo(name = "uploadSuccessTime")
     @SerializedName("uploadSuccessTime")
@@ -68,7 +58,7 @@ data class UploadBean(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as UploadBean
+        other as DiskUploadBean
         if (filePath != other.filePath) return false
         if (pid != other.pid) return false
         if (sha1 != other.sha1) return false
@@ -95,18 +85,18 @@ data class UploadBean(
     }
 
     fun getUploadTimeStr(): String {
-        if(uploadSuccessTime!! <=0){
+        if (uploadSuccessTime!! <= 0) {
             return ""
         }
-        if(uploadSuccessTimeStr.isNullOrEmpty()){
-            uploadSuccessTimeStr=FormatStrUtils.getformatDate(uploadSuccessTime!!);
+        if (uploadSuccessTimeStr.isNullOrEmpty()) {
+            uploadSuccessTimeStr = FormatStrUtils.getformatDate(uploadSuccessTime!!);
         }
         return uploadSuccessTimeStr!!
 
     }
 
     override fun toString(): String {
-        return "UploadBean(fileName=$fileName, filePath=$filePath, fileSize=$fileSize, mimeType=$mimeType, createTime=$createTime, pid=$pid, uploadStatus=$uploadStatus, sha1=$sha1, id=$id)"
+        return "UploadBean(fileName=$fileName, filePath=$filePath, fileSize=$fileSize, mimeType=$mimeType,  pid=$pid, uploadStatus=$uploadStatus, sha1=$sha1, id=$id)"
     }
 
 

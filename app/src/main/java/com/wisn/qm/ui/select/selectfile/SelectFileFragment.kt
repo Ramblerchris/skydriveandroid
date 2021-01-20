@@ -13,7 +13,11 @@ import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileBean
 import com.wisn.qm.ui.select.SelectFileViewModel
+import kotlinx.android.synthetic.main.fragment_disklist.*
 import kotlinx.android.synthetic.main.fragment_selectfile.*
+import kotlinx.android.synthetic.main.fragment_selectfile.recyclerView
+import kotlinx.android.synthetic.main.fragment_selectfile.topbar
+import kotlinx.android.synthetic.main.item_empty.*
 import java.io.File
 
 /**
@@ -36,7 +40,7 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
     }
 
     override fun initView(views: View) {
-        title = topbar?.setTitle("文件选择")!!
+        title = topbar?.setTitle("本地文件选择")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         leftCancel = topbar?.addLeftTextButton("返回 ", R.id.topbar_right_add_button)!!
@@ -50,40 +54,43 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
         rightButton.setTextColor(Color.BLACK)
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {
-            var intent = Intent()
-            val value = viewModel.selectData().value
-            value?.let {
-                intent.putExtra("data", value)
-                setFragmentResult(101, intent)
-            }
-            popBackStack()
+            setResultData()
+            super.onBackPressed()
         }
         linearLayoutManager = LinearLayoutManager(context)
         with(recyclerView) {
             this?.layoutManager = linearLayoutManager
             this?.adapter = mAdapter
         }
-
+        empty_tip.setText("此目录没有文件")
+        empty_tip.visibility = View.GONE
         viewModel.getFileBeanList(null).observe(this, Observer {
-            mAdapter.setNewData(it)
+            if (it.isNullOrEmpty()) {
+                empty_tip.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+            } else {
+                empty_tip.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+                mAdapter.setNewData(it)
+            }
         })
+    }
 
-//        viewModel.selectData().observe(this, Observer {
-//            if (it != null && it.size > 0) {
-//                rightButton.visibility = View.VISIBLE
-//                title.text = "已选中${it.size}项"
-//            } else {
-//                rightButton.visibility = View.GONE
-//                title.text = "请选择"
-//            }
-//        })
-
+    private fun setResultData() {
+        var intent = Intent()
+        val value = mAdapter.selectList
+        value?.let {
+            intent.putExtra("data", value)
+            setFragmentResult(101, intent)
+        }
     }
 
 
     override fun onBackPressed() {
         LogUtils.d(TAG, " AlbumDetailsPageingFragment.onBackPressed")
+//        super.onBackPressed()
         if (viewModel.backFileList()) {
+            setResultData()
             super.onBackPressed()
         }
     }

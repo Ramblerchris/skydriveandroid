@@ -16,7 +16,7 @@ import com.wisn.qm.ui.select.SelectFileViewModel
 
 import kotlinx.android.synthetic.main.fragment_selectfile.*
 
-open class SelectPictureFragment : BaseFragment<SelectFileViewModel>(), SelectMediaCallBack {
+open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMediaCallBack {
     lateinit var title: QMUIQQFaceView
     lateinit var leftCancel: Button
     lateinit var rightButton: Button

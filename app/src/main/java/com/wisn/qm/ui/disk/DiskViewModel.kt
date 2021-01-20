@@ -1,36 +1,78 @@
 package com.wisn.qm.ui.disk
 
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.library.base.base.BaseViewModel
-import com.wisn.qm.mode.UserDirListDataSource
+import com.wisn.qm.mode.beans.FileBean
 import com.wisn.qm.mode.beans.FileType
-import com.wisn.qm.mode.beans.PageKey
 import com.wisn.qm.mode.db.AppDataBase
+import com.wisn.qm.mode.db.beans.DiskUploadBean
 import com.wisn.qm.mode.db.beans.UserDirBean
-import com.wisn.qm.mode.db.beans.MediaInfo
-import com.wisn.qm.mode.db.beans.UploadBean
 import com.wisn.qm.mode.net.ApiNetWork
 import com.wisn.qm.task.UploadTaskUitls
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DiskViewModel : BaseViewModel() {
     val userdir = MutableLiveData<UserDirBean>()
     var result = ArrayList<String>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var selectData = MutableLiveData<MutableList<UserDirBean>>()
-    var userDirListDataSource: UserDirListDataSource? = null
-
+    var currentpid: Long = -1
+    var stack: Stack<Long> = Stack()
 
     fun selectData(): MutableLiveData<MutableList<UserDirBean>> {
         if (selectData.value == null) {
             selectData.value = ArrayList<UserDirBean>()
         }
         return selectData
+    }
+
+    fun getDiskDirlist(pid: Long, isBack: Boolean = false): MutableLiveData<MutableList<UserDirBean>> {
+        launchGo({
+            val dirlist = ApiNetWork.newInstance().getDiskDirlist(pid)
+            if (dirlist.isSuccess()) {
+                dirlistLD.value = dirlist.data.list
+                addPid(pid, isBack)
+            }
+            dirlist
+        })
+        return dirlistLD
+    }
+
+    private fun addPid(pid: Long, isBack: Boolean = false) {
+        if (!isBack) {
+            if (stack.isEmpty()) {
+                stack.push(currentpid)
+            } else {
+                val peek = stack.peek();
+                if (peek != currentpid) {
+                    stack.push(currentpid)
+                }
+            }
+        }
+        currentpid = pid
+    }
+
+    fun refresh() {
+        getDiskDirlist(currentpid)
+    }
+
+    fun backFileList(): Boolean {
+        try {
+            if (currentpid == -1L) {
+                return true
+            }
+            val pop = stack.pop()
+            getDiskDirlist(pop, true)
+            return false
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
 
     fun editUserDirBean(isinit: Boolean, isAdd: Boolean, userDirBean: UserDirBean?) {
@@ -63,17 +105,6 @@ class DiskViewModel : BaseViewModel() {
         return userdir
     }
 
-    fun getDiskDirlist(pid: Long): MutableLiveData<MutableList<UserDirBean>> {
-        launchGo({
-            val dirlist = ApiNetWork.newInstance().getDiskDirlist(pid)
-            if (dirlist.isSuccess()) {
-                dirlistLD.value = dirlist.data.list
-            }
-            dirlist
-        })
-        return dirlistLD
-    }
-
     fun deletefiles(pid: Long) {
         launchGo({
             var sb = StringBuilder();
@@ -93,21 +124,20 @@ class DiskViewModel : BaseViewModel() {
     }
 
 
-    fun saveMedianInfo(selectData: ArrayList<MediaInfo>, get: UserDirBean) {
+    fun saveFileBeanList(selectData: ArrayList<FileBean>) {
         LogUtils.d("saveMedianInfo", Thread.currentThread().name)
         GlobalScope.launch {
 
             LogUtils.d("saveMedianInfo", Thread.currentThread().name)
             //子线程
-            var uploadlist = ArrayList<UploadBean>()
+            var uploadlist = ArrayList<DiskUploadBean>()
             for (mediainfo in selectData) {
-                mediainfo.pid = get.id
-                mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                uploadlist.add(UploadTaskUitls.buidUploadBean(mediainfo))
+                var diskUploadBean = DiskUploadBean(mediainfo.fileName, mediainfo.filePath, mediainfo.size, currentpid, FileType.UPloadStatus_Noupload)
+                uploadlist.add(diskUploadBean)
             }
             LogUtils.d("uploadlist size", uploadlist.size)
-            AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
-            UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
+            AppDataBase.getInstanse().diskUploadBeanDao?.insertDiskUploadBeanList(uploadlist)
+            UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildDiskUploadWorkerRequest())
         }
     }
 

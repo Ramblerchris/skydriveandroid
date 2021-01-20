@@ -195,33 +195,6 @@
 -keepclassmembers class * extends android.webkit.WebViewClient {
     public void *(android.webkit.WebView, jav.lang.String);
 }
-#在app中与HTML5的JavaScript的交互进行特殊处理
-#我们需要确保这些js要调用的原生方法不能够被混淆，于是我们需要做如下处理：
-#-keepclassmembers class com.ljd.example.JSInterface {
-#    <methods>;
-#}
-#-keep public class [包名.类名]$[内部类]{
-#    public *;
-#}
-#-keepattributes JavascriptInterface
-
-
-#
-#---------------------------------实体类---------------------------------
-#--------(实体Model不能混淆，否则找不到对应的属性获取不到值)-----
-#
-#-dontwarn  com.wisn.qm.mode.**
-#-dontwarn  com.wisn.qm.mode.bean.**
--keep class com.wisn.qm.mode.beans.** { *; }
--keep class com.wisn.qm.mode.db.beans.** { *; }
--keep class com.wisn.qm.mode.db.AppDataBase { *; }
--keepclassmembers class com.library.base.config.UserBean {
-   *;
-}
--keep  public class * extends  com.wisn.qm.mode.db.AppDataBase { *; }
-#对含有反射类的处理
-#-keep class com.wisn.qm.db.beans.** { *; }
-#
 # ----------------------------- 其他的 -----------------------------
 #
 # 删除代码中Log相关的代码
@@ -374,5 +347,35 @@
 -keep class com.autonavi.**{*;}
 ##---------------  高德  ----------
 
+
+
+
+#在app中与HTML5的JavaScript的交互进行特殊处理
+#我们需要确保这些js要调用的原生方法不能够被混淆，于是我们需要做如下处理：
+#-keepclassmembers class com.ljd.example.JSInterface {
+#    <methods>;
+#}
+#-keep public class [包名.类名]$[内部类]{
+#    public *;
+#}
+#-keepattributes JavascriptInterface
+
+
+#
+#---------------------------------实体类---------------------------------
+#--------(实体Model不能混淆，否则找不到对应的属性获取不到值)-----
+#
+#-dontwarn  com.wisn.qm.mode.**
+#-dontwarn  com.wisn.qm.mode.bean.**
+-keep class com.wisn.qm.mode.beans.** { *; }
+-keep class com.wisn.qm.mode.db.beans.** { *; }
+-keep class com.wisn.qm.mode.db.AppDataBase { *; }
+-keepclassmembers class com.library.base.config.UserBean {
+   *;
+}
+-keep  public class * extends  com.wisn.qm.mode.db.AppDataBase { *; }
+#对含有反射类的处理
+#-keep class com.wisn.qm.db.beans.** { *; }
+#
 
 

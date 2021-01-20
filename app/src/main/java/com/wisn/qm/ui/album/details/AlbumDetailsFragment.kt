@@ -22,7 +22,7 @@ import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.AlbumViewModel
 import com.wisn.qm.ui.album.EditAlbumDetails
-import com.wisn.qm.ui.select.selectmedia.SelectPictureFragment
+import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
 
@@ -73,7 +73,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
                         }
                         .create(R.style.QMUI_Dialog).show()
             } else {
-                val selectPictureFragment = SelectPictureFragment()
+                val selectPictureFragment = SelectMediaFragment()
                 selectPictureFragment.arguments = Bundle()
                 selectPictureFragment.requireArguments().putSerializable(ConstantKey.albuminfo, get)
                 startFragmentForResult(selectPictureFragment, 100)

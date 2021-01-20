@@ -12,7 +12,7 @@ import com.wisn.qm.mode.beans.FileBean
 
 class SelectFileAdapter(var clickItem: ClickItem, var data: MutableList<FileBean>) : RecyclerView.Adapter<SelectFileViewHolder>() {
 
-    var selectList: MutableList<FileBean> = ArrayList()
+    var selectList: ArrayList<FileBean> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectFileViewHolder {
         return SelectFileViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item_selectfile, parent, false))

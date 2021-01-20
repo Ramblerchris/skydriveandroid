@@ -159,7 +159,7 @@ class ApiNetWork {
     /**
      * 删除文件夹
      */
-    suspend fun deleteDirs(@Query("ids") ids: String): BaseResult<Boolean> {
+    suspend fun deleteDirs(ids: String): BaseResult<Boolean> {
         return getServie().deleteDirs(ids)
     }
 
@@ -197,6 +197,10 @@ class ApiNetWork {
      */
     suspend fun addDiskDir(pid: Long, filename: String): BaseResult<UserDirBean> {
         return getServie().uploadDiskFileHitpass(pid, filename)
+    }
+
+    suspend fun uploadDiskFile( sha1: String, pid: Long,  minetype: String,  file: MultipartBody.Part): BaseResult<UserDirBean>{
+        return getServie().uploadDiskFile(sha1,pid,minetype,file)
     }
 
 

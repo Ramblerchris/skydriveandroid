@@ -1,6 +1,6 @@
 package com.wisn.qm.mode.beans
 
-import android.text.TextUtils
+import java.io.Serializable
 
 /**
  *
@@ -18,13 +18,13 @@ data class FileBean(
         //icon
         val resIcon: Int?,
         //大小
-        val size: Long?) :Comparable<FileBean>{
-    var __isSelect:Boolean=false
+        val size: Long?) : Serializable, Comparable<FileBean> {
+    var __isSelect: Boolean = false
 
     override fun compareTo(other: FileBean): Int {
         if (isDir) {
             return 1
-        }else{
+        } else {
 //            if (!TextUtils.isEmpty(this.fileName) && !TextUtils.isEmpty(other.fileName)) {
 //                return -1
 //            }

@@ -3,6 +3,7 @@ package com.wisn.qm.mode.file
 import android.provider.MediaStore
 import com.blankj.utilcode.util.LogUtils
 import com.library.base.BaseApp
+import com.library.base.utils.FormatStrUtils
 import com.library.base.utils.SHAMD5Utils
 import com.wisn.qm.mode.db.beans.MediaInfo
 import kotlinx.coroutines.Dispatchers
@@ -171,7 +172,7 @@ class MediaInfoScanHelper {
                             val element = MediaInfo(id, fileName, filePath, fileSize, duration, mimeType, true, createTime, null, latitude, longitude, width, height)
                             element.sha1 = shA1
 //                            val format1 = format.format(Date(duration))
-                            var createTimess = getTimestr(duration)
+                            var createTimess = FormatStrUtils.getFormatTimeStr(duration)
                             element.timestr = createTimess
 //                            element.timestr = converted
 //                            LogUtils.d("AAAAABBB${SystemClock.elapsedRealtime()}  createTime:" + createTime + " duration" + duration + "timestr" + element.timestr)
@@ -196,36 +197,6 @@ class MediaInfoScanHelper {
         return dotname?.substring(dotname.lastIndexOf("."))
     }
 
-    private val SECONDS_PER_MINUTE = 60
-    private val SECONDS_PER_HOUR = 60 * 60
-    private val SECONDS_PER_DAY = 24 * 60 * 60
-
-    fun getTimestr(duration: Long): String {
-//        val millis = duration % 1000
-
-        var seconds = Math.floor(duration / 1000.toDouble()).toInt()
-//        var days = 0
-        var hours = 0
-        var minutes = 0
-
-//        /* if (seconds >= SECONDS_PER_DAY) {
-//             days = seconds / SECONDS_PER_DAY
-//             seconds -= days * SECONDS_PER_DAY
-//         }*/
-        if (seconds >= SECONDS_PER_HOUR) {
-            hours = seconds / SECONDS_PER_HOUR
-            seconds -= hours * SECONDS_PER_HOUR
-        }
-        if (seconds >= SECONDS_PER_MINUTE) {
-            minutes = seconds / SECONDS_PER_MINUTE
-            seconds -= minutes * SECONDS_PER_MINUTE
-        }
-        if (hours > 0) {
-            return String.format("%2d:%02d:%02d", hours, minutes, seconds)
-        } else {
-            return String.format("%02d:%02d", minutes, seconds)
-        }
-    }
 
     fun getTimeDurationStr(duration: Long): String? {
         try {

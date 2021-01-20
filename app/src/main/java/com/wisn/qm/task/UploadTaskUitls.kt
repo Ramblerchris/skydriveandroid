@@ -40,6 +40,10 @@ object UploadTaskUitls {
         return buildUploadRequest(null, UploadWorker::class)
     }
 
+    fun buildDiskUploadWorkerRequest(): WorkRequest {
+        return buildUploadRequest(null, DiskUploadWorker::class)
+    }
+
     fun buildMediaScanWorkerRequest(): WorkRequest {
         return buildUploadRequest(null, MediaScanWorker::class)
     }

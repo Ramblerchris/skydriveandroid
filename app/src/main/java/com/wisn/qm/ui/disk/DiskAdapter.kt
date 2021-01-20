@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.VibrateUtils
+import com.library.base.config.Constant
+import com.library.base.utils.FormatStrUtils
 import com.wisn.qm.R
-import com.wisn.qm.mode.beans.FileBean
 import com.wisn.qm.mode.db.beans.UserDirBean
 
 class DiskAdapter(var clickItem: ClickItem, var data: MutableList<UserDirBean>) : RecyclerView.Adapter<SelectFileViewHolder>() {
@@ -47,13 +47,20 @@ class SelectFileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var des: TextView = itemView.findViewById(R.id.des)
     fun setData(fileBean: UserDirBean) {
         textView.setText(fileBean.filename)
-        des.setText(fileBean.createattimestr)
         select.visibility = View.INVISIBLE
 
-        if (fileBean.type==1) {
+        if (fileBean.type == Constant.TypeDir) {
             imageView.setImageResource(R.mipmap.icon_select_dir2)
+            des.setText(fileBean.createattimestr)
+
         } else {
             imageView.setImageResource(R.mipmap.icon_select_file2)
+            if(fileBean.size!=null){
+                des.setText("${fileBean.createattimestr} ${FormatStrUtils.getFormatDiskSizeStr(fileBean.size!!.toLong())}")
+            }else{
+                des.setText(fileBean.createattimestr)
+            }
+
         }
     }
 }

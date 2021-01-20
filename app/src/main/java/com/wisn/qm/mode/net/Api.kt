@@ -162,6 +162,12 @@ interface Api {
     @POST("/disk/adddir")
     suspend fun addDiskDir(@Field("pid") pid: Long, @Field("filename") filename: String): BaseResult<UserDirBean>
 
+    /**
+     * 单文件上传
+     */
+    @Multipart
+    @POST("/disk/upload")
+    suspend fun uploadDiskFile(@Part("sha1") sha1: String, @Part("pid") pid: Long, @Part("minetype") minetype: String,  @Part file: MultipartBody.Part): BaseResult<UserDirBean>
 
     /************************************分块上传******************************************/
     /**
