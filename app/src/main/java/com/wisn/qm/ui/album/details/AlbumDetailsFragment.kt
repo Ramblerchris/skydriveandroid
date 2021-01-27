@@ -55,7 +55,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             }
         }
 
-        rightButton = topbar?.addRightTextButton("添加 ", R.id.topbar_right_add_button)!!
+        rightButton = topbar?.addRightTextButton("添加", R.id.topbar_right_add_button)!!
         rightButton.setTextColor(Color.BLACK)
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="2dp">
+
+    <ImageView
+        android:id="@+id/newalbum_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:padding="4dp"
+        android:visibility="visible"
+        android:src="@mipmap/cloud_album_ic_auto_add_face"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/newalbum_video_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/time_video_bg"
+        android:paddingLeft="9dp"
+        android:paddingTop="2dp"
+        android:paddingRight="9dp"
+        android:paddingBottom="2dp"
+        android:textColor="#fff"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="12:33" />
+
+    <ImageView
+        android:id="@+id/newalbum_iv_select"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="8dp"
+        tools:background="@color/red"
+        android:elevation="1dp"
+        android:visibility="visible"
+        android:src="@mipmap/vip_icon_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

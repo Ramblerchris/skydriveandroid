@@ -2,10 +2,7 @@ package com.wisn.qm.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
-import android.view.MotionEvent
-import android.view.ViewConfiguration
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentContainerView
@@ -33,7 +30,6 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(this, storagePermissions, 1)
         QMUIStatusBarHelper.setStatusBarLightMode(this)
-
     }
 
 
@@ -188,6 +184,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
             globalBtn.setOnClickListener {
                 //                    showGlobalActionPopup(v);
             }
+            globalBtn.visibility= View.GONE
             val globalBtnLp = LayoutParams(btnSize, btnSize)
             globalBtnLp.gravity = Gravity.BOTTOM or Gravity.RIGHT
             globalBtnLp.bottomMargin = QMUIDisplayHelper.dp2px(context, 60)

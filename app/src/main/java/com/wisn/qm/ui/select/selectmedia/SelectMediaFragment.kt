@@ -98,7 +98,7 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
             }
             viewModel.selectData().value = viewModel.selectData().value;
         } else {
-            title.text = "已选中${viewModel.selectData.value?.size}项"
+            title.text = "已选中${viewModel.mediaSelectList.value?.size}项"
         }
     }
 }

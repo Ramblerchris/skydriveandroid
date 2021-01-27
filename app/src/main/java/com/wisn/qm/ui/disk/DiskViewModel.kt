@@ -96,14 +96,16 @@ class DiskViewModel : BaseViewModel() {
 
     fun addUserDir(filename: String): MutableLiveData<UserDirBean> {
         launchGo({
-            val dirlist = ApiNetWork.newInstance().addUserDir(-1, filename)
+            val dirlist = ApiNetWork.newInstance().addDiskDir(currentpid, filename)
             if (dirlist.isSuccess()) {
                 userdir.value = dirlist.data
+                refresh()
             }
             dirlist
         })
         return userdir
     }
+
 
     fun deletefiles(pid: Long) {
         launchGo({

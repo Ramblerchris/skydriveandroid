@@ -24,6 +24,7 @@
         android:text="目录为空"
         android:textColor="#666666"
         android:textSize="14sp"
+        android:visibility="gone"
         android:layout_marginTop="?attr/qmui_topbar_height"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

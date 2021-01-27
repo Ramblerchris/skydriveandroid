@@ -13,15 +13,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import java.io.File
-import java.util.*
 import kotlin.collections.ArrayList
 
 class SelectFileViewModel : BaseViewModel() {
-    var listdata = MutableLiveData<MutableList<MediaInfo>>()
-    var listfilebean = MutableLiveData<MutableList<FileBean>>()
-    var selectData = MutableLiveData<ArrayList<MediaInfo>>()
-    var file: File? = null
-    var rootName: String? = null
+    var mediaImagelistdata = MutableLiveData<MutableList<MediaInfo>>()
+    var filelistdata = MutableLiveData<MutableList<FileBean>>()
+    var mediaSelectList = MutableLiveData<ArrayList<MediaInfo>>()
+    var currentFileName = MutableLiveData<String>()
+    private var currentFile: File? = null
+    private var rootName: String? = null
 
     fun getMediaImageList(): MutableLiveData<MutableList<MediaInfo>> {
 
@@ -57,28 +57,28 @@ class SelectFileViewModel : BaseViewModel() {
                 }
             }.flowOn(Dispatchers.IO).collect {
                 LogUtils.d("getMediaImageList3 BBB", Thread.currentThread().name)
-                listdata.value = it
+                mediaImagelistdata.value = it
             }
         }
-        return listdata
+        return mediaImagelistdata
     }
 
     fun selectData(): MutableLiveData<ArrayList<MediaInfo>> {
-        if (selectData.value == null) {
-            selectData.value = ArrayList<MediaInfo>()
+        if (mediaSelectList.value == null) {
+            mediaSelectList.value = ArrayList<MediaInfo>()
         }
-        return selectData
+        return mediaSelectList
     }
 
 
     fun backFileList(): Boolean {
-        if (file == null || TextUtils.isEmpty(rootName)) {
+        if (currentFile == null || TextUtils.isEmpty(rootName)) {
             return true
         }
-        if (rootName.equals(file!!.absolutePath)) {
+        if (rootName.equals(currentFile!!.absolutePath)) {
             return true
         }
-        val parentFile = file!!.parentFile
+        val parentFile = currentFile!!.parentFile
         if (parentFile.isDirectory) {
             getFileBeanList(parentFile)
         }
@@ -93,12 +93,16 @@ class SelectFileViewModel : BaseViewModel() {
                 var result: MutableList<FileBean> = ArrayList()
                 LogUtils.d("getFileBeanList ", Thread.currentThread().name)
                 if (selectTargFile != null) {
-                    file = selectTargFile
+                    currentFile = selectTargFile
+                    currentFile?.let {
+                        currentFileName.postValue(it.name)
+                    }
                 } else {
-                    file = Environment.getExternalStorageDirectory()
-                    rootName = file?.absolutePath
+                    currentFile = Environment.getExternalStorageDirectory()
+                    rootName = currentFile?.absolutePath
+                    currentFileName.postValue("/")
                 }
-                val listFiles = file!!.listFiles()
+                val listFiles = currentFile!!.listFiles()
                 val iterator = listFiles.iterator();
                 while (iterator.hasNext()) {
                     val next = iterator.next()
@@ -127,9 +131,9 @@ class SelectFileViewModel : BaseViewModel() {
                 result
             }.flowOn(Dispatchers.IO).collect {
                 LogUtils.d("getMediaImageList3 BBB", Thread.currentThread().name)
-                listfilebean.value = it
+                filelistdata.value = it
             }
         }
-        return listfilebean
+        return filelistdata
     }
 }

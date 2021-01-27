@@ -69,13 +69,19 @@ data class MediaInfo(
 
     override var itemType: Int = 0
     get() {
-        if(isVideo!!){
+        if (isVideo!!) {
             return FileType.VideoViewItem
-        }else{
+        }
+        if (field == 0) {
             return FileType.ImageViewItem
         }
+        return field
     }
 
+    @Ignore
+    constructor (itemType: Int):this(0,null,null,0,0,null,false,0,null,0f,0f,0,0) {
+        this.itemType=itemType
+    }
 
     @ColumnInfo(name = "pid")
     @SerializedName("pid")

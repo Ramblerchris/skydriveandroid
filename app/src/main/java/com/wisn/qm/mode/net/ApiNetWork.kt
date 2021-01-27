@@ -196,7 +196,7 @@ class ApiNetWork {
      * 添加文件夹
      */
     suspend fun addDiskDir(pid: Long, filename: String): BaseResult<UserDirBean> {
-        return getServie().uploadDiskFileHitpass(pid, filename)
+        return getServie().addDiskDir(pid, filename)
     }
 
     suspend fun uploadDiskFile( sha1: String, pid: Long,  minetype: String,  file: MultipartBody.Part): BaseResult<UserDirBean>{

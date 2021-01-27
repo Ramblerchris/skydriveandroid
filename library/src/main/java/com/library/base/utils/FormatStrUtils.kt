@@ -5,9 +5,9 @@ import java.util.*
 
 object FormatStrUtils {
 
-    val DF_HH_MM_SS = "HH:mm:ss"
+    private const val DF_HH_MM_SS = "HH:mm:ss"
 
-    private const val minute = 60 * 1000.toLong()// 1分钟
+    private const val minute = 60 * 1000.toLong() // 1分钟
 
     private const val hour = 60 * minute // 1小时
 
@@ -92,13 +92,13 @@ object FormatStrUtils {
             size = String.format("%.2fB", limit.toFloat())
         } else if (limit < 0.1 * MB) {
             // 如果小于0.1MB转化成KB
-            size = String.format("%.2fKB", (limit / KB).toFloat())
+            size = String.format("%.2fKB", limit.toFloat() / KB)
         } else if (limit < 0.1 * GB) {
             // 如果小于0.1GB转化成MB
-            size = String.format("%.2fMB", (limit / (MB).toFloat()))
+            size = String.format("%.2fMB", limit.toFloat() / MB)
         } else {
             // 其他转化成GB
-            size = String.format("%.2fGB", (limit / (GB).toFloat()))
+            size = String.format("%.2fGB", limit.toFloat() / GB)
         }
         return size
     }

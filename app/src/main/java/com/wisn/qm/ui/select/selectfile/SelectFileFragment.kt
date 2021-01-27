@@ -13,8 +13,6 @@ import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileBean
 import com.wisn.qm.ui.select.SelectFileViewModel
-import kotlinx.android.synthetic.main.fragment_disklist.*
-import kotlinx.android.synthetic.main.fragment_selectfile.*
 import kotlinx.android.synthetic.main.fragment_selectfile.recyclerView
 import kotlinx.android.synthetic.main.fragment_selectfile.topbar
 import kotlinx.android.synthetic.main.item_empty.*
@@ -43,14 +41,14 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
         title = topbar?.setTitle("本地文件选择")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        leftCancel = topbar?.addLeftTextButton("返回 ", R.id.topbar_right_add_button)!!
+        leftCancel = topbar?.addLeftTextButton("返回", R.id.topbar_right_add_button)!!
         leftCancel.setTextColor(Color.BLACK)
         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         leftCancel.visibility = View.VISIBLE
         leftCancel.setOnClickListener {
             popBackStack()
         }
-        rightButton = topbar?.addRightTextButton("确定 ", R.id.topbar_right_add_button)!!
+        rightButton = topbar?.addRightTextButton("确定", R.id.topbar_right_add_button)!!
         rightButton.setTextColor(Color.BLACK)
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {
@@ -72,6 +70,13 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
                 empty_tip.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
                 mAdapter.setNewData(it)
+            }
+        })
+        viewModel.currentFileName.observe(this, Observer {
+            if (it.isNullOrEmpty()) {
+                title.text = "本地文件选择"
+            } else {
+                title.text = it
             }
         })
     }
@@ -101,18 +106,5 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
             viewModel.getFileBeanList(File(fileBean.filePath))
         }
     }
-
-//    override fun changeSelectData(isAdd: Boolean, item: MediaInfo?) {
-//        if (item != null) {
-//            if (isAdd) {
-//                viewModel.selectData().value?.add(item)
-//            } else {
-//                viewModel.selectData().value?.remove(item)
-//            }
-//            viewModel.selectData().value = viewModel.selectData().value;
-//        } else {
-//            title.text = "已选中${viewModel.selectData.value?.size}项"
-//        }
-//    }
 
 }
