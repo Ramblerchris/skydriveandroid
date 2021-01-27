@@ -53,7 +53,7 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
                 ToastUtils.showShort("请输入相册名称")
             } else {
                 text.run {
-                    hideSoftInput(et_albumName?.windowToken)
+                    hideSoftInput(et_albumName?.windowToken,false)
                     viewModel.addUserDir(text.toString()).observe(this@NewAlbumFragment, Observer {
 //                    ToastUtils.showShort(it.toString())
                         var ait=it
@@ -89,8 +89,10 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
 
     override fun click(isadd: Boolean, position: Int, fileBean: MediaInfo) {
         if (isadd) {
+            hideSoftInput(et_albumName.windowToken,false)
             val selectPictureFragment = SelectMediaFragment()
             selectPictureFragment.arguments = Bundle()
+            selectPictureFragment.selectList = newAlbumAdapter.getSelectDate()
             startFragmentForResult(selectPictureFragment, 100)
         }
     }

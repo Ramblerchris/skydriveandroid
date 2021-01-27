@@ -23,38 +23,62 @@ class SelectFileViewModel : BaseViewModel() {
     private var currentFile: File? = null
     private var rootName: String? = null
 
-    fun getMediaImageList(): MutableLiveData<MutableList<MediaInfo>> {
+    private var selectIdList = ArrayList<Long>()
+
+    fun getMediaImageList(selectList: MutableList<MediaInfo>?): MutableLiveData<MutableList<MediaInfo>> {
 
         LogUtils.d("getMediaImageList3AA ", Thread.currentThread().name)
         launchUI {
             launchFlow {
                 LogUtils.d("getMediaImageList3 ", Thread.currentThread().name)
-                val maxId = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoMaxId();
+                val maxId = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoMaxId()
+                val mediaImageList:MutableList<MediaInfo>?
                 if (maxId != null && maxId > 0) {
                     val mediaImageListNew = DataRepository.getInstance().getMediaImageAndVideoList(maxId.toString())
-                    val mediaInfoListAll = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoListAllNotDelete()
+                    mediaImageList = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoListAllNotDelete()
                     mediaImageListNew?.let {
-                        if (mediaInfoListAll != null && mediaInfoListAll.isNotEmpty()) {
-                            mediaInfoListAll.addAll(mediaImageListNew)
+                        if (mediaImageList != null && mediaImageList.isNotEmpty()) {
+                            mediaImageList.addAll(mediaImageListNew)
                         }
                     }
-                    mediaInfoListAll?.sortByDescending {
+                    mediaImageList?.sortByDescending {
                         it.createTime
                     }
                     mediaImageListNew?.let {
                         AppDataBase.getInstanse().mediaInfoDao?.insertMediaInfo(mediaImageListNew)
                     }
-                    mediaInfoListAll;
                 } else {
-                    val mediaImageList = DataRepository.getInstance().getMediaImageAndVideoList("-1")
+                    mediaImageList = DataRepository.getInstance().getMediaImageAndVideoList("-1")
                     mediaImageList?.let {
                         mediaImageList?.sortByDescending {
                             it.createTime
                         }
                         AppDataBase.getInstanse().mediaInfoDao?.insertMediaInfo(mediaImageList)
                     }
-                    mediaImageList;
                 }
+                selectList?.let {
+                    selectIdList.clear()
+                    for( mediainfo in it){
+                        mediainfo.id?.let {
+                            selectIdList.add(it)
+                        }
+                    }
+                }
+                var tempposition=0
+                if (mediaImageList != null && selectList != null && selectList.size > 0) {
+                    for (mediainfo in mediaImageList) {
+                        if (selectIdList.contains(mediainfo.id)) {
+                            mediainfo.isSelect = true
+                            selectData().value?.add(mediainfo)
+                            tempposition++
+                        }
+                        //优化，不必所有的都遍历完
+                       if(tempposition>=selectIdList.size){
+                           break
+                       }
+                    }
+                }
+                mediaImageList
             }.flowOn(Dispatchers.IO).collect {
                 LogUtils.d("getMediaImageList3 BBB", Thread.currentThread().name)
                 mediaImagelistdata.value = it

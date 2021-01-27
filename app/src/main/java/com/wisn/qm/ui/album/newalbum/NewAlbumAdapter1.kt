@@ -55,20 +55,23 @@ class NewAlbumAdapter1(var clickItem: ClickItem, var data: MutableList<MediaInfo
         if (this.data.size >= 1) {
             this.data.removeAt(this.data.size - 1)
         }
-        data?.let { this.data.addAll(it) }
+        data?.let {
+            this.data.clear()
+            this.data.addAll(it)
+        }
         this.data.add(MediaInfo(i))
         notifyDataSetChanged()
     }
 
     fun getSelectDate(): MutableList<MediaInfo>? {
-      /*  if (this.data.size >= 1) {
-            val get = this.data.get(this.data.size - 1)
-            if (get.itemType == i) {
-                return this.data.subList(0, this.data.size - 1)
-            } else {
-                return this.data
-            }
-        }*/
+        /*  if (this.data.size >= 1) {
+              val get = this.data.get(this.data.size - 1)
+              if (get.itemType == i) {
+                  return this.data.subList(0, this.data.size - 1)
+              } else {
+                  return this.data
+              }
+          }*/
         return this.data
     }
 

@@ -10,6 +10,8 @@ import com.library.base.BaseFragment
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.fragment_login.topbar
+import kotlinx.android.synthetic.main.fragment_newalbum.*
 
 /**
  * Created by Wisn on 2020/6/6 下午5:06.
@@ -32,6 +34,7 @@ class LoginFragment : BaseFragment<UserViewModel>() {
                 ToastUtils.showShort("请输入密码")
                 return@setOnClickListener;
             }
+            hideSoftInput(et_password.windowToken,false)
             viewModel.login(phone, password).observe(this, Observer { ToastUtils.showShort(it) })
         }
         tv_register?.setOnClickListener {
@@ -40,6 +43,9 @@ class LoginFragment : BaseFragment<UserViewModel>() {
         viewModel.defUi.msgEvent.observe(this, Observer {
             if (it.code == 100) {
                 startFragmentAndDestroyCurrent(HomeFragment(), false)
+            }else{
+                et_phone.requestFocus()
+                hideSoftInput(et_password.windowToken,true)
             }
         })
     }

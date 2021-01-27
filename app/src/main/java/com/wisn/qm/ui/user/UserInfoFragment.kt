@@ -80,8 +80,6 @@ open class UserInfoFragment : BaseFragment<UserViewModel>(), View.OnClickListene
                     .addAction("退出") { dialog, _ ->
                         viewModel.singout()
                         dialog.dismiss()
-                        GlobalUser.clearToken()
-                        BaseApp.app.loginEvent()
                     }
                     .create(R.style.QMUI_Dialog).show()
         }

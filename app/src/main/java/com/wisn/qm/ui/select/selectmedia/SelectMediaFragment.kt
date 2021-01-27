@@ -22,7 +22,7 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
     lateinit var rightButton: Button
     private val mAdapter by lazy { SelectMediaAdapter(this) }
     lateinit var gridLayoutManager: GridLayoutManager
-
+    var selectList: MutableList<MediaInfo>? = null
     override fun layoutId(): Int {
         return R.layout.fragment_selectmedia
     }
@@ -31,38 +31,24 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
         title = topbar?.setTitle("照片库")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        leftCancel =topbar?.addLeftTextButton("取消 ", R.id.topbar_right_add_button)!!
+        leftCancel = topbar?.addLeftTextButton("取消 ", R.id.topbar_right_add_button)!!
         leftCancel.setTextColor(Color.BLACK)
         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         leftCancel.visibility = View.VISIBLE
         leftCancel.setOnClickListener {
             popBackStack()
         }
-//        val get = arguments?.get(ConstantKey.albuminfo) as UserDirBean
-
         rightButton = topbar?.addRightTextButton("确定 ", R.id.topbar_right_add_button)!!
         rightButton.setTextColor(Color.BLACK)
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {
-            var intent=Intent()
+            var intent = Intent()
             val value = viewModel.selectData().value
             value?.let {
-                intent.putExtra("data",value)
-                setFragmentResult(101,intent )
+                intent.putExtra("data", value)
+                setFragmentResult(101, intent)
             }
             popBackStack()
-           /* MessageDialogBuilder(activity)
-//                    .setTitle("")
-                    .setMessage("确定要添加吗？")
-                    .setSkinManager(QMUISkinManager.defaultInstance(context))
-                    .addAction("取消") { dialog, index -> dialog.dismiss() }
-                    .addAction(0, "确定", QMUIDialogAction.ACTION_PROP_POSITIVE) { dialog, index ->
-                        dialog.dismiss()
-                        viewModel.saveMedianInfo(get)
-                        Toast.makeText(activity, "已经添加到上传任务", Toast.LENGTH_SHORT).show()
-                        popBackStack()
-                    }
-                    .create(com.qmuiteam.qmui.R.style.QMUI_Dialog).show()*/
         }
         gridLayoutManager = GridLayoutManager(context, 3)
         with(gridLayoutManager) {
@@ -73,20 +59,36 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
             this?.adapter = mAdapter
         }
 
-        viewModel.getMediaImageList().observe(this, Observer {
-            mAdapter.setNewInstance(it)
-        })
-
-        viewModel.selectData().observe(this, Observer {
-            if (it != null && it.size > 0) {
-                rightButton.visibility = View.VISIBLE
-                title.text = "已选中${it.size}项"
-            } else {
-                rightButton.visibility = View.GONE
-                title.text = "请选择"
+        viewModel.getMediaImageList(selectList).observe(this, Observer {
+            if(selectList==null){
+                mAdapter.setNewInstance(it)
+            }else{
+                recyclerView.postDelayed({
+                    mAdapter.setNewInstance(it)
+                }, 100)
+                viewModel.mediaSelectList.value?.size?.let { it1 -> setTitleTipInfo(it1) }
             }
         })
 
+        viewModel.selectData().observe(this, Observer {
+            setTitleTipInfo(it.size)
+        })
+
+    }
+
+    override fun lazyLoadData() {
+        super.lazyLoadData()
+
+    }
+
+    private fun setTitleTipInfo(cout:Int) {
+        if (cout> 0) {
+            rightButton.visibility = View.VISIBLE
+            title.text = "已选中${cout}项"
+        } else {
+            rightButton.visibility = View.GONE
+            title.text = "请选择"
+        }
     }
 
     override fun changeSelectData(isAdd: Boolean, item: MediaInfo?) {
@@ -98,7 +100,8 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
             }
             viewModel.selectData().value = viewModel.selectData().value;
         } else {
-            title.text = "已选中${viewModel.mediaSelectList.value?.size}项"
+            viewModel.mediaSelectList.value?.size?.let { setTitleTipInfo(it) }
+//            title.text = "已选中${viewModel.mediaSelectList.value?.size}项"
         }
     }
 }

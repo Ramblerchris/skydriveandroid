@@ -1,6 +1,7 @@
 package com.wisn.qm.ui.user
 
 import androidx.lifecycle.MutableLiveData
+import com.library.base.BaseApp
 import com.library.base.base.BaseViewModel
 import com.library.base.config.GlobalUser
 import com.library.base.event.Message
@@ -31,7 +32,11 @@ class UserViewModel : BaseViewModel() {
 
     fun singout() {
         launchGo({
-             ApiNetWork.newInstance().singout();
+             val singout = ApiNetWork.newInstance().singout()
+            singout
+        },complete = {
+            GlobalUser.clearToken()
+            BaseApp.app.loginEvent()
         })
     }
 

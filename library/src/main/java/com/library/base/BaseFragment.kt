@@ -56,11 +56,15 @@ abstract class BaseFragment<VM : BaseViewModel> : QMUIFragment() {
     }
     private var inputMethodManager: InputMethodManager? = null
 
-    open fun hideSoftInput(windowToken: IBinder?){
+    open fun hideSoftInput(windowToken: IBinder?,isShow:Boolean){
         if (inputMethodManager == null) {
             inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
         }
-        inputMethodManager?.hideSoftInputFromWindow(windowToken, 0)
+        if(isShow){
+            inputMethodManager?.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+        }else{
+            inputMethodManager?.hideSoftInputFromWindow(windowToken, 0)
+        }
     }
 
     override fun backViewInitOffset(context: Context?, dragDirection: Int, moveEdge: Int): Int {
