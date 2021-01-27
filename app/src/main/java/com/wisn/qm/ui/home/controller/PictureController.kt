@@ -56,9 +56,6 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
             showPictureControl(false)
         }
         gridLayoutManager = GridLayoutManager(context, 3)
-//        with(gridLayoutManager) {
-//            spanSizeLookup = SpanSizeLookup(mAdapter)
-//        }
         recyclerView = findViewById(R.id.recyclerView)
         swiperefresh = findViewById(R.id.swiperefresh)
         //设置进度View样式的大小，只有两个值DEFAULT和LARGE，表示默认和较大
@@ -70,13 +67,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
             layoutManager = gridLayoutManager
             adapter = mAdapter
         }
-        /* if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-             recyclerView?.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                 LogUtils.d(" PictureController "+scrollY+" "+oldScrollY)
-             }
-         }*/
         swiperefresh?.setOnRefreshListener(this)
-
         mAdapter.run {
             LogUtils.d(" PictureController .mAdapter.run ")
 

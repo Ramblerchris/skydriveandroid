@@ -2,22 +2,26 @@ package com.wisn.qm.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.*
-import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentContainerView
+import androidx.lifecycle.Observer
+import com.blankj.utilcode.util.LogUtils
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragmentActivity
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.arch.annotation.FirstFragments
 import com.qmuiteam.qmui.arch.annotation.LatestVisitRecord
+import com.qmuiteam.qmui.layout.QMUIButton
 import com.qmuiteam.qmui.skin.QMUISkinHelper
 import com.qmuiteam.qmui.skin.QMUISkinValueBuilder
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.util.QMUIViewOffsetHelper
-import com.qmuiteam.qmui.widget.QMUIRadiusImageView2
 import com.wisn.qm.R
+import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.ui.home.HomeFragment
 
 @FirstFragments(value = [HomeFragment::class])
@@ -25,22 +29,35 @@ import com.wisn.qm.ui.home.HomeFragment
 @LatestVisitRecord
 open class MainActivity : BaseFragmentActivity<MainViewModel>() {
     private val storagePermissions: Array<String> = arrayOf("android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_WIFI_STATE");
-
+    private lateinit var  customRootView: CustomRootView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(this, storagePermissions, 1)
         QMUIStatusBarHelper.setStatusBarLightMode(this)
+        LiveEventBus
+                .get(ConstantKey.uploadingInfo, String::class.java)
+                .observe(this, Observer {
+                    customRootView.globalBtn.visibility= View.VISIBLE
+                    customRootView.globalBtn.text = it
+                })
+        LiveEventBus
+                .get(ConstantKey.updatePhotoList, Int::class.java)
+                .observe(this, Observer {
+                    LogUtils.d("updatePhotoList")
+                    customRootView.globalBtn.visibility= View.GONE
+                })
     }
 
 
     override fun onCreateRootView(fragmentContainerId: Int): RootView {
-        return CustomRootView(this, fragmentContainerId)
+         customRootView=  CustomRootView(this, fragmentContainerId);
+        return customRootView
     }
 
 
     internal inner class CustomRootView(context: Context?, fragmentContainerId: Int) : RootView(context, fragmentContainerId) {
         private val fragmentContainer: FragmentContainerView
-        private val globalBtn: QMUIRadiusImageView2
+        val globalBtn: QMUIButton
         private val globalBtnOffsetHelper: QMUIViewOffsetHelper
         private val btnSize: Int
         private val touchSlop: Int
@@ -173,18 +190,22 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
             }
             addView(fragmentContainer, LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-            globalBtn = QMUIRadiusImageView2(context)
-            globalBtn.setImageResource(R.mipmap.ic_launcher)
-            globalBtn.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            globalBtn = QMUIButton(context)
+            globalBtn.setTextColor(resources.getColor(R.color.app_color_theme_1))
+            globalBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+//            globalBtn.setBackgroundResource(R.mipmap.ic_launcher)
+//            globalBtn.scaleType = ImageView.ScaleType.CENTER_INSIDE
+//            globalBtn.setRadiusAndShadow(btnSize / 2,
+//                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
+//            globalBtn.borderWidth = 1
+//            globalBtn.borderColor = QMUIResHelper.getAttrColor(context, R.attr.qmui_skin_support_color_separator)
             globalBtn.setRadiusAndShadow(btnSize / 2,
                     QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
-            globalBtn.borderWidth = 1
-            globalBtn.borderColor = QMUIResHelper.getAttrColor(context, R.attr.qmui_skin_support_color_separator)
             globalBtn.setBackgroundColor(QMUIResHelper.getAttrColor(context, R.attr.app_skin_common_background))
-            globalBtn.setOnClickListener {
-                //                    showGlobalActionPopup(v);
-            }
-            globalBtn.visibility= View.GONE
+//            globalBtn.setOnClickListener {
+//                //                    showGlobalActionPopup(v);
+//            }
+//            globalBtn.visibility= View.GONE
             val globalBtnLp = LayoutParams(btnSize, btnSize)
             globalBtnLp.gravity = Gravity.BOTTOM or Gravity.RIGHT
             globalBtnLp.bottomMargin = QMUIDisplayHelper.dp2px(context, 60)

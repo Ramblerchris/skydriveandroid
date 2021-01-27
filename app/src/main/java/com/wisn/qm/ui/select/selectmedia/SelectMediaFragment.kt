@@ -31,14 +31,14 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
         title = topbar?.setTitle("照片库")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        leftCancel = topbar?.addLeftTextButton("取消 ", R.id.topbar_right_add_button)!!
+        leftCancel = topbar?.addLeftTextButton("取消", R.id.topbar_right_add_button)!!
         leftCancel.setTextColor(Color.BLACK)
         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         leftCancel.visibility = View.VISIBLE
         leftCancel.setOnClickListener {
             popBackStack()
         }
-        rightButton = topbar?.addRightTextButton("确定 ", R.id.topbar_right_add_button)!!
+        rightButton = topbar?.addRightTextButton("确定", R.id.topbar_right_add_button)!!
         rightButton.setTextColor(Color.BLACK)
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {

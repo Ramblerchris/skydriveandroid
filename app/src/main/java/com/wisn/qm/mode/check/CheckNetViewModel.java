@@ -49,6 +49,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by Wisn on 2020/6/7 上午11:17.
  */
+@Deprecated
 public class CheckNetViewModel extends ViewModel {
     private MutableLiveData<String> result;
     private  BroadcastGroup client;

@@ -6,6 +6,7 @@ object ConstantKey {
     const val updatePhotoList: String = "updatePhotolist"
     const val updateDiskList: String = "updateDiskList"
     const val albuminfo: String = "albuminfo"
+    const val uploadingInfo: String = "uploadingInfo"
 
 
     //蒲公英key

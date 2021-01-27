@@ -29,6 +29,8 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
 //                val newInstance = AppDataBaseHelper.newInstance(Utils.getApp())
                 val uploadDataList = AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanListPreUpload(FileType.UPloadStatus_Noupload)
                 if (uploadDataList != null) {
+                    val size = uploadDataList.size
+                    var position = 0;
                     for (uploadbean in uploadDataList) {
                         LogUtils.d("0000doWork" + uploadbean.toString())
                         //如果sha1为null 先生成sha1
@@ -37,14 +39,18 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                                 SHAMD5Utils.getSHA1(uploadbean.filePath)
                             }
                         }
+                        position++
+                        LiveEventBus
+                                .get(ConstantKey.uploadingInfo)
+                                .post("上传中(${position}/${size})")
                         //先尝试秒传
                         val uploadFileHitpass = uploadbean.sha1?.let {
-                             ApiNetWork.newInstance().uploadFileHitpass(uploadbean.pid, uploadbean.sha1!!)
+                            ApiNetWork.newInstance().uploadFileHitpass(uploadbean.pid, uploadbean.sha1!!)
                         }
                         if (uploadFileHitpass != null) {
                             if (uploadFileHitpass.isUploadSuccess()) {
                                 //修改上传成功状态
-                                AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess,System.currentTimeMillis())
+                                AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
                                 AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_uploadSuccess)
                             } else {
                                 //秒传失败，要重新上传文件
@@ -53,14 +59,19 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                         } else {
                             uploadFile(uploadbean)
                         }
+                        if (position == size) {
+                            LiveEventBus
+                                    .get(ConstantKey.uploadingInfo)
+                                    .post("上传完成")
+                        }
                     }
                     LogUtils.d("0000doWork  LiveEventBus")
                     LiveEventBus
                             .get(ConstantKey.updatePhotoList)
-                            .postDelay(1, 1000);
+                            .postDelay(1, 1000)
                     LiveEventBus
                             .get(ConstantKey.updateAlbum)
-                            .post(1);
+                            .post(1)
                 }
             } catch (e: Exception) {
             }
@@ -74,9 +85,9 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
         var requestFile = RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
         val body = MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
 
-        val uploadFile =  ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
+        val uploadFile = ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
         if (uploadFile.isUploadSuccess()) {
-            AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess,System.currentTimeMillis())
+            AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
             LogUtils.d("0000doWork   " + uploadFile.data())
 
         }
