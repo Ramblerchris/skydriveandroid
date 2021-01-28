@@ -66,12 +66,14 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                         }
                     }
                     LogUtils.d("0000doWork  LiveEventBus")
-                    LiveEventBus
-                            .get(ConstantKey.updatePhotoList)
-                            .postDelay(1, 1000)
-                    LiveEventBus
-                            .get(ConstantKey.updateAlbum)
-                            .post(1)
+                    if (position > 0) {
+                        LiveEventBus
+                                .get(ConstantKey.updatePhotoList)
+                                .postDelay(1, 1000)
+                        LiveEventBus
+                                .get(ConstantKey.updateAlbum)
+                                .post(1)
+                    }
                 }
             } catch (e: Exception) {
             }

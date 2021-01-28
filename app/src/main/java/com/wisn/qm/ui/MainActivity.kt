@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragmentActivity
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
@@ -44,8 +45,10 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                 .get(ConstantKey.updatePhotoList, Int::class.java)
                 .observe(this, Observer {
                     LogUtils.d("updatePhotoList")
+                    VibrateUtils.vibrate(30)
                     customRootView.globalBtn.visibility= View.GONE
                 })
+        customRootView.globalBtn.visibility= View.GONE
     }
 
 

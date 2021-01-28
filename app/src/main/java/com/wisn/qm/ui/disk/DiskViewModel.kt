@@ -11,6 +11,7 @@ import com.wisn.qm.mode.db.beans.DiskUploadBean
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.net.ApiNetWork
 import com.wisn.qm.task.UploadTaskUitls
+import com.wisn.qm.ui.view.ViewPosition
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -23,6 +24,8 @@ class DiskViewModel : BaseViewModel() {
     var selectData = MutableLiveData<MutableList<UserDirBean>>()
     var currentpid: Long = -1
     var stack: Stack<Long> = Stack()
+    var currentViewPosition = MutableLiveData<ViewPosition>()
+    private var positionMap = HashMap<Long, ViewPosition>()
 
     fun selectData(): MutableLiveData<MutableList<UserDirBean>> {
         if (selectData.value == null) {
@@ -37,6 +40,11 @@ class DiskViewModel : BaseViewModel() {
             if (dirlist.isSuccess()) {
                 dirlistLD.value = dirlist.data.list
                 addPid(pid, isBack)
+                //更新当前位置
+                val get = positionMap.get(currentpid)
+                get?.let {
+                    currentViewPosition.value=get
+                }
             }
             dirlist
         })
@@ -109,7 +117,7 @@ class DiskViewModel : BaseViewModel() {
 
     fun deletefiles(pid: Long) {
         launchGo({
-            var sb = StringBuilder();
+            var sb = StringBuilder()
             result.forEachIndexed { index, s ->
                 if (index == (result.size - 1)) {
                     sb.append(s)
@@ -125,6 +133,9 @@ class DiskViewModel : BaseViewModel() {
         })
     }
 
+    fun setViewPosition(viewPosition: ViewPosition) {
+        positionMap.put(currentpid,viewPosition)
+    }
 
     fun saveFileBeanList(selectData: ArrayList<FileBean>) {
         LogUtils.d("saveMedianInfo", Thread.currentThread().name)

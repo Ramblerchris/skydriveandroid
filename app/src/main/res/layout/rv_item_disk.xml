@@ -5,7 +5,9 @@
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    style="@style/Widget.AppCompat.Button"
+    android:background="?android:attr/selectableItemBackground"
+    android:foreground="?android:attr/selectableItemBackground"
     android:gravity="center"
     android:orientation="vertical">
 

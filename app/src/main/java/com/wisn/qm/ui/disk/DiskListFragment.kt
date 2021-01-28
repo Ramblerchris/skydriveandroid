@@ -9,13 +9,13 @@ import android.view.View
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragment
 import com.library.base.config.Constant
-import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
@@ -24,9 +24,11 @@ import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.beans.FileBean
 import com.wisn.qm.mode.db.beans.UserDirBean
-import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.select.selectfile.SelectFileFragment
+import com.wisn.qm.ui.view.ViewPosition
 import kotlinx.android.synthetic.main.fragment_disklist.*
+import kotlinx.android.synthetic.main.fragment_disklist.recyclerView
+import kotlinx.android.synthetic.main.fragment_disklist.topbar
 import kotlinx.android.synthetic.main.item_empty.*
 
 /**
@@ -42,6 +44,9 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
     private val mAdapter by lazy { DiskAdapter(this, ArrayList()) }
     lateinit var linearLayoutManager: LinearLayoutManager
     var TAG = "DiskListFragment"
+
+    private var lastPosition = 0
+    private var lastOffset = 0
 
     override fun layoutId(): Int {
         return R.layout.fragment_disklist
@@ -72,6 +77,22 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
             this?.layoutManager = linearLayoutManager
             this?.adapter = mAdapter
         }
+
+        viewModel.currentViewPosition.observe(this, Observer {
+            linearLayoutManager.scrollToPositionWithOffset(it.lastPosition,it.lastOffset)
+        })
+        recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                try {
+                    val topView: View = linearLayoutManager.getChildAt(0)!! //获取可视的第一个view
+                    lastOffset = topView.top //获取与该view的顶部的偏移量
+                    lastPosition = linearLayoutManager.getPosition(topView) //得到该View的数组位置
+                } catch (e: Exception) {
+                }
+            }
+        })
+
         empty_tip.setText("云盘为空,快去添吧！")
         viewModel.getDiskDirlist(-1).observe(this, Observer {
             swiperefresh?.isRefreshing = false
@@ -157,6 +178,7 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
 
     override fun click(position: Int, fileBean: UserDirBean) {
         if (fileBean.type == Constant.TypeDir) {
+            viewModel.setViewPosition(ViewPosition(lastPosition,lastOffset))
             viewModel.getDiskDirlist(fileBean.id)
         }
     }

@@ -9,6 +9,7 @@ import com.wisn.qm.mode.DataRepository
 import com.wisn.qm.mode.beans.FileBean
 import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.MediaInfo
+import com.wisn.qm.ui.view.ViewPosition
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
@@ -20,6 +21,8 @@ class SelectFileViewModel : BaseViewModel() {
     var filelistdata = MutableLiveData<MutableList<FileBean>>()
     var mediaSelectList = MutableLiveData<ArrayList<MediaInfo>>()
     var currentFileName = MutableLiveData<String>()
+    var currentViewPosition = MutableLiveData<ViewPosition>()
+    private var positionMap = HashMap<String,ViewPosition>()
     private var currentFile: File? = null
     private var rootName: String? = null
 
@@ -32,7 +35,7 @@ class SelectFileViewModel : BaseViewModel() {
             launchFlow {
                 LogUtils.d("getMediaImageList3 ", Thread.currentThread().name)
                 val maxId = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoMaxId()
-                val mediaImageList:MutableList<MediaInfo>?
+                val mediaImageList: MutableList<MediaInfo>?
                 if (maxId != null && maxId > 0) {
                     val mediaImageListNew = DataRepository.getInstance().getMediaImageAndVideoList(maxId.toString())
                     mediaImageList = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoListAllNotDelete()
@@ -58,13 +61,13 @@ class SelectFileViewModel : BaseViewModel() {
                 }
                 selectList?.let {
                     selectIdList.clear()
-                    for( mediainfo in it){
+                    for (mediainfo in it) {
                         mediainfo.id?.let {
                             selectIdList.add(it)
                         }
                     }
                 }
-                var tempposition=0
+                var tempposition = 0
                 if (mediaImageList != null && selectList != null && selectList.size > 0) {
                     for (mediainfo in mediaImageList) {
                         if (selectIdList.contains(mediainfo.id)) {
@@ -73,9 +76,9 @@ class SelectFileViewModel : BaseViewModel() {
                             tempposition++
                         }
                         //优化，不必所有的都遍历完
-                       if(tempposition>=selectIdList.size){
-                           break
-                       }
+                        if (tempposition >= selectIdList.size) {
+                            break
+                        }
                     }
                 }
                 mediaImageList
@@ -92,6 +95,12 @@ class SelectFileViewModel : BaseViewModel() {
             mediaSelectList.value = ArrayList<MediaInfo>()
         }
         return mediaSelectList
+    }
+
+    fun setViewPosition(viewPosition: ViewPosition) {
+        if (currentFile != null) {
+            positionMap.put(currentFile!!.absolutePath,viewPosition)
+        }
     }
 
 
@@ -156,6 +165,13 @@ class SelectFileViewModel : BaseViewModel() {
             }.flowOn(Dispatchers.IO).collect {
                 LogUtils.d("getMediaImageList3 BBB", Thread.currentThread().name)
                 filelistdata.value = it
+                currentFile?.let {
+                    val get = positionMap.get(it.absolutePath)
+                    get?.let {
+                        currentViewPosition.value=get
+
+                    }
+                }
             }
         }
         return filelistdata

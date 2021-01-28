@@ -77,6 +77,7 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
             layoutManager = gridLayoutManager
         }
         newAlbumAdapter.setNewData(null)
+        et_albumName?.post {   hideSoftInput(et_albumName?.windowToken,true)  }
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Intent?) {
