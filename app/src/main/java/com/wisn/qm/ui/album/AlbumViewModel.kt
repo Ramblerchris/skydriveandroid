@@ -82,7 +82,7 @@ class AlbumViewModel : BaseViewModel() {
 
     fun getUserDirlist(pid: Long): MutableLiveData<MutableList<UserDirBean>> {
         launchGo({
-            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid)
+            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid,pageSize = -1)
             if (dirlist.isSuccess()) {
                 dirlistLD.value = dirlist.data.list
             }

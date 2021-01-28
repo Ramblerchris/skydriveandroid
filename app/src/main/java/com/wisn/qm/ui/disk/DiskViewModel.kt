@@ -29,14 +29,14 @@ class DiskViewModel : BaseViewModel() {
 
     fun selectData(): MutableLiveData<MutableList<UserDirBean>> {
         if (selectData.value == null) {
-            selectData.value = ArrayList<UserDirBean>()
+            selectData.value = ArrayList()
         }
         return selectData
     }
 
     fun getDiskDirlist(pid: Long, isBack: Boolean = false): MutableLiveData<MutableList<UserDirBean>> {
         launchGo({
-            val dirlist = ApiNetWork.newInstance().getDiskDirlist(pid)
+            val dirlist = ApiNetWork.newInstance().getDiskDirlist(pid,pageSize = -1)
             if (dirlist.isSuccess()) {
                 dirlistLD.value = dirlist.data.list
                 addPid(pid, isBack)
