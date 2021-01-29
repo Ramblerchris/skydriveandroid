@@ -124,7 +124,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
 //            mHomeControlListener.startFragmentByView(TestVideoPlayerFragment())
         } else if (v == tv_username) {
             val builder = EditTextDialogBuilder(context)
-            builder.setTitle("修改昵称")
+            val create = builder.setTitle("修改昵称")
                     .setSkinManager(QMUISkinManager.defaultInstance(context))
                     .setPlaceholder("在此输入您的昵称")
                     .setDefaultText(tv_username.getText())
@@ -137,7 +137,11 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                             mHomeViewModel.updateUserName(text.toString())
                         }
                     }
-                    .create(R.style.QMUI_Dialog).show()
+                    .create(R.style.QMUI_Dialog);
+            create.show()
+            create.setOnShowListener {
+                builder.editText.selectAll()
+            }
         } else if (v == iv_header) {
             val builder = QMUIBottomSheet.BottomListSheetBuilder(context)
             builder.setGravityCenter(true)

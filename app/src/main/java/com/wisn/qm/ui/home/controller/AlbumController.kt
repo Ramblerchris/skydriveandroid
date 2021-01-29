@@ -121,12 +121,18 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                             val text: CharSequence = builder.editText.text
                             if (!TextUtils.isEmpty(text)) {
                                 dialog.dismiss()
-                                mHomeViewModel.updateUserDirName(item.id,text.toString())
+                                mHomeViewModel.updateUserDirName(item.id, text.toString())
                             } else {
                                 ToastUtils.showShort("请输入相册名称")
                             }
                         }
-                        .create(R.style.QMUI_Dialog).show()
+
+                val create=builder.create(R.style.QMUI_Dialog)
+                create.setOnShowListener {
+                    builder.editText.selectAll()
+                }
+                create.show()
+
             } else if (position == 1) {
                 val item = mAdapter.getItem(index)
                 VibrateUtils.vibrate(10)
