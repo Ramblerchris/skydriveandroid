@@ -101,7 +101,7 @@ class AlbumViewModel : BaseViewModel() {
                     sb.append(s + ";")
                 }
             }
-            val dirlist = ApiNetWork.newInstance().deletefiles(pid, sb.toString())
+            val dirlist = ApiNetWork.newInstance().deleteUserfilesByPidAndSha1s(pid, sb.toString())
             if (dirlist.isSuccess()) {
                 getUserDirlist(pid);
             }

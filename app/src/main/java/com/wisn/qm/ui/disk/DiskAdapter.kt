@@ -20,10 +20,28 @@ class DiskAdapter(var clickItem: ClickItem, var data: MutableList<UserDirBean>) 
     }
 
     override fun onBindViewHolder(holder: SelectFileViewHolder, position: Int) {
-        val get = data.get(position)
-        holder.setData(get)
+        val fileBean = data.get(position)
+        holder.textView.setText(fileBean.filename)
+        holder.select.visibility = View.INVISIBLE
+
+        if (fileBean.type == Constant.TypeDir) {
+            holder.imageView.setImageResource(R.mipmap.icon_select_dir2)
+            holder.des.setText(fileBean.createattimestr)
+
+        } else {
+            holder.imageView.setImageResource(R.mipmap.icon_select_file2)
+            if (fileBean.size != null) {
+                holder.des.setText("${fileBean.createattimestr} ${FormatStrUtils.getFormatDiskSizeStr(fileBean.size!!.toLong())}")
+            } else {
+                holder.des.setText(fileBean.createattimestr)
+            }
+        }
         holder.itemView.setOnClickListener {
-            clickItem.click(position, get)
+            clickItem.click(position, fileBean)
+        }
+        holder.itemView.setOnLongClickListener {
+            clickItem.longclick(holder.textView, position, fileBean)
+            true
         }
     }
 
@@ -45,26 +63,9 @@ class SelectFileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var select: ImageView = itemView.findViewById(R.id.select)
     var textView: TextView = itemView.findViewById(R.id.textView)
     var des: TextView = itemView.findViewById(R.id.des)
-    fun setData(fileBean: UserDirBean) {
-        textView.setText(fileBean.filename)
-        select.visibility = View.INVISIBLE
-
-        if (fileBean.type == Constant.TypeDir) {
-            imageView.setImageResource(R.mipmap.icon_select_dir2)
-            des.setText(fileBean.createattimestr)
-
-        } else {
-            imageView.setImageResource(R.mipmap.icon_select_file2)
-            if(fileBean.size!=null){
-                des.setText("${fileBean.createattimestr} ${FormatStrUtils.getFormatDiskSizeStr(fileBean.size!!.toLong())}")
-            }else{
-                des.setText(fileBean.createattimestr)
-            }
-
-        }
-    }
 }
 
 interface ClickItem {
     fun click(position: Int, fileBean: UserDirBean)
+    fun longclick(view: View, position: Int, fileBean: UserDirBean)
 }

@@ -75,7 +75,7 @@ interface Api {
      *
      */
     @POST("/userfile/deletefiles")
-    suspend fun deletefiles(@Query("pid") pid: Long, @Query("sha1s") sha1s: String): BaseResult<Any>
+    suspend fun deleteUserfilesByPidAndSha1s(@Query("pid") pid: Long, @Query("sha1s") sha1s: String): BaseResult<Any>
 
     /**
      * 获取当前用户所有文件夹
@@ -101,6 +101,7 @@ interface Api {
      */
     @GET("/userfile/updateName")
     suspend fun updateUserDirName(@Query("id") id: Long,@Query("newfilename") sha1: String): BaseResult<String>
+
 
     /**
      * 获取每个目录的文件夹列表
@@ -152,7 +153,9 @@ interface Api {
      * 删除单个文件
      */
     @DELETE("/disk/delete")
-    suspend fun deleteDiskFile(@Query("filesha1") sha1: String): BaseResult<String>
+//    suspend fun deleteDiskFile(@Query("filesha1") sha1: String): BaseResult<String>
+    suspend fun deleteDiskFile(@Query("ids") ids: String): BaseResult<String>
+
 
     /**
      * 获取每个disk目录的文件夹列表
@@ -173,6 +176,13 @@ interface Api {
     @Multipart
     @POST("/disk/upload")
     suspend fun uploadDiskFile(@Part("sha1") sha1: String, @Part("pid") pid: Long, @Part("minetype") minetype: String,  @Part file: MultipartBody.Part): BaseResult<UserDirBean>
+
+
+    /**
+     * 修改单个文件夹名称
+     */
+    @GET("/disk/updateName")
+    suspend fun updateDiskDirName(@Query("id") id: Long,@Query("newfilename") sha1: String): BaseResult<String>
 
     /************************************分块上传******************************************/
     /**

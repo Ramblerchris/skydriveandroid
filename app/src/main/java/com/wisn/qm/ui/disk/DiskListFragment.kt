@@ -5,7 +5,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.InputType
+import android.text.TextUtils
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,13 +16,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragment
 import com.library.base.config.Constant
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.skin.QMUISkinManager
+import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
+import com.qmuiteam.qmui.widget.popup.QMUIPopup
+import com.qmuiteam.qmui.widget.popup.QMUIPopups
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.beans.FileBean
@@ -44,6 +51,7 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
     private val mAdapter by lazy { DiskAdapter(this, ArrayList()) }
     lateinit var linearLayoutManager: LinearLayoutManager
     var TAG = "DiskListFragment"
+    var mGlobalAction: QMUIPopup? =null
 
     private var lastPosition = 0
     private var lastOffset = 0
@@ -158,6 +166,72 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
                 }.build().show()
     }
 
+
+    override fun longclick(view :View,position: Int, item: UserDirBean) {
+        var tip=if (item.ftype==Constant.TypeDir) "文件夹" else "文件"
+        //todo 处理非文件夹
+        val datalist: java.util.ArrayList<String?> = java.util.ArrayList()
+        datalist.add("修改${tip}名称")
+        datalist.add("删除${tip}")
+        val adapter: ArrayAdapter<String?> = ArrayAdapter(requireContext(), R.layout.simple_list_item, datalist)
+        val onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, l ->
+            if (position == 0) {
+                val builder = QMUIDialog.EditTextDialogBuilder(requireContext())
+                builder.setTitle("修改${tip}名称")
+                        .setSkinManager(QMUISkinManager.defaultInstance(context))
+                        .setPlaceholder("在此输入${tip}名称")
+                        .setDefaultText(item.filename)
+                        .setInputType(InputType.TYPE_CLASS_TEXT)
+                        .addAction("取消") { dialog, index -> dialog.dismiss() }
+                        .addAction("确定") { dialog, index ->
+                            val text: CharSequence = builder.editText.text
+                            if (!TextUtils.isEmpty(text)) {
+                                dialog.dismiss()
+                                viewModel.updateUserDirName(item.id, text.toString())
+                            } else {
+                                ToastUtils.showShort("请输入${tip}名称")
+                            }
+                        }
+                val create=builder.create(R.style.QMUI_Dialog)
+                builder.editText.selectAll()
+                create.show()
+
+            } else if (position == 1) {
+                VibrateUtils.vibrate(10)
+                QMUIDialog.MessageDialogBuilder(context)
+                        .setTitle("删除${tip}")
+                        .setSkinManager(QMUISkinManager.defaultInstance(context))
+                        .setMessage("确定要删除 ${item.filename} ${tip}吗?")
+                        .addAction("取消") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .addAction("确定") { dialog, _ ->
+                            dialog.dismiss()
+                            viewModel.deleteDirs(item.id.toString()).observe(this, Observer {
+                                if (it) {
+                                    viewModel.refresh()
+                                }
+                            })
+                        }
+                        .create(R.style.QMUI_Dialog).show()
+            }
+            mGlobalAction?.dismiss()
+        }
+        mGlobalAction = QMUIPopups.listPopup(context,
+                QMUIDisplayHelper.dp2px(context, 250),
+                QMUIDisplayHelper.dp2px(context, 300),
+                adapter,
+                onItemClickListener)
+                .animStyle(QMUIPopup.ANIM_GROW_FROM_CENTER)
+                .preferredDirection(QMUIPopup.DIRECTION_TOP)
+                .shadow(true)
+                .dimAmount(0.3f)
+                .edgeProtection(QMUIDisplayHelper.dp2px(context, 10))
+                .offsetYIfTop(QMUIDisplayHelper.dp2px(context, 5))
+                .skinManager(QMUISkinManager.defaultInstance(context))
+                .show(view)
+    }
+
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onFragmentResult(requestCode, resultCode, data)
         try {
@@ -182,6 +256,7 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
             viewModel.getDiskDirlist(fileBean.id)
         }
     }
+
 
     override fun onRefresh() {
         viewModel.refresh()

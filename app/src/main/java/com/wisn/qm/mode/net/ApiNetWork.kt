@@ -92,8 +92,8 @@ class ApiNetWork {
     }
 
 
-    suspend fun deletefiles(pid: Long, sha1s: String): BaseResult<Any> {
-        return getServie().deletefiles(pid, sha1s)
+    suspend fun deleteUserfilesByPidAndSha1s(pid: Long, sha1s: String): BaseResult<Any> {
+        return getServie().deleteUserfilesByPidAndSha1s(pid, sha1s)
     }
 
     /**
@@ -122,37 +122,37 @@ class ApiNetWork {
     /**
      * 每个目录的文件夹列表
      */
-    suspend fun getUserDirlist(pid: Long,  pageSize:Long? =20,lastId: Long? =-1): BaseResult<PageBean<MutableList<UserDirBean>>> {
-        return getServie().getUserDirlist(pid,pageSize,lastId)
+    suspend fun getUserDirlist(pid: Long, pageSize: Long? = 20, lastId: Long? = -1): BaseResult<PageBean<MutableList<UserDirBean>>> {
+        return getServie().getUserDirlist(pid, pageSize, lastId)
     }
 
 
     /**
      * 添加文件夹
      */
-    suspend fun addUserDir( pid: Long,  filename: String): BaseResult<UserDirBean> {
+    suspend fun addUserDir(pid: Long, filename: String): BaseResult<UserDirBean> {
         return getServie().addUserDir(pid, filename)
     }
 
     /**
      * 初始化分块上传
      */
-    suspend fun initMultipartInfo(pid: Long,  filename: String,
-                                   filesize: Long,sha1: String): BaseResult<MultiPartInfo> {
+    suspend fun initMultipartInfo(pid: Long, filename: String,
+                                  filesize: Long, sha1: String): BaseResult<MultiPartInfo> {
         return getServie().initMultipartInfo(pid, filename, filesize, sha1)
     }
 
     /**
      * 通知分块上传完成
      */
-    suspend fun finishMultipartInfo( uploadId: String, sha1: String): BaseResult<MultiPartInfo> {
+    suspend fun finishMultipartInfo(uploadId: String, sha1: String): BaseResult<MultiPartInfo> {
         return getServie().finishMultipartInfo(uploadId, sha1)
     }
 
     /**
      * 分块上传
      */
-    suspend fun uploadMultipartInfo( pid: Long, uploadId: String, chunkindex: Int): BaseResult<MultiPartInfo> {
+    suspend fun uploadMultipartInfo(pid: Long, uploadId: String, chunkindex: Int): BaseResult<MultiPartInfo> {
         return getServie().uploadMultipartInfo(pid, uploadId, chunkindex)
     }
 
@@ -179,10 +179,10 @@ class ApiNetWork {
     }
 
     /**
-     * 删除单个文件
+     * 删除文件列表
      */
-    suspend fun deleteDiskFile(sha1: String): BaseResult<String> {
-        return getServie().deleteDiskFile(sha1)
+    suspend fun deleteDiskFile(@Query("ids") ids: String): BaseResult<String>{
+        return getServie().deleteDiskFile(ids)
     }
 
     /**
@@ -202,13 +202,17 @@ class ApiNetWork {
     /**
      * 修改文件夹名称
      */
-    suspend fun updateUserDirName(@Query("id") id: Long,@Query("newfilename") newfilename: String): BaseResult<String>{
+    suspend fun updateUserDirName(id: Long, newfilename: String): BaseResult<String> {
         return getServie().updateUserDirName(id, newfilename)
     }
 
+    suspend fun updateDiskDirName(id: Long, newfilename: String): BaseResult<String> {
+        return getServie().updateDiskDirName(id, newfilename)
+    }
 
-    suspend fun uploadDiskFile( sha1: String, pid: Long,  minetype: String,  file: MultipartBody.Part): BaseResult<UserDirBean>{
-        return getServie().uploadDiskFile(sha1,pid,minetype,file)
+
+    suspend fun uploadDiskFile(sha1: String, pid: Long, minetype: String, file: MultipartBody.Part): BaseResult<UserDirBean> {
+        return getServie().uploadDiskFile(sha1, pid, minetype, file)
     }
 
 

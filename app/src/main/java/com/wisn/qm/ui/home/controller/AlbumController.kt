@@ -110,7 +110,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
         val onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, l ->
             if (position == 0) {
                 val item = mAdapter.getItem(index)
-                val builder = QMUIDialog.EditTextDialogBuilder(context)
+                val builder = QMUIDialog.EditTextDialogBuilder(context.applicationContext)
                 builder.setTitle("修改相册名称")
                         .setSkinManager(QMUISkinManager.defaultInstance(context))
                         .setPlaceholder("在此输入相册名称")
@@ -126,11 +126,8 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                                 ToastUtils.showShort("请输入相册名称")
                             }
                         }
-
                 val create=builder.create(R.style.QMUI_Dialog)
-                create.setOnShowListener {
-                    builder.editText.selectAll()
-                }
+                builder.editText.selectAll()
                 create.show()
 
             } else if (position == 1) {

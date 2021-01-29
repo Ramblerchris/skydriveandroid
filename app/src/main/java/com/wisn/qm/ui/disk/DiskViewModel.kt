@@ -26,6 +26,8 @@ class DiskViewModel : BaseViewModel() {
     var stack: Stack<Long> = Stack()
     var currentViewPosition = MutableLiveData<ViewPosition>()
     private var positionMap = HashMap<Long, ViewPosition>()
+    var deleteDirs = MutableLiveData<Boolean>()
+
 
     fun selectData(): MutableLiveData<MutableList<UserDirBean>> {
         if (selectData.value == null) {
@@ -49,6 +51,17 @@ class DiskViewModel : BaseViewModel() {
             dirlist
         })
         return dirlistLD
+    }
+
+
+    fun updateUserDirName(id: Long, username: String) {
+        launchGo({
+            val updateDirName = ApiNetWork.newInstance().updateDiskDirName(id, username)
+            if (updateDirName.isSuccess()) {
+                refresh()
+            }
+            updateDirName
+        })
     }
 
     private fun addPid(pid: Long, isBack: Boolean = false) {
@@ -115,6 +128,20 @@ class DiskViewModel : BaseViewModel() {
     }
 
 
+    fun deleteDirs(ids: String): MutableLiveData<Boolean> {
+        launchGo({
+            val deleteDirss = ApiNetWork.newInstance().deleteDiskFile(ids)
+            if (deleteDirss.isSuccess()) {
+                deleteDirs.value = true
+            }
+            deleteDirss
+        }, {
+
+        })
+        return deleteDirs
+    }
+
+
     fun deletefiles(pid: Long) {
         launchGo({
             var sb = StringBuilder()
@@ -125,7 +152,7 @@ class DiskViewModel : BaseViewModel() {
                     sb.append(s + ";")
                 }
             }
-            val dirlist = ApiNetWork.newInstance().deletefiles(pid, sb.toString())
+            val dirlist = ApiNetWork.newInstance().deleteUserfilesByPidAndSha1s(pid, sb.toString())
             if (dirlist.isSuccess()) {
                 getDiskDirlist(pid)
             }

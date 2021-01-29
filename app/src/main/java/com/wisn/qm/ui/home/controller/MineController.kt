@@ -88,9 +88,9 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                 .setLeftIconSize(QMUIDisplayHelper.dp2px(context, 18), ViewGroup.LayoutParams.WRAP_CONTENT)
                 .addItemView(setting, this)
                 .addItemView(uploadlist, this)
+                .addItemView(pan, this)
                 .addItemView(collection, this)
                 .addItemView(delete, this)
-                .addItemView(pan, this)
                 .addItemView(localvideo, this)
 //                .setShowSeparator(false)
                 .setOnlyShowMiddleSeparator(true)
@@ -137,11 +137,10 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                             mHomeViewModel.updateUserName(text.toString())
                         }
                     }
-                    .create(R.style.QMUI_Dialog);
+                    .create(R.style.QMUI_Dialog)
+            builder.editText.selectAll()
             create.show()
-            create.setOnShowListener {
-                builder.editText.selectAll()
-            }
+
         } else if (v == iv_header) {
             val builder = QMUIBottomSheet.BottomListSheetBuilder(context)
             builder.setGravityCenter(true)
