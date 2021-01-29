@@ -96,6 +96,11 @@ interface Api {
     @POST("/userfile/hitpass")
     suspend fun uploadFileHitpass(@Query("pid") pid: Long, @Query("sha1") sha1: String): BaseResult<UserDirBean>
 
+    /**
+     * 修改单个文件夹名称
+     */
+    @GET("/userfile/updateName")
+    suspend fun updateUserDirName(@Query("id") id: Long,@Query("newfilename") sha1: String): BaseResult<String>
 
     /**
      * 获取每个目录的文件夹列表

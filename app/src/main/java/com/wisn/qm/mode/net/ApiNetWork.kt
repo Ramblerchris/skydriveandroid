@@ -199,6 +199,14 @@ class ApiNetWork {
         return getServie().addDiskDir(pid, filename)
     }
 
+    /**
+     * 修改文件夹名称
+     */
+    suspend fun updateUserDirName(@Query("id") id: Long,@Query("newfilename") newfilename: String): BaseResult<String>{
+        return getServie().updateUserDirName(id, newfilename)
+    }
+
+
     suspend fun uploadDiskFile( sha1: String, pid: Long,  minetype: String,  file: MultipartBody.Part): BaseResult<UserDirBean>{
         return getServie().uploadDiskFile(sha1,pid,minetype,file)
     }

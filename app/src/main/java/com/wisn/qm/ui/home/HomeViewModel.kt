@@ -29,6 +29,8 @@ import okhttp3.RequestBody
 import java.io.File
 
 class HomeViewModel : BaseViewModel() {
+    private val titleStr = "照片"
+
 
     //    var listdata = MutableLiveData<MutableList<MediaInfo>>()
     var selectData = MutableLiveData<MutableList<MediaInfo>>()
@@ -38,60 +40,26 @@ class HomeViewModel : BaseViewModel() {
     var userBean = MutableLiveData<UserBean>()
     var deleteDirs = MutableLiveData<Boolean>()
     var UpdateData = MutableLiveData<Update>()
+    var titleShow = MutableLiveData<String>()
 
-    /* fun getMediaImageList(): MutableLiveData<MutableList<MediaInfo>> {
-         LogUtils.d("getMediaImageList1", Thread.currentThread().name)
-         launchUI {
-             LogUtils.d("getMediaImageList2", Thread.currentThread().name)
-             launchFlow {
-                 LogUtils.d("getMediaImageList3", Thread.currentThread().name)
-                 try {
-                      ApiNetWork.newInstance().getAllSha1sByUser()
-                 } catch (e: Exception) {
-                     e.printStackTrace()
-                     null
-                 }
-
-             }.flatMapConcat {
-                 LogUtils.d("getMediaImageList7", Thread.currentThread().name)
-
-                 val mediaImageList = LocalFileRepository.getInstance().getMediaImageList()
- //                return@flatMapConcat
-                 //子线程
-                 it?.let {
-                     if (it.isSuccess()) {
-                         val data = it.data;
-                         for (mediainfo in mediaImageList) {
-                             val contains = data.contains(mediainfo.sha1)
-                             if (contains) {
-                                 mediainfo.uploadStatus = FileType.UPloadStatus_uploadSuccess
-                             }
-                         }
-
-                     }
-                 }
-                 launchFlow { mediaImageList }
-
-             }
-                     .onStart {
-                         //子线程
-                         LogUtils.d("getMediaImageList4", Thread.currentThread().name)
-
-                     }
-                     .flowOn(Dispatchers.IO)
-                     .onCompletion {
-                         //Main线程
-                         LogUtils.d("getMediaImageList5", Thread.currentThread().name)
-
-                     }
-                     .collect {
-                         LogUtils.d("getMediaImageList6", Thread.currentThread().name)
-                         //Main线程
-                         listdata.value = it
-                     }
-         }
-         return listdata
-     }*/
+    fun changeSelectData(isinit: Boolean, isSelectModel: Boolean, isAdd: Boolean, item: MediaInfo?) {
+        if (isinit) {
+            selectData.value?.clear();
+        }
+        if (isSelectModel) {
+            if (item != null) {
+                if (isAdd) {
+                    selectData.value?.add(item)
+                } else {
+                    selectData.value?.remove(item)
+                }
+                selectData.value = selectData.value
+            }
+            titleShow.value = "已选中${selectData.value ?: 0}项"
+        } else {
+            titleShow.value = titleStr
+        }
+    }
 
     fun getUserDirlist(): MutableLiveData<MutableList<UserDirBean>> {
         launchGoLo({
@@ -110,10 +78,10 @@ class HomeViewModel : BaseViewModel() {
         launchGoLo({
             val result = DataRepository.getInstance().apiNetWork.checkUpdate(BuildConfig.VERSION_NAME, "")
             if (result != null && result.data != null) {
-                if (result.data.buildHaveNewVersion && !result.data.downloadURL.isNullOrEmpty() && !result.data.buildBuildVersion.isNullOrEmpty()){
+                if (result.data.buildHaveNewVersion && !result.data.downloadURL.isNullOrEmpty() && !result.data.buildBuildVersion.isNullOrEmpty()) {
                     val toInt = result.data.buildVersionNo?.toInt()
                     toInt?.let {
-                        if(toInt>BuildConfig.VERSION_CODE){
+                        if (toInt > BuildConfig.VERSION_CODE) {
                             UpdateData.value = result.data
                         }
                     }
@@ -185,6 +153,16 @@ class HomeViewModel : BaseViewModel() {
             dirlist
         })
         return usernameData
+    }
+
+    fun updateUserDirName(id: Long, username: String) {
+        launchGo({
+            val updateDirName = ApiNetWork.newInstance().updateUserDirName(id, username)
+            if (updateDirName.isSuccess()) {
+                getUserDirlist()
+            }
+            updateDirName
+        })
     }
 
     fun selectData(): MutableLiveData<MutableList<MediaInfo>> {

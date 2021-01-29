@@ -1,10 +1,8 @@
 package com.wisn.qm.ui.home.controller
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +11,6 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.ImageUtils
-import com.blankj.utilcode.util.PathUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -29,8 +24,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.wisn.qm.R
-import com.wisn.qm.mode.ConstantKey
-import com.wisn.qm.ui.album.details.AlbumDetailsFragment
 import com.wisn.qm.ui.disk.DiskListFragment
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
@@ -38,8 +31,6 @@ import com.wisn.qm.ui.select.selectfile.SelectFileFragment
 import com.wisn.qm.ui.upload.UploadListFragment
 import com.wisn.qm.ui.user.SettingFragment
 import com.wisn.qm.ui.user.UserInfoFragment
-import com.wisn.qm.ui.video.TestVideoPlayerFragment
-import java.io.File
 
 /**
  * Created by Wisn on 2020/6/5 下午11:25.
@@ -136,6 +127,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
             builder.setTitle("修改昵称")
                     .setSkinManager(QMUISkinManager.defaultInstance(context))
                     .setPlaceholder("在此输入您的昵称")
+                    .setDefaultText(tv_username.getText())
                     .setInputType(InputType.TYPE_CLASS_TEXT)
                     .addAction("取消") { dialog, index -> dialog.dismiss() }
                     .addAction("确定") { dialog, index ->

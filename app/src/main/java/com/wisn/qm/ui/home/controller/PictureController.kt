@@ -68,7 +68,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
             adapter = mAdapter
         }
         swiperefresh?.setOnRefreshListener(this)
-        mAdapter.run {
+       /* mAdapter.run {
             LogUtils.d(" PictureController .mAdapter.run ")
 
             mHomeViewModel.selectData().observe(mHomeFragment, Observer {
@@ -77,7 +77,10 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
                     title.text = "已选中${it?.size}项"
                 }
             })
-        }
+        }*/
+        mHomeViewModel.titleShow.observe(mHomeFragment, Observer {
+            title.text = it
+        })
         LiveEventBus
                 .get(ConstantKey.updateHomeMedialist, MutableList::class.java)
                 .observe(mHomeFragment!!, Observer {
@@ -119,23 +122,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
     }
 
     override fun changeSelectData(isinit: Boolean, isSelectModel: Boolean, isAdd: Boolean, item: MediaInfo?) {
-        if (isinit) {
-            mHomeViewModel.selectData().value?.clear();
-        }
-        if (isSelectModel) {
-            if (item != null) {
-                if (isAdd) {
-                    mHomeViewModel.selectData().value?.add(item)
-                } else {
-                    mHomeViewModel.selectData().value?.remove(item)
-                }
-                mHomeViewModel.selectData().value = mHomeViewModel.selectData().value;
-            } else {
-                title.text = "已选中${mHomeViewModel.selectData.value?.size ?: 0}项"
-            }
-        } else {
-            title.text = titleStr
-        }
+        mHomeViewModel.changeSelectData(isinit,isSelectModel,isAdd,item)
     }
 
     override fun getHomeFragment(): HomeFragment {

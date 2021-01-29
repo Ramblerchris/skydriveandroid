@@ -122,7 +122,6 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
             if (isShowEdit) {
                 title.text = "已选中${it?.size}项"
             }
-
         })
         LiveEventBus
                 .get(ConstantKey.updatePhotoList, Int::class.java)
