@@ -152,8 +152,7 @@ interface Api {
     /**
      * 删除单个文件
      */
-    @DELETE("/disk/delete")
-//    suspend fun deleteDiskFile(@Query("filesha1") sha1: String): BaseResult<String>
+    @POST("/disk/delete")
     suspend fun deleteDiskFile(@Query("ids") ids: String): BaseResult<String>
 
 
