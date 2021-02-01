@@ -19,7 +19,7 @@ class NetPreviewVideoViewHolder(var context: Context, var view: View, var previe
 
     override fun loadVideo(position: Int, mediainfo: UserDirBean) {
         mediainfo.sha1?.let {
-            GlideUtils.loadUrl(Constant.getImageUrl(it)!!, preview.thumb!!)
+            GlideUtils.loadUrlNoOP(Constant.getImageUrl(it)!!, preview.thumb!!)
         }
         this.pos = position
         view.tag = this

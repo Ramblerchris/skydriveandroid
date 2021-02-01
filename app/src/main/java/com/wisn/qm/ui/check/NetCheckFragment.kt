@@ -49,7 +49,6 @@ class NetCheckFragment : BaseFragment<NetCheckViewModel>() {
         super.initView(views)
         initTopBar()
         select_ok?.onClick {
-//            viewModel.checkNet()
             LogUtils.d("getNetinfo 222", Thread.currentThread().name)
             val sp1 = spinner1?.selectedItem.toString()
             val sp2 = spinner2?.selectedItem.toString()

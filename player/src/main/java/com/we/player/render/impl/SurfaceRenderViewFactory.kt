@@ -3,7 +3,6 @@ package com.we.player.render.impl
 import android.content.Context
 import com.we.player.render.RenderViewFactory
 import com.we.player.render.SurfaceRenderView
-import com.we.player.render.TextureRenderView
 
 /**
  *

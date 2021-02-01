@@ -7,7 +7,7 @@ import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.we.player.controller.component.TitleControlView
 import com.we.player.controller.controller.StandardController
-import com.we.player.player.exo.ExoPlayerFactory
+import com.we.playerexo.ExoPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.wisn.qm.R

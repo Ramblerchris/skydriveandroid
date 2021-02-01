@@ -11,7 +11,7 @@ import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.config.Constant
-import com.we.player.player.exo.ExoPlayerFactory
+import com.we.playerexo.ExoPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.wisn.qm.R

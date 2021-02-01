@@ -40,7 +40,7 @@ class NetPreviewImageViewHolder(var context: Context, view: View, var previewCal
 
     override fun loadImage(position: Int, mediainfo: UserDirBean) {
         mediainfo.sha1?.let {
-            GlideUtils.loadUrl(Constant.getImageUrl(it)!!, gif_view)
+            GlideUtils.loadUrlNoOP(Constant.getImageUrl(it)!!, gif_view)
             iv_image.visibility = View.GONE
             gif_view.visibility = View.VISIBLE
         }

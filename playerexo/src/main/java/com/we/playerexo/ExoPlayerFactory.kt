@@ -1,4 +1,4 @@
-package com.we.player.player.exo
+package com.we.playerexo
 
 import android.app.Application
 import com.we.player.player.PlayerFactory

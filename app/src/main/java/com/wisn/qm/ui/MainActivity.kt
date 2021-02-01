@@ -46,7 +46,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                 .get(ConstantKey.updatePhotoList, Int::class.java)
                 .observe(this, Observer {
                     LogUtils.d("updatePhotoList")
-                    UploadTip.tipVibrate()
+                    UploadTip.tipVibrate(60)
                     customRootView.globalBtn.visibility= View.GONE
                 })
         customRootView.globalBtn.visibility= View.GONE

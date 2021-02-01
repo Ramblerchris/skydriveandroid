@@ -198,37 +198,6 @@ class MediaInfoScanHelper {
     }
 
 
-    fun getTimeDurationStr(duration: Long): String? {
-        try {
-            val sb = StringBuffer()
-            val l = duration / 1000 //计算奔视频有多少秒
-            val hour = l / 3600 //计算有多少个小时
-            val min = (l - hour * 3600) / 60 //计算有多少分钟
-            val sec = l % 60 //计算有多少秒
-            if (hour != 0L) {
-                if (hour < 10) {
-                    sb.append("0$hour:")
-                } else {
-                    sb.append("$hour:")
-                }
-            }
-            if (min < 10) {
-                sb.append("0$min:")
-            } else {
-                sb.append("$min:")
-            }
-            if (sec < 10) {
-                sb.append("0$sec")
-            } else {
-                sb.append(sec)
-            }
-            return sb.toString()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-        return null
-    }
-
     companion object {
         private var mediaInfo: MediaInfoScanHelper? = null
         fun newInstance() = mediaInfo ?: synchronized(this) {

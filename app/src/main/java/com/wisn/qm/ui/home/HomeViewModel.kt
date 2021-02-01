@@ -58,7 +58,7 @@ class HomeViewModel : BaseViewModel() {
                 }
                 selectData.value = selectData.value
             }
-            titleShow.value = "已选中${selectData.value ?: 0}项"
+            titleShow.value = "已选中${selectData.value?.size ?: 0}项"
         } else {
             titleShow.value = titleStr
         }

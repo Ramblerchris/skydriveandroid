@@ -8,7 +8,7 @@
             name="AlbumController"
             type="com.wisn.qm.ui.home.controller.AlbumController" />
     </data>
-    <com.library.base.views.QMUIRoundConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.qmuiteam.qmui.alpha.QMUIAlphaConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rootview"
         android:layout_width="match_parent"
@@ -68,5 +68,5 @@
             app:layout_constraintTop_toBottomOf="@+id/name"
             app:layout_constraintVertical_chainStyle="packed" />
 
-    </com.library.base.views.QMUIRoundConstraintLayout>
+    </com.qmuiteam.qmui.alpha.QMUIAlphaConstraintLayout>
 </layout>
