@@ -123,6 +123,9 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
                 title.text = "已选中${it?.size}项"
             }
         })
+        viewModel.defUi.refresh.observe(viewLifecycleOwner, Observer {
+            albumPictureAdapter.refresh()
+        })
         LiveEventBus
                 .get(ConstantKey.updatePhotoList, Int::class.java)
                 .observe(this, Observer {

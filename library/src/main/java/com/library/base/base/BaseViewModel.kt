@@ -32,7 +32,7 @@ open class BaseViewModel : AndroidViewModel(Utils.getApp()), LifecycleObserver {
             complete: suspend CoroutineScope.() -> Unit = {},
             isShowDialog: Boolean = true
     ) {
-        if (isShowDialog) defUi.disDialog.call()
+        if (isShowDialog) defUi.showDialog.call()
         launchUI {
             coroutineScope {
                 try {
@@ -47,6 +47,7 @@ open class BaseViewModel : AndroidViewModel(Utils.getApp()), LifecycleObserver {
                 } catch (e: Throwable) {
                     error(ExceptionHandle.handleException(e))
                 } finally {
+                    if (isShowDialog) defUi.disDialog.call()
                     complete()
                 }
             }
@@ -61,7 +62,7 @@ open class BaseViewModel : AndroidViewModel(Utils.getApp()), LifecycleObserver {
             complete: suspend CoroutineScope.() -> Unit = {},
             isShowDialog: Boolean = true
     ) {
-        if (isShowDialog) defUi.disDialog.call()
+        if (isShowDialog) defUi.showDialog.call()
         launchUI {
             coroutineScope {
                 try {
@@ -113,6 +114,7 @@ open class BaseViewModel : AndroidViewModel(Utils.getApp()), LifecycleObserver {
         val disDialog by lazy { SingleLiveEvent<Void>() }
         val toastEvent by lazy { SingleLiveEvent<String>() }
         val msgEvent by lazy { SingleLiveEvent<Message>() }
+        val refresh by lazy { SingleLiveEvent<Void>() }
     }
 
 }

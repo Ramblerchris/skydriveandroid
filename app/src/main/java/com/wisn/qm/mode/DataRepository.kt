@@ -5,6 +5,8 @@ import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.file.MediaInfoScanHelper
 import com.wisn.qm.mode.net.ApiNetWork
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.lang.Exception
 
 class DataRepository private constructor(val apiNetWork: ApiNetWork, val appDataBase: AppDataBase, val mediaInfohelper: MediaInfoScanHelper) {
@@ -15,7 +17,7 @@ class DataRepository private constructor(val apiNetWork: ApiNetWork, val appData
     }
 
     suspend fun getMediaImageAndVideoList(maxid: String): MutableList<MediaInfo>? {
-        val mediaImageList = mediaInfohelper.getMediaImageList(maxid)
+       /* val mediaImageList = mediaInfohelper.getMediaImageList(maxid)
         val mediaVideoList = mediaInfohelper.getMediaVideoList(maxid)
         if (mediaImageList.isNotEmpty()) {
             mediaImageList.addAll(mediaVideoList)
@@ -23,8 +25,13 @@ class DataRepository private constructor(val apiNetWork: ApiNetWork, val appData
         } else if (mediaVideoList.isNotEmpty()) {
             mediaVideoList.addAll(mediaImageList)
             return mediaVideoList
-        }
-        return null
+        }*/
+        //async是不阻塞线程的
+        val mediaImageList =GlobalScope.async { mediaInfohelper.getMediaImageList(maxid) }
+        val mediaVideoList = GlobalScope.async {mediaInfohelper.getMediaVideoList(maxid)}
+        val await = mediaImageList.await();
+        await.addAll(mediaVideoList.await())
+        return await
     }
 
     suspend fun getUserDirlist(isUserCache: Boolean): MutableList<UserDirBean>? {
