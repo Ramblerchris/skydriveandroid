@@ -11,9 +11,9 @@ import com.library.base.config.GlobalConfig
  */
 object UploadTip {
 
-    fun tipVibrate() {
+    fun tipVibrate(milliseconds:Long=30) {
         if (GlobalConfig.tipVibrate) {
-            VibrateUtils.vibrate(30)
+            VibrateUtils.vibrate(milliseconds)
         }
     }
 

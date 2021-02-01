@@ -29,6 +29,8 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
             try {
                 val uploadDataList = AppDataBase.getInstanse().diskUploadBeanDao?.getDiskUploadBeanListPreUpload(FileType.UPloadStatus_Noupload)
                 if (uploadDataList != null) {
+                    val size = uploadDataList.size
+                    var position = 0
                     for (diskUploadbean in uploadDataList) {
                         LogUtils.d("0000doWork" + diskUploadbean.toString())
                         //如果sha1为null 先生成sha1
@@ -40,6 +42,10 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
                                 AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanSha1(diskUploadbean.id,it)
                             }
                         }
+                        position++
+                        LiveEventBus
+                                .get(ConstantKey.uploadingInfo)
+                                .post("上传中(${position}/${size})")
                         //先尝试秒传
                         val uploadFileHitpass = diskUploadbean.sha1?.let {
                             ApiNetWork.newInstance().uploadDiskFileHitpass(diskUploadbean.pid, diskUploadbean.sha1!!)
@@ -57,8 +63,13 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
                         }
                         UploadTip.tipRing()
                         UploadTip.tipVibrate()
+                        if (position == size) {
+                            LiveEventBus
+                                    .get(ConstantKey.uploadingInfo)
+                                    .post("上传完成")
+                        }
                     }
-                    LogUtils.d("0000doWork  LiveEventBus")
+//                    LogUtils.d("0000doWork  LiveEventBus")
 //                    LiveEventBus
 //                            .get(ConstantKey.updateDiskList)
 //                            .postDelay(1, 1000);

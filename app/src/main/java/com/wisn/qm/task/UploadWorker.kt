@@ -68,7 +68,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                                     .post("上传完成")
                         }
                     }
-                    LogUtils.d("0000doWork  LiveEventBus")
+//                    LogUtils.d("0000doWork  LiveEventBus")
                     if (position > 0) {
                         LiveEventBus
                                 .get(ConstantKey.updatePhotoList)

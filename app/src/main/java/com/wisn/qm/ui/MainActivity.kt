@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragmentActivity
+import com.library.base.utils.UploadTip
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.arch.annotation.FirstFragments
 import com.qmuiteam.qmui.arch.annotation.LatestVisitRecord
@@ -45,7 +46,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                 .get(ConstantKey.updatePhotoList, Int::class.java)
                 .observe(this, Observer {
                     LogUtils.d("updatePhotoList")
-                    VibrateUtils.vibrate(30)
+                    UploadTip.tipVibrate()
                     customRootView.globalBtn.visibility= View.GONE
                 })
         customRootView.globalBtn.visibility= View.GONE
