@@ -43,6 +43,9 @@ class HomeViewModel : BaseViewModel() {
     var titleShow = MutableLiveData<String>()
 
     fun changeSelectData(isinit: Boolean, isSelectModel: Boolean, isAdd: Boolean, item: MediaInfo?) {
+        if (selectData.value == null) {
+            selectData.value = ArrayList<MediaInfo>()
+        }
         if (isinit) {
             selectData.value?.clear();
         }

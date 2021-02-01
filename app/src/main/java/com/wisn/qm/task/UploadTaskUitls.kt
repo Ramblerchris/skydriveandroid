@@ -2,22 +2,28 @@ package com.wisn.qm.task
 
 import android.content.Context
 import androidx.work.*
+import com.library.base.config.GlobalConfig
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UploadBean
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 object UploadTaskUitls {
-    val constraints: Constraints by lazy {
-        Constraints.Builder()
-//                .setRequiresCharging(true)
-//                .setRequiredNetworkType(NetworkType.CONNECTED)
-//                .setRequiresStorageNotLow(true)
-                .build()
-    }
+//    val constraints: Constraints by lazy {
+//        Constraints.Builder()
+//                .setRequiresCharging(GlobalConfig.lowBatteryUpload)
+////                .setRequiredNetworkType(NetworkType.CONNECTED)
+////                .setRequiresStorageNotLow(true)
+//                .build()
+//    }
 
     fun buildUploadRequest(inputdata: Data?, clazz: KClass<out Worker>): WorkRequest {
-
+        val build = Constraints.Builder()
+                .setRequiresCharging(GlobalConfig.ChargingUpload)
+                .setRequiresBatteryNotLow(GlobalConfig.lowBatteryUpload)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .setRequiresStorageNotLow(false)
+                .build()
         val constraints = OneTimeWorkRequest.Builder(clazz.java)
                 //设置指数退避策略。假如Worker线程的执行出现了异常，比如服务器宕机，那么你可能希望过一段时间，重试该任务。那么你可以在Worker的doWork()方法中返回Result.retry()，系统会有默认的指数退避策略来帮你重试任务，你也可以通过setBackoffCriteria()方法，自定义指数退避策略。
                 .setBackoffCriteria(BackoffPolicy.LINEAR, OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.MILLISECONDS)//设置指数退避算法
@@ -25,7 +31,7 @@ object UploadTaskUitls {
 //                .setInitialDelay(10,TimeUnit.SECONDS)//符合触发条件后，延迟10秒执行
                 //为任务设置Tag标签。设置Tag后，你就可以通过该抱歉跟踪任务的状态WorkManager.getWorkInfosByTagLiveData(String tag)或者取消任务WorkManager.cancelAllWorkByTag(String tag)。
                 .addTag("UploadTag")
-                .setConstraints(constraints);
+                .setConstraints(build);
         inputdata?.let {
             constraints.setInputData(inputdata)
         }

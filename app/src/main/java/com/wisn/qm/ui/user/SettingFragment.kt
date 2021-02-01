@@ -8,6 +8,7 @@ import android.widget.CompoundButton
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseFragment
+import com.library.base.config.GlobalConfig
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
@@ -20,6 +21,8 @@ import kotlinx.android.synthetic.main.fragment_setting.*
 
 open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener {
     lateinit var title: QMUIQQFaceView
+    val tipRing by lazy {  groupListView?.createItemView(null, "上传提示音", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val tipVibrate by lazy {  groupListView?.createItemView(null, "上传提示震动", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
     val autoUpload by lazy {  groupListView?.createItemView(null, "是否自动同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
     val lowBatteryUpload by lazy {  groupListView?.createItemView(null, "低电量是否同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
     val versionItem by lazy {  groupListView?.createItemView(null, "版本号", AppUtils.getAppVersionName(), QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_NONE) }
@@ -37,8 +40,25 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
         }
 
 
+        tipRing?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
+            if (b) {
+                tipRing?.setDetailText("开")
+
+            } else {
+                tipRing?.setDetailText("关")
+            }
+            GlobalConfig.saveTipRing(b)
+        }
+
+        tipVibrate?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
+            if (b) {
+                tipVibrate?.setDetailText("开")
+            } else {
+                tipVibrate?.setDetailText("关")
+            }
+            GlobalConfig.saveTipVibrate(b)
+        }
         autoUpload?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
-            ToastUtils.showShort(b.toString())
             if (b) {
                 autoUpload?.setDetailText("自动")
 //                versionItem?.showNewTip(false)
@@ -54,33 +74,29 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
             }
         }
         lowBatteryUpload?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
-            ToastUtils.showShort(b.toString())
             if (b) {
                 lowBatteryUpload?.setDetailText("是")
-//                versionItem?.showNewTip(false)
-//                versionItem?.showRedDot(false)
-//                versionItem?.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_NONE
-
-
             } else {
                 lowBatteryUpload?.setDetailText("否")
-//                versionItem?.showNewTip(true)
-//                versionItem?.showRedDot(true)
-//                versionItem?.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON
             }
+            GlobalConfig.saveLowBatteryUpload(b)
         }
 
         QMUIGroupListView.newSection(context)
                 .setTitle("")
                 .setDescription("")
                 .setLeftIconSize(QMUIDisplayHelper.dp2px(context, 18), ViewGroup.LayoutParams.WRAP_CONTENT)
-                .addItemView(autoUpload, this)
+                .addItemView(tipRing, this)
+                .addItemView(tipVibrate, this)
+//                .addItemView(autoUpload, this)
                 .addItemView(lowBatteryUpload, this)
                 .addItemView(versionItem, this)
                 .addItemView(about, this)
                 .setMiddleSeparatorInset(QMUIDisplayHelper.dp2px(context, 18), 0)
-                .addTo( groupListView);
-
+                .addTo( groupListView)
+        tipRing?.switch?.isChecked=GlobalConfig.tipRing
+        tipVibrate?.switch?.isChecked=GlobalConfig.tipVibrate
+        lowBatteryUpload?.switch?.isChecked=GlobalConfig.lowBatteryUpload
     }
 
     override fun onClick(v: View?) {

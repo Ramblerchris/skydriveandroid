@@ -6,6 +6,7 @@ import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.utils.SHAMD5Utils
+import com.library.base.utils.UploadTip
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.AppDataBase
@@ -54,6 +55,8 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
                         } else {
                             uploadFile(diskUploadbean)
                         }
+                        UploadTip.tipRing()
+                        UploadTip.tipVibrate()
                     }
                     LogUtils.d("0000doWork  LiveEventBus")
 //                    LiveEventBus

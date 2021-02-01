@@ -3,6 +3,7 @@ import android.content.Context
 import androidx.multidex.MultiDexApplication
 import com.blankj.utilcode.util.Utils
 import com.library.base.config.Constant
+import com.library.base.config.GlobalConfig
 import com.library.base.config.GlobalUser
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
 import com.squareup.leakcanary.LeakCanary
@@ -26,8 +27,9 @@ open class BaseApp : MultiDexApplication() {
         app = this
         Utils.init(this)
         QMUISwipeBackActivityManager.init(this)
-        GlobalUser.initData()
+        GlobalConfig.initConfig()
         Constant.initBaseUrl()
+        GlobalUser.initData()
     }
     open fun loginEvent(){
     }

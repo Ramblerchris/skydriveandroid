@@ -8,21 +8,21 @@ object GlobalUser {
     var userinfo: UserBean? = null
 
     fun initData() {
-        token = SPUtils.getInstance().getString(Constant.TokenKey)
-        val userstr = SPUtils.getInstance().getString(Constant.UserInfo)
+        token = SPUtils.getInstance().getString(SpConstant.TokenKey)
+        val userstr = SPUtils.getInstance().getString(SpConstant.UserInfo)
         userinfo = GsonUtils.fromJson(userstr, UserBean::class.java)
     }
 
     fun saveToken(token: String) {
         if (token.isNotEmpty()) {
-            SPUtils.getInstance().put(Constant.TokenKey, token)
+            SPUtils.getInstance().put(SpConstant.TokenKey, token)
             this.token = token
         }
     }
 
     fun saveUserInfo(userBean: UserBean) {
         val toJson = GsonUtils.toJson(userBean)
-        SPUtils.getInstance().put(Constant.UserInfo, toJson)
+        SPUtils.getInstance().put(SpConstant.UserInfo, toJson)
         this.userinfo = userBean
     }
 
@@ -32,8 +32,8 @@ object GlobalUser {
     }
 
     fun clearToken() {
-        SPUtils.getInstance().put(Constant.TokenKey, "")
-        SPUtils.getInstance().put(Constant.UserInfo, "")
+        SPUtils.getInstance().put(SpConstant.TokenKey, "")
+        SPUtils.getInstance().put(SpConstant.UserInfo, "")
         this.token = null
         this.userinfo = null
     }

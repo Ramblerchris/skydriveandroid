@@ -6,6 +6,7 @@ import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.utils.SHAMD5Utils
+import com.library.base.utils.UploadTip
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.AppDataBase
@@ -30,7 +31,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                 val uploadDataList = AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanListPreUpload(FileType.UPloadStatus_Noupload)
                 if (uploadDataList != null) {
                     val size = uploadDataList.size
-                    var position = 0;
+                    var position = 0
                     for (uploadbean in uploadDataList) {
                         LogUtils.d("0000doWork" + uploadbean.toString())
                         //如果sha1为null 先生成sha1
@@ -59,6 +60,8 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                         } else {
                             uploadFile(uploadbean)
                         }
+                        UploadTip.tipRing()
+                        UploadTip.tipVibrate()
                         if (position == size) {
                             LiveEventBus
                                     .get(ConstantKey.uploadingInfo)
