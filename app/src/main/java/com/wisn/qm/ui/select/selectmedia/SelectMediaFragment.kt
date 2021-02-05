@@ -13,16 +13,16 @@ import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.select.SelectFileViewModel
-
 import kotlinx.android.synthetic.main.fragment_selectfile.*
 
-open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMediaCallBack {
+open class SelectMediaFragment(var maxSelect:Int=-1) : BaseFragment<SelectFileViewModel>() {
     lateinit var title: QMUIQQFaceView
     lateinit var leftCancel: Button
     lateinit var rightButton: Button
-    private val mAdapter by lazy { SelectMediaAdapter(this) }
+    private val mAdapter by lazy { SelectMediaAdapter(viewModel,maxSelect) }
     lateinit var gridLayoutManager: GridLayoutManager
     var selectList: MutableList<MediaInfo>? = null
+    var selectMediaCall:SelectMediaCall?=null
     override fun layoutId(): Int {
         return R.layout.fragment_selectmedia
     }
@@ -45,6 +45,7 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
             var intent = Intent()
             val value = viewModel.selectData().value
             value?.let {
+                selectMediaCall?.setResult(it)
                 intent.putExtra("data", value)
                 setFragmentResult(101, intent)
             }
@@ -76,11 +77,6 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
 
     }
 
-    override fun lazyLoadData() {
-        super.lazyLoadData()
-
-    }
-
     private fun setTitleTipInfo(cout:Int) {
         if (cout> 0) {
             rightButton.visibility = View.VISIBLE
@@ -91,19 +87,6 @@ open class SelectMediaFragment : BaseFragment<SelectFileViewModel>(), SelectMedi
         }
     }
 
-    override fun changeSelectData(isAdd: Boolean, item: MediaInfo?) {
-        if (item != null) {
-            if (isAdd) {
-                viewModel.selectData().value?.add(item)
-            } else {
-                viewModel.selectData().value?.remove(item)
-            }
-            viewModel.selectData().value = viewModel.selectData().value;
-        } else {
-            viewModel.mediaSelectList.value?.size?.let { setTitleTipInfo(it) }
-//            title.text = "已选中${viewModel.mediaSelectList.value?.size}项"
-        }
-    }
 }
 
 open class SelectSpanSizeLookup(var adapterV2: SelectMediaAdapter) : GridLayoutManager.SpanSizeLookup() {
@@ -118,4 +101,7 @@ open class SelectSpanSizeLookup(var adapterV2: SelectMediaAdapter) : GridLayoutM
 
     }
 
+}
+interface SelectMediaCall {
+    fun setResult(result:ArrayList<MediaInfo>)
 }

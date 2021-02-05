@@ -13,9 +13,9 @@ import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.library.base.config.Constant
 import com.library.base.config.GlobalUser
+import com.library.base.utils.GlideUtils
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView2
@@ -24,10 +24,13 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog.EditTextDialogBuilder
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView
 import com.qmuiteam.qmui.widget.grouplist.QMUIGroupListView
 import com.wisn.qm.R
+import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.disk.DiskListFragment
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
 import com.wisn.qm.ui.select.selectfile.SelectFileFragment
+import com.wisn.qm.ui.select.selectmedia.SelectMediaCall
+import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
 import com.wisn.qm.ui.upload.UploadListFragment
 import com.wisn.qm.ui.user.SettingFragment
 import com.wisn.qm.ui.user.UserInfoFragment
@@ -39,7 +42,6 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
     val iv_header = findViewById<QMUIRadiusImageView2>(R.id.iv_header)
     val tv_username = findViewById<TextView>(R.id.tv_username)
     val swiperefresh = findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
-    val tv_content = findViewById<TextView>(R.id.tv_content)
     val v_header_click = findViewById<View>(R.id.v_header_click)
     val iv_right = findViewById<ImageView>(R.id.iv_right)
     val groupListView = findViewById<QMUIGroupListView>(R.id.groupListView)
@@ -69,9 +71,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
             GlobalUser.userinfo?.photo_file_sha1?.let {
                 val imageUrl = Constant.getImageUrl(GlobalUser.userinfo!!.photo_file_sha1)
                 imageUrl?.let {
-                    Glide.with(context!!).load(imageUrl)
-                            .apply(RequestOptions())
-                            .into(iv_header)
+                    GlideUtils.loadUrl(imageUrl,iv_header,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar)
                 }
             }
             tv_username.text = GlobalUser.userinfo!!.user_name
@@ -156,16 +156,28 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                             mHomeFragment.registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
                                 mHomeViewModel.updateUserPhoto(it)
                                 Glide.with(this).load(it).into(iv_header)
+//                                GlideUtils.loadUrl(it,iv_header,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar)
                             }.launch(null)
                         } else if (position == 1) {
-                            ToastUtils.showShort("开发中")
+//                            ToastUtils.showShort("开发中")
+                           var select: SelectMediaFragment = SelectMediaFragment(1)
+                            select.selectMediaCall=object: SelectMediaCall {
+                                override fun setResult(result: ArrayList<MediaInfo>) {
+                                    val get = result.get(0)
+                                    get.filePath?.let {
+                                        mHomeViewModel.updateUserPhoto(it)
+                                        GlideUtils.loadFile(it, iv_header, R.mipmap.ic_default_avatar, R.mipmap.ic_default_avatar, R.mipmap.ic_default_avatar)
+                                    }
+                                }
+                            }
+                            mHomeFragment.startFragment(select)
                         } else {
                             ToastUtils.showShort("开发中")
                         }
                     }
             builder.addItem("拍照")
             builder.addItem("从相册中选择")
-            builder.addItem("查看大图")
+//            builder.addItem("查看大图")
             builder.build().show()
         } else {
             ToastUtils.showShort("开发中")

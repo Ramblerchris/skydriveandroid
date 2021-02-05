@@ -32,7 +32,6 @@ class HomeViewModel : BaseViewModel() {
     private val titleStr = "照片"
 
 
-    //    var listdata = MutableLiveData<MutableList<MediaInfo>>()
     var selectData = MutableLiveData<MutableList<MediaInfo>>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var userdirBean = MutableLiveData<UserDirBean>()
@@ -121,23 +120,29 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun updateUserPhoto(it: Bitmap): MutableLiveData<UserDirBean> {
-        launchGo({
-//            suspend fun updateUserPhoto(file: MultipartBody.Part): BaseResult<UserDirBean> {
-            var file = File(PathUtils.getInternalAppCachePath() + File.separator + System.currentTimeMillis() + "jpeg");
-            ImageUtils.save(it, file, Bitmap.CompressFormat.JPEG)
-            var requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
-            val dirlist = ApiNetWork.newInstance().updateUserPhoto(body)
-            if (dirlist.isSuccess()) {
-                userdirBean.value = dirlist.data
-                GlobalUser.userinfo?.let {
-                    it.photo_file_sha1 = dirlist.data.sha1!!
-                    GlobalUser.saveUserInfo(it)
+        var file = File(PathUtils.getInternalAppCachePath() + File.separator + System.currentTimeMillis() + "jpeg");
+        ImageUtils.save(it, file, Bitmap.CompressFormat.JPEG)
+        return updateUserPhoto(file.absolutePath)
+    }
 
+    fun updateUserPhoto(it: String): MutableLiveData<UserDirBean> {
+        var file=File(it)
+        if( file.exists()){
+            launchGo({
+//            suspend fun updateUserPhoto(file: MultipartBody.Part): BaseResult<UserDirBean> {
+                var requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
+                val dirlist = ApiNetWork.newInstance().updateUserPhoto(body)
+                if (dirlist.isSuccess()) {
+                    userdirBean.value = dirlist.data
+                    GlobalUser.userinfo?.let {
+                        it.photo_file_sha1 = dirlist.data.sha1!!
+                        GlobalUser.saveUserInfo(it)
+                    }
                 }
-            }
-            dirlist
-        })
+                dirlist
+            })
+        }
         return userdirBean
     }
 

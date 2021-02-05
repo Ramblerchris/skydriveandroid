@@ -2,6 +2,7 @@ package com.wisn.qm.ui.select.selectmedia
 
 import android.view.View
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -12,28 +13,19 @@ import com.wisn.qm.databinding.RvItemPictureTitleBinding
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
+import com.wisn.qm.ui.select.SelectFileViewModel
 import java.io.File
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.
  */
 
-class SelectMediaAdapter(selectPictureCallBack: SelectMediaCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
-    protected var selectPictureCallBack: SelectMediaCallBack
+class SelectMediaAdapter(var selectPictureCallBack: SelectFileViewModel, var maxSelect: Int = -1) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
 
     init {
         addItemType(FileType.TimeTitle, R.layout.rv_item_picture_title)
         addItemType(FileType.ImageViewItem, R.layout.rv_item_picture_image)
         addItemType(FileType.VideoViewItem, R.layout.rv_item_picture_image)
-        this.selectPictureCallBack = selectPictureCallBack!!
-    }
-
-    fun updateSelect(isSelectModel: Boolean?) {
-        isSelectModel?.let {
-            selectPictureCallBack.changeSelectData(false, null);
-        }
-//        selectPosition = -1
-        notifyDataSetChanged()
     }
 
     /**
@@ -48,7 +40,7 @@ class SelectMediaAdapter(selectPictureCallBack: SelectMediaCallBack?) : BaseMult
         if (viewType == FileType.TimeTitle) {
             viewHolder.setDataBinding<RvItemPictureImageBinding>(viewHolder.itemView)
 //            viewHolder.dataBinding = DataBindingUtil.bind<RvItemPictureImageBinding>(viewHolder.itemView)
-        } else if (viewType == FileType.ImageViewItem||viewType == FileType.VideoViewItem) {
+        } else if (viewType == FileType.ImageViewItem || viewType == FileType.VideoViewItem) {
             viewHolder.setDataBinding<RvItemPictureTitleBinding>(viewHolder.itemView)
 //            viewHolder.dataBinding = DataBindingUtil.bind<RvItemPictureTitleBinding>(viewHolder.itemView)
         }
@@ -70,10 +62,14 @@ class SelectMediaAdapter(selectPictureCallBack: SelectMediaCallBack?) : BaseMult
                         .apply(RequestOptions())
                         .into(it)
                 dataBinding.image.onClick {
+                    //如果是要选中
+                    if (maxSelect > 0 && !item.isSelect && selectPictureCallBack.selectData().value?.size!! >= maxSelect) {
+                        ToastUtils.showShort("最多选择${maxSelect}张")
+                        return@onClick
+                    }
                     item.isSelect = !item.isSelect
                     notifyItemChanged(adapterPosition)
-                    selectPictureCallBack.changeSelectData(item.isSelect, item);
-
+                    selectPictureCallBack.changeSelectData(item.isSelect, item)
                 }
                 dataBinding.ivSelect.visibility = View.VISIBLE
                 if (item.isSelect) {

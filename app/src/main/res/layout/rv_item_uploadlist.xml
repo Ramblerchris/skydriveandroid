@@ -11,7 +11,7 @@
             type="com.wisn.qm.mode.beans.FileType" />
     </data>
 
-    <com.qmuiteam.qmui.alpha.QMUIAlphaConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.qmuiteam.qmui.layout.QMUIConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/rootview"
         android:layout_width="match_parent"
@@ -21,9 +21,9 @@
         android:layout_marginRight="12dp"
         android:layout_marginBottom="4dp"
         android:clickable="true"
+        android:background="@color/qmui_config_color_white"
         app:qmui_backgroundColor="@color/qmui_config_color_white"
         app:qmui_radius="4dp"
-        app:qmui_shadowAlpha="0.4"
         app:qmui_shadowElevation="6dp">
 
 
@@ -68,5 +68,5 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="上传成功" />
 
-    </com.qmuiteam.qmui.alpha.QMUIAlphaConstraintLayout>
+    </com.qmuiteam.qmui.layout.QMUIConstraintLayout>
 </layout>

@@ -21,10 +21,13 @@ class SelectFileViewModel : BaseViewModel() {
     var filelistdata = MutableLiveData<MutableList<FileBean>>()
     var mediaSelectList = MutableLiveData<ArrayList<MediaInfo>>()
     var currentFileName = MutableLiveData<String>()
+    var titleShow = MutableLiveData<String>()
+
     var currentViewPosition = MutableLiveData<ViewPosition>()
-    private var positionMap = HashMap<String,ViewPosition>()
+    private var positionMap = HashMap<String, ViewPosition>()
     private var currentFile: File? = null
     private var rootName: String? = null
+
 
     private var selectIdList = ArrayList<Long>()
 
@@ -90,6 +93,19 @@ class SelectFileViewModel : BaseViewModel() {
         return mediaImagelistdata
     }
 
+    fun changeSelectData(isAdd: Boolean, item: MediaInfo?) {
+        if (item != null) {
+            if (isAdd) {
+                selectData().value?.add(item)
+            } else {
+                selectData().value?.remove(item)
+            }
+            selectData().value = selectData().value
+        }
+        titleShow.value = "已选中${selectData().value?.size ?: 0}项"
+    }
+
+
     fun selectData(): MutableLiveData<ArrayList<MediaInfo>> {
         if (mediaSelectList.value == null) {
             mediaSelectList.value = ArrayList<MediaInfo>()
@@ -99,7 +115,7 @@ class SelectFileViewModel : BaseViewModel() {
 
     fun setViewPosition(viewPosition: ViewPosition) {
         if (currentFile != null) {
-            positionMap.put(currentFile!!.absolutePath,viewPosition)
+            positionMap.put(currentFile!!.absolutePath, viewPosition)
         }
     }
 
@@ -168,7 +184,7 @@ class SelectFileViewModel : BaseViewModel() {
                 currentFile?.let {
                     val get = positionMap.get(it.absolutePath)
                     get?.let {
-                        currentViewPosition.value=get
+                        currentViewPosition.value = get
 
                     }
                 }
