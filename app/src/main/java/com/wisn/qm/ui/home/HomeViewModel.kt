@@ -30,8 +30,11 @@ import java.io.File
 
 class HomeViewModel : BaseViewModel() {
     private val titleStr = "照片"
-
-
+    var count: Int = 0
+        set(value){
+            field=value
+            updateHomeTitle()
+        }
     var selectData = MutableLiveData<MutableList<MediaInfo>>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var userdirBean = MutableLiveData<UserDirBean>()
@@ -40,6 +43,7 @@ class HomeViewModel : BaseViewModel() {
     var deleteDirs = MutableLiveData<Boolean>()
     var UpdateData = MutableLiveData<Update>()
     var titleShow = MutableLiveData<String>()
+
 
     fun changeSelectData(isinit: Boolean, isSelectModel: Boolean, isAdd: Boolean, item: MediaInfo?) {
         if (selectData.value == null) {
@@ -59,7 +63,15 @@ class HomeViewModel : BaseViewModel() {
             }
             titleShow.value = "已选中${selectData.value?.size ?: 0}项"
         } else {
-            titleShow.value = titleStr
+            updateHomeTitle()
+        }
+    }
+
+    private fun updateHomeTitle() {
+        if (count > 0) {
+            titleShow.value = "$titleStr($count)"
+        } else {
+            titleShow.value = "$titleStr"
         }
     }
 
@@ -126,8 +138,8 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun updateUserPhoto(it: String): MutableLiveData<UserDirBean> {
-        var file=File(it)
-        if( file.exists()){
+        var file = File(it)
+        if (file.exists()) {
             launchGo({
 //            suspend fun updateUserPhoto(file: MultipartBody.Part): BaseResult<UserDirBean> {
                 var requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file)

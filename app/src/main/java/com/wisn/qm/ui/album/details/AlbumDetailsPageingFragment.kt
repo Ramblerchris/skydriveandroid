@@ -104,9 +104,9 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
         }
         swiperefresh?.setOnRefreshListener(this)
         var gridLayoutManager = GridLayoutManager(context, 3)
-        with(gridLayoutManager) {
-            spanSizeLookup = SpanSizeLookupPage(albumPictureAdapter)
-        }
+//        with(gridLayoutManager) {
+//            spanSizeLookup = SpanSizeLookupPage(albumPictureAdapter)
+//        }
 
         with(recyclerView!!) {
             adapter = albumPictureAdapter.withLoadStateFooter(footer = LoadStateFooterAdapter(retry = {
@@ -133,10 +133,10 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
                     albumPictureAdapter.refresh()
                 })
         albumPictureAdapter.addLoadStateListener {
-            Log.d(TAG, "it.source addLoadStateListener " + it.source)
-            Log.d(TAG, "it.prepend addLoadStateListener " + it.prepend)
-            Log.d(TAG, "it.append addLoadStateListener " + it.append)
-            Log.d(TAG, "it.refresh addLoadStateListener " + it.refresh)
+//            Log.d(TAG, "it.source addLoadStateListener " + it.source)
+//            Log.d(TAG, "it.prepend addLoadStateListener " + it.prepend)
+//            Log.d(TAG, "it.append addLoadStateListener " + it.append)
+//            Log.d(TAG, "it.refresh addLoadStateListener " + it.refresh)
             when (it.refresh) {
                 is LoadState.NotLoading -> {
                     Log.d(TAG, "is NotLoading")

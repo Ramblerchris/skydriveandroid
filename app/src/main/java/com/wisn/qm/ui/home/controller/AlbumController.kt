@@ -110,10 +110,10 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
         val onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, l ->
             if (position == 0) {
                 val item = mAdapter.getItem(index)
-                val builder = QMUIDialog.EditTextDialogBuilder(context.applicationContext)
+                val builder = QMUIDialog.EditTextDialogBuilder(context)
                 builder.setTitle("修改相册名称")
                         .setSkinManager(QMUISkinManager.defaultInstance(context))
-                        .setPlaceholder("在此输入相册名称")
+                        .setPlaceholder("在此输入新相册名称")
                         .setDefaultText(item.filename)
                         .setInputType(InputType.TYPE_CLASS_TEXT)
                         .addAction("取消") { dialog, index -> dialog.dismiss() }

@@ -193,10 +193,10 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
     }
 
     override fun onContentClick(view: View) {
-        if (vp_content?.visibility == View.GONE) {
-            vp_content?.visibility = View.VISIBLE
+        if (group_content?.visibility == View.GONE) {
+            group_content?.visibility = View.VISIBLE
         } else {
-            vp_content?.visibility = View.GONE
+            group_content?.visibility = View.GONE
         }
     }
 

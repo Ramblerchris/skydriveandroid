@@ -1,6 +1,7 @@
 package com.library.base.utils
 
 import com.blankj.utilcode.util.VibrateUtils
+import com.library.R
 import com.library.base.config.GlobalConfig
 
 /**
@@ -19,7 +20,7 @@ object UploadTip {
 
     fun tipRing() {
         if (GlobalConfig.tipRing) {
-
+            SoundPoolUtils.getInstance().play(R.raw.device)
         }
     }
 }

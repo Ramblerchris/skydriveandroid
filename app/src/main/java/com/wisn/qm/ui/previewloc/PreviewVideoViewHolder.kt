@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
 import com.library.base.utils.GlideUtils
-import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.previewloc.view.PreviewLocalControlView

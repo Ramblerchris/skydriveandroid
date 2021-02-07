@@ -60,7 +60,6 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                         } else {
                             uploadFile(uploadbean)
                         }
-                        UploadTip.tipRing()
                         UploadTip.tipVibrate()
                         if (position == size) {
                             LiveEventBus
@@ -70,6 +69,8 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                     }
 //                    LogUtils.d("0000doWork  LiveEventBus")
                     if (position > 0) {
+                        UploadTip.tipRing()
+
                         LiveEventBus
                                 .get(ConstantKey.updatePhotoList)
                                 .postDelay(1, 1000)

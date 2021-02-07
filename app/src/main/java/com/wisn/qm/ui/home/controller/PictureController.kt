@@ -95,6 +95,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
                         empty_tip.setText("本地相册为空,快去拍照吧！")
                         mAdapter.setEmptyView(item_empty)
                     } else {
+                        mHomeViewModel.count=it.size
                         mAdapter.setNewInstance(it as MutableList<MediaInfo>)
                     }
                 })
@@ -114,7 +115,6 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
                 leftCancel.visibility = View.VISIBLE
             } else {
                 leftCancel.visibility = View.GONE
-                title.text = titleStr
             }
             mAdapter.updateSelect(isShow)
         }

@@ -25,17 +25,18 @@
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:fitsSystemWindows="true"
-            android:padding="11dp"
+            android:padding="8dp"
             android:src="@mipmap/ic_left_back_white" />
 
         <View
             android:id="@+id/bottom_bg"
             android:layout_width="match_parent"
             android:layout_height="64dp"
+            android:visibility="gone"
             android:background="@drawable/bottom_black_bg_270"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -52,6 +53,7 @@
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_delete"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -70,6 +72,8 @@
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:visibility="gone"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -81,5 +85,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="top_bg,iv_back,bottom_bg,tv_collection,tv_delete" />
+            app:constraint_referenced_ids="top_bg,iv_back" />
     </com.qmuiteam.qmui.widget.QMUIWindowInsetLayout2>

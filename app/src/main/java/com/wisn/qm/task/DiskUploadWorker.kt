@@ -61,7 +61,6 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
                         } else {
                             uploadFile(diskUploadbean)
                         }
-                        UploadTip.tipRing()
                         UploadTip.tipVibrate()
                         if (position == size) {
                             LiveEventBus
@@ -73,9 +72,12 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
 //                    LiveEventBus
 //                            .get(ConstantKey.updateDiskList)
 //                            .postDelay(1, 1000);
-                    LiveEventBus
-                            .get(ConstantKey.updateDiskList)
-                            .post(1)
+                    if (position > 0) {
+                        UploadTip.tipRing()
+                        LiveEventBus
+                                .get(ConstantKey.updateDiskList)
+                                .post(1)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
