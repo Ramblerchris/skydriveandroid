@@ -104,9 +104,9 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
         }
         swiperefresh?.setOnRefreshListener(this)
         var gridLayoutManager = GridLayoutManager(context, 3)
-//        with(gridLayoutManager) {
-//            spanSizeLookup = SpanSizeLookupPage(albumPictureAdapter)
-//        }
+        with(gridLayoutManager) {
+            spanSizeLookup = SpanSizeLookupPage(albumPictureAdapter)
+        }
 
         with(recyclerView!!) {
             adapter = albumPictureAdapter.withLoadStateFooter(footer = LoadStateFooterAdapter(retry = {
