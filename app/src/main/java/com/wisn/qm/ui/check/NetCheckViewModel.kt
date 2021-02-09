@@ -5,6 +5,7 @@ import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
+import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.LogUtils
 import com.library.base.BaseApp
 import com.library.base.base.BaseViewModel
@@ -13,6 +14,8 @@ import com.library.base.net.broadcast.BroadcastGroup
 import com.library.base.net.broadcast.MessageCall
 import com.library.base.net.broadcast.UdpConfig
 import com.library.base.utils.NetCheckUtils
+import com.wisn.qm.BuildConfig
+import com.wisn.qm.mode.beans.ScanMessage
 import com.wisn.qm.mode.net.ApiNetWork
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
@@ -30,10 +33,10 @@ class NetCheckViewModel : BaseViewModel() {
     fun initBroadcastListener() {
         try {
             broadCastGroup?.listenerMessage(UdpConfig.groupIp, UdpConfig.Group_ClientListenport, MessageCall { message, ip ->
-                setResult("group $message ", ip)
+                setResult("group $message ",message, ip)
             })
             broadCastAll?.listenerMessage(UdpConfig.All_ClientListenport, MessageCall { message, ip ->
-                setResult("broadcast $message ", ip)
+                setResult("broadcast $message ",message, ip)
             })
             //            WifiManager wifiManager = (WifiManager) App.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             val wifiManager = BaseApp.app.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -52,12 +55,15 @@ class NetCheckViewModel : BaseViewModel() {
     }
 
 
-    private fun setResult(message: String?, ip: String) {
+    private fun setResult(message: String?,data:String?, ip: String) {
         LogUtils.d(TAG, " MESSAGE:$message ip:$ip")
-        val handler = Handler(Looper.getMainLooper())
-        handler.post {
-            getResult().setValue("ip:$ip $message  ")
-            setServerIp(ip)
+        val fromJson = GsonUtils.fromJson<ScanMessage>(data, ScanMessage::class.java)
+        if (fromJson.debug == BuildConfig.DEBUG) {
+            val handler = Handler(Looper.getMainLooper())
+            handler.post {
+                getResult().setValue("ip:$ip $message  ")
+                setServerIp(ip)
+            }
         }
     }
 

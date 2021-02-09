@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">空箱子</string>
+    <string name="app_name_debug">空箱子(开发)</string>
 </resources>

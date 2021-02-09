@@ -32,6 +32,7 @@ android {
 
     buildTypes {
         release {
+            manifestPlaceholders = [appName     : "@string/app_name"]
             minifyEnabled true
             zipAlignEnabled true // Zipalign优化
             shrinkResources true // 移除无用的resource文件
@@ -40,6 +41,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
+            manifestPlaceholders = [appName     : "@string/app_name_debug"]
             minifyEnabled true
             zipAlignEnabled true // Zipalign优化
             shrinkResources true // 移除无用的resource文件
