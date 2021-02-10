@@ -183,6 +183,12 @@ interface Api {
     @GET("/disk/updateName")
     suspend fun updateDiskDirName(@Query("id") id: Long,@Query("newfilename") sha1: String): BaseResult<String>
 
+    /**
+     * 控制服务器开机和关机
+     */
+    @GET("/admin/sdrb")
+    suspend fun adminSDRB(@Query("type") type: String,@Query("time") time: String?): BaseResult<String>
+
     /************************************分块上传******************************************/
     /**
      * 初始化分块上传

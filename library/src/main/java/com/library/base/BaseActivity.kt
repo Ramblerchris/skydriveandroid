@@ -3,15 +3,12 @@ package com.library.base
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ToastUtils
 import com.library.base.base.BaseViewModel
 import com.library.base.base.ViewModelFactory
 import com.library.base.event.Message
-import com.squareup.leakcanary.LeakCanary
 import java.lang.reflect.ParameterizedType
 
 abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {

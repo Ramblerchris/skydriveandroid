@@ -206,6 +206,13 @@ class ApiNetWork {
         return getServie().updateUserDirName(id, newfilename)
     }
 
+    /**
+     * 控制服务器开机和关机
+     */
+    suspend fun adminSDRB( type: String, time: String?): BaseResult<String>{
+        return getServie().adminSDRB(type, time)
+    }
+
     suspend fun updateDiskDirName(id: Long, newfilename: String): BaseResult<String> {
         return getServie().updateDiskDirName(id, newfilename)
     }

@@ -21,25 +21,24 @@ import kotlinx.android.synthetic.main.fragment_setting.*
 
 open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener {
     lateinit var title: QMUIQQFaceView
-    val tipRing by lazy {  groupListView?.createItemView(null, "上传提示音", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
-    val tipVibrate by lazy {  groupListView?.createItemView(null, "上传提示震动", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
-    val autoUpload by lazy {  groupListView?.createItemView(null, "是否自动同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
-    val lowBatteryUpload by lazy {  groupListView?.createItemView(null, "低电量是否同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
-    val versionItem by lazy {  groupListView?.createItemView(null, "版本号", AppUtils.getAppVersionName(), QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_NONE) }
-    val about by lazy {  groupListView?.createItemView(null, "关于APP", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON) }
+    val tipRing by lazy { groupListView?.createItemView(null, "上传提示音", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val tipVibrate by lazy { groupListView?.createItemView(null, "上传提示震动", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val autoUpload by lazy { groupListView?.createItemView(null, "是否自动同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val lowBatteryUpload by lazy { groupListView?.createItemView(null, "低电量是否同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val serverManager by lazy { groupListView?.createItemView(null, "服务器管理", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON) }
+    val versionItem by lazy { groupListView?.createItemView(null, "版本号", AppUtils.getAppVersionName(), QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_NONE) }
+    val about by lazy { groupListView?.createItemView(null, "关于APP", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON) }
     override fun layoutId() = R.layout.fragment_setting
     override fun initView(views: View) {
         super.initView(views)
-        title =  topbar?.setTitle("设置")!!
+        title = topbar?.setTitle("设置")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        val addLeftBackImageButton =  topbar?.addLeftBackImageButton()
+        val addLeftBackImageButton = topbar?.addLeftBackImageButton()
         addLeftBackImageButton?.setColorFilter(Color.BLACK)
         addLeftBackImageButton?.setOnClickListener {
             popBackStack()
         }
-
-
         tipRing?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
             if (b) {
                 tipRing?.setDetailText("开")
@@ -61,16 +60,8 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
         autoUpload?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
             if (b) {
                 autoUpload?.setDetailText("自动")
-//                versionItem?.showNewTip(false)
-//                versionItem?.showRedDot(false)
-//                versionItem?.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_NONE
-
-
             } else {
                 autoUpload?.setDetailText("手动")
-//                versionItem?.showNewTip(true)
-//                versionItem?.showRedDot(true)
-//                versionItem?.accessoryType = QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON
             }
         }
         lowBatteryUpload?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
@@ -90,13 +81,14 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
                 .addItemView(tipVibrate, this)
 //                .addItemView(autoUpload, this)
                 .addItemView(lowBatteryUpload, this)
+                .addItemView(serverManager, this)
                 .addItemView(versionItem, this)
                 .addItemView(about, this)
                 .setMiddleSeparatorInset(QMUIDisplayHelper.dp2px(context, 18), 0)
-                .addTo( groupListView)
-        tipRing?.switch?.isChecked=GlobalConfig.tipRing
-        tipVibrate?.switch?.isChecked=GlobalConfig.tipVibrate
-        lowBatteryUpload?.switch?.isChecked=GlobalConfig.lowBatteryUpload
+                .addTo(groupListView)
+        tipRing?.switch?.isChecked = GlobalConfig.tipRing
+        tipVibrate?.switch?.isChecked = GlobalConfig.tipVibrate
+        lowBatteryUpload?.switch?.isChecked = GlobalConfig.lowBatteryUpload
     }
 
     override fun onClick(v: View?) {
@@ -110,7 +102,9 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
                     .addAction("取消") { dialog, _ ->
                         dialog.dismiss()
                     }
-                    .create(com.qmuiteam.qmui.R.style.QMUI_Dialog).show()
+                    .create(R.style.QMUI_Dialog).show()
+        } else if (v == serverManager) {
+            startFragment(ShutdownServerFragment())
         }
 
     }

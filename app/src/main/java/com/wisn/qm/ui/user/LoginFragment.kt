@@ -11,7 +11,6 @@ import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.topbar
-import kotlinx.android.synthetic.main.fragment_newalbum.*
 
 /**
  * Created by Wisn on 2020/6/6 下午5:06.
