@@ -79,6 +79,11 @@ class SelectMediaAdapter(var selectPictureCallBack: SelectFileViewModel, var max
                 }
 
             }
+            if (item.uploadStatus == FileType.MediainfoStatus_uploadSuccess) {
+                dataBinding?.ivIsexist?.visibility = View.VISIBLE
+            } else {
+                dataBinding?.ivIsexist?.visibility = View.GONE
+            }
             if (item.isVideo!!) {
                 dataBinding?.videoTime?.visibility = View.VISIBLE
                 dataBinding?.videoTime?.setText(item.timestr)

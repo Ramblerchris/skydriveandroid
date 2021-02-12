@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -29,8 +30,10 @@ import com.wisn.qm.ui.netpreview.NetPreviewFragment
 import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 
@@ -55,7 +58,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
     }
 
     override fun onBackPressed() {
-        LogUtils.d(TAG," AlbumDetailsPageingFragment.onBackPressed")
+        LogUtils.d(TAG, " AlbumDetailsPageingFragment.onBackPressed")
         if (isShowEdit) {
             albumPictureAdapter.updateSelect(false)
         } else {
@@ -137,6 +140,9 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
 //            Log.d(TAG, "it.prepend addLoadStateListener " + it.prepend)
 //            Log.d(TAG, "it.append addLoadStateListener " + it.append)
 //            Log.d(TAG, "it.refresh addLoadStateListener " + it.refresh)
+            if (!isShowEdit) {
+                title.text = viewModel.getDirListCount(get.filename)
+            }
             when (it.refresh) {
                 is LoadState.NotLoading -> {
                     Log.d(TAG, "is NotLoading")
@@ -157,20 +163,32 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
             }
         }
         swiperefresh.isRefreshing = true
-        lifecycleScope.launch {
-            try {
-                viewModel.getUserDirListDataSource(get.id).collectLatest {
-                    Log.d(TAG, "AAAAAgetUserDirListDataSource ")
-                    swiperefresh?.isRefreshing = false
-                    swiperefresh.visibility = View.VISIBLE
-                    item_empty.visibility = View.GONE
-                    albumPictureAdapter.submitData(it)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                LogUtils.d(TAG, "getUserDirListDataSource：" + e)
+//        lifecycleScope.launch {
+//            try {
+//                val data = withContext(Dispatchers.IO) {
+//                    viewModel.getUserDirListDataSource(get.id)
+//                }
+//                data.collectLatest {
+//                    Log.d(TAG, "AAAAAgetUserDirListDataSource ")
+//                    swiperefresh?.isRefreshing = false
+//                    swiperefresh.visibility = View.VISIBLE
+//                    item_empty.visibility = View.GONE
+//                    albumPictureAdapter.submitData(it)
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                LogUtils.d(TAG, "getUserDirListDataSource：" + e)
+//            }
+//        }
+        viewModel.getUserDirListDataSource(get.id).observe(viewLifecycleOwner, Observer {
+            lifecycleScope.launchWhenCreated {
+                swiperefresh?.isRefreshing = false
+                swiperefresh.visibility = View.VISIBLE
+                item_empty.visibility = View.GONE
+                albumPictureAdapter.submitData(it)
             }
-        }
+        })
+
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -193,7 +211,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
             title.text = "已选中${viewModel.selectData.value?.size ?: 0}项"
             rightButton.text = "删除"
         } else {
-            title.text = get.filename
+            title.text = viewModel.getDirListCount(get.filename)
             rightButton.text = "添加"
         }
     }
@@ -202,6 +220,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
         viewModel.editUserDirBean(isinit, isAdd, userDirBean)
 
     }
+
     open fun prePic(position: Int) {
         //查看大图
         val netPreviewFragment = NetPreviewFragment(this.viewModel.getDirListAll(), position)

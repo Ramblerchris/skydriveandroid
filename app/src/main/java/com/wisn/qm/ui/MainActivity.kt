@@ -1,6 +1,7 @@
 package com.wisn.qm.ui
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
@@ -8,7 +9,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragmentActivity
 import com.library.base.utils.UploadTip
@@ -39,7 +39,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
         LiveEventBus
                 .get(ConstantKey.uploadingInfo, String::class.java)
                 .observe(this, Observer {
-                    customRootView.globalBtn.visibility= View.VISIBLE
+                    customRootView.globalBtn.visibility = View.VISIBLE
                     customRootView.globalBtn.text = it
                 })
         LiveEventBus
@@ -47,9 +47,23 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                 .observe(this, Observer {
                     LogUtils.d("updatePhotoList")
                     UploadTip.tipVibrate(60)
-                    customRootView.globalBtn.visibility= View.GONE
+                    customRootView.globalBtn.visibility = View.GONE
                 })
         customRootView.globalBtn.visibility= View.GONE
+    }
+
+    override fun onBackPressed() {
+        LogUtils.d(" mBackStack(backStackEntryCount):"+supportFragmentManager.backStackEntryCount)
+//        LogUtils.d(" mBackStack(fragments size):"+supportFragmentManager.fragments.size)
+
+        if (supportFragmentManager.backStackEntryCount <= 1 ) {
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_HOME)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }else{
+            super.onBackPressed()
+        }
     }
 
 

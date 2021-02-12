@@ -26,8 +26,13 @@
                     android:layout_marginRight="30dp"
                     android:background="@null"
                     android:hint="请输入手机号"
+                    android:inputType="number"
+                    android:textCursorDrawable="@drawable/shape_et_cursor"
+
                     android:maxLines="1"
-                    android:text=""
+                    android:singleLine="true"                    android:text=""
+                    android:imeOptions="actionNext"
+                    android:nextFocusForward="@+id/et_password"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +46,11 @@
                     android:background="@null"
                     android:hint="请设置登录密码"
                     android:maxLines="1"
-                    android:text=""
+                    android:singleLine="true"                    android:text=""
+                    android:imeOptions="actionNext"
+                    android:textCursorDrawable="@drawable/shape_et_cursor"
+
+                    android:nextFocusForward="@+id/et_password2"
                     app:layout_constraintTop_toBottomOf="@+id/et_phone" />
 
                 <EditText
@@ -54,6 +63,9 @@
                     android:background="@null"
                     android:hint="请重复输入登录密码"
                     android:maxLines="1"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@drawable/shape_et_cursor"
+
                     app:layout_constraintTop_toBottomOf="@+id/et_password" />
 
                 <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton

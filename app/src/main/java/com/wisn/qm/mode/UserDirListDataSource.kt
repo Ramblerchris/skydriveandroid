@@ -19,6 +19,7 @@ import java.lang.Exception
 
 class UserDirListDataSource : PagingSource<PageKey, UserDirBean>() {
     var  mutableList:ArrayList<UserDirBean> =ArrayList<UserDirBean>()
+    var count :Long? = null
     override suspend fun load(params: LoadParams<PageKey>): LoadResult<PageKey, UserDirBean> {
 
         return try {
@@ -28,10 +29,12 @@ class UserDirListDataSource : PagingSource<PageKey, UserDirBean>() {
             Log.d("UserDirListDataSource", "请求第${currentPage}页")
             val dirlist = ApiNetWork.newInstance().getUserDirlist(currentPage.pid, currentPage.pageSize, currentPage.lastId)
             var nextPage = if (dirlist.isSuccess() && dirlist.data != null && currentPage.lastId != dirlist.data.nextpageid && dirlist.data.list.size > 0) {
-                PageKey(currentPage.pid, dirlist.data.nextpageid, pageSize = 20);
+                //是否有下一页
+                PageKey(currentPage.pid, dirlist.data.nextpageid, pageSize = 20)
             } else {
                 null
             }
+            count=dirlist.data.total
             if(dirlist.data.list.size == 0){
                 if (currentPage.lastId == -1L ) {
                     mutableList.clear()

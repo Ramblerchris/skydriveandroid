@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -18,6 +19,7 @@ import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.AlbumViewModel
 import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_newalbum.*
 import kotlinx.android.synthetic.main.fragment_newalbum.recyclerView
 import kotlinx.android.synthetic.main.fragment_newalbum.topbar
@@ -53,7 +55,8 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
                 ToastUtils.showShort("请输入相册名称")
             } else {
                 text.run {
-                    hideSoftInput(et_albumName?.windowToken,false)
+//                    hideSoftInput(et_albumName?.windowToken,false)
+                    KeyboardUtils.hideSoftInput(et_albumName)
                     viewModel.addUserDir(text.toString()).observe(this@NewAlbumFragment, Observer {
 //                    ToastUtils.showShort(it.toString())
                         var ait=it
@@ -77,7 +80,17 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
             layoutManager = gridLayoutManager
         }
         newAlbumAdapter.setNewData(null)
-        et_albumName?.post {   hideSoftInput(et_albumName?.windowToken,true)  }
+        et_albumName?.postDelayed({
+            KeyboardUtils.showSoftInput(et_albumName)
+        }, 300)
+    }
+
+
+    override fun onDestroyView() {
+//        hideSoftInput(et_albumName?.windowToken,false)
+        KeyboardUtils.hideSoftInput(et_albumName)
+
+        super.onDestroyView()
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -90,7 +103,8 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
 
     override fun click(isadd: Boolean, position: Int, fileBean: MediaInfo) {
         if (isadd) {
-            hideSoftInput(et_albumName.windowToken,false)
+//            hideSoftInput(et_albumName.windowToken,false)
+            KeyboardUtils.hideSoftInput(et_albumName)
             val selectPictureFragment = SelectMediaFragment()
             selectPictureFragment.arguments = Bundle()
             selectPictureFragment.selectList = newAlbumAdapter.getSelectDate()

@@ -34,7 +34,7 @@ class NetCheckFragment : BaseFragment<NetCheckViewModel>() {
     }
 
     private fun initTopBar() {
-        title = topbar?.setTitle("查找服务器")!!
+        title = topbar?.setTitle("查找目标服务器")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         val addLeftBackImageButton = topbar?.addLeftBackImageButton()

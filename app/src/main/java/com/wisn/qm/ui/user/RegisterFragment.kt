@@ -4,10 +4,16 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.view.View
 import androidx.lifecycle.Observer
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseFragment
 import com.wisn.qm.R
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
+import kotlinx.android.synthetic.main.fragment_register.et_password
+import kotlinx.android.synthetic.main.fragment_register.et_phone
+import kotlinx.android.synthetic.main.fragment_register.login
+import kotlinx.android.synthetic.main.fragment_register.topbar
 
 /**
  * Created by Wisn on 2020/6/6 下午5:06.
@@ -48,6 +54,9 @@ class RegisterFragment : BaseFragment<UserViewModel>() {
                 popBackStack()
             }
         })
+        et_phone?.post {
+            KeyboardUtils.showSoftInput(et_phone)
+        }
     }
 
     private fun initTopBar() {

@@ -4,7 +4,10 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.lifecycle.Observer
+import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseFragment
 import com.wisn.qm.R
@@ -22,19 +25,7 @@ class LoginFragment : BaseFragment<UserViewModel>() {
         initTopBar()
 //        viewModel.getResult()?.observe(this, Observer { s -> Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show() })
         login?.setOnClickListener {
-            Log.d(TAG, "测试11" + et_phone?.text.toString())
-            var phone = et_phone?.text.toString();
-            var password = et_password?.text.toString()
-            if (phone.isNullOrEmpty()) {
-                ToastUtils.showShort("请输入手机号")
-                return@setOnClickListener;
-            }
-            if (password.isNullOrEmpty()) {
-                ToastUtils.showShort("请输入密码")
-                return@setOnClickListener;
-            }
-            hideSoftInput(et_password.windowToken,false)
-            viewModel.login(phone, password).observe(this, Observer { ToastUtils.showShort(it) })
+            commitDate()
         }
         tv_register?.setOnClickListener {
             startFragment(RegisterFragment())
@@ -42,13 +33,45 @@ class LoginFragment : BaseFragment<UserViewModel>() {
         viewModel.defUi.msgEvent.observe(this, Observer {
             if (it.code == 100) {
                 startFragmentAndDestroyCurrent(HomeFragment(), false)
-            }else{
-                et_phone.requestFocus()
-                hideSoftInput(et_password.windowToken,true)
+            } else {
+//                et_phone.requestFocus()
+//                hideSoftInput(et_password.windowToken,true)
+                KeyboardUtils.showSoftInput(et_phone)
             }
+        })
+        et_phone?.postDelayed({
+            KeyboardUtils.showSoftInput(et_phone)
+        }, 300)
+        et_password.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if(actionId== EditorInfo.IME_ACTION_DONE){
+                commitDate()
+                return@OnEditorActionListener true
+            }
+            return@OnEditorActionListener false
         })
     }
 
+    private fun commitDate() {
+        Log.d(TAG, "测试11" + et_phone?.text.toString())
+        var phone = et_phone?.text.toString();
+        var password = et_password?.text.toString()
+        if (phone.isNullOrEmpty()) {
+            ToastUtils.showShort("请输入手机号")
+            return;
+        }
+        if (password.isNullOrEmpty()) {
+            ToastUtils.showShort("请输入密码")
+            return;
+        }
+        //            hideSoftInput(et_password.windowToken,false)
+        KeyboardUtils.hideSoftInput(et_password)
+        viewModel.login(phone, password).observe(this, Observer { ToastUtils.showShort(it) })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        et_phone?.requestFocus()
+    }
     private fun initTopBar() {
 //        val  addLeftBackImageButton =  topbar?.addLeftBackImageButton();
 //        addLeftBackImageButton?.setColorFilter(Color.BLACK);

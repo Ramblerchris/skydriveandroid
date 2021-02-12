@@ -1,8 +1,11 @@
 package com.wisn.qm.ui.album
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.library.base.base.BaseViewModel
@@ -63,10 +66,20 @@ class AlbumViewModel : BaseViewModel() {
         return userDirListDataSource!!.mutableList!!
     }
 
+    fun getDirListCount(dirName: String?): String? {
+        return if (userDirListDataSource != null && userDirListDataSource!!.count != null) {
+            "${dirName}(${userDirListDataSource!!.count})"
+        } else {
+            dirName
+        }
+    }
+
     fun getUserDirListDataSource(pid: Long) = Pager(PagingConfig(pageSize = 1, prefetchDistance = 40), PageKey(pid)) {
         userDirListDataSource = UserDirListDataSource()
         return@Pager userDirListDataSource!!
     }.flow
+            .cachedIn(viewModelScope)
+            .asLiveData(viewModelScope.coroutineContext)
 
 
     fun addUserDir(filename: String): MutableLiveData<UserDirBean> {
@@ -82,7 +95,7 @@ class AlbumViewModel : BaseViewModel() {
 
     fun getUserDirlist(pid: Long): MutableLiveData<MutableList<UserDirBean>> {
         launchGo({
-            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid,pageSize = -1)
+            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid, pageSize = -1)
             if (dirlist.isSuccess()) {
                 dirlistLD.value = dirlist.data.list
             }

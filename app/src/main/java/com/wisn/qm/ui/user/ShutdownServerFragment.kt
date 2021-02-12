@@ -56,8 +56,9 @@ class ShutdownServerFragment : BaseFragment<UserViewModel>() {
         select_ok?.onClick {
             LogUtils.d("getNetinfo 222", Thread.currentThread().name)
             var type = ""
+            var time = ""
             var typeMessage = ""
-            var timeMessage = ""
+            var timeMessage = "立刻"
             if (rg_model.checkedRadioButtonId == R.id.radioButton_shutdown) {
                 typeMessage = "服务器关机"
                 type = "sd_off"
@@ -65,7 +66,6 @@ class ShutdownServerFragment : BaseFragment<UserViewModel>() {
                 typeMessage = "服务器重启"
                 type = "sd_reboot"
             }
-            var time = "立刻"
             if (cb_time.isChecked) {
                 val sp1 = spinner1?.selectedItem.toString()
                 val sp2 = spinner2?.selectedItem.toString()
