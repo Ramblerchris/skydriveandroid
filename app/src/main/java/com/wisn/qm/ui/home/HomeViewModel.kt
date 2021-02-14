@@ -50,7 +50,7 @@ class HomeViewModel : BaseViewModel() {
             selectData.value = ArrayList<MediaInfo>()
         }
         if (isinit) {
-            selectData.value?.clear();
+            selectData.value?.clear()
         }
         if (isSelectModel) {
             if (item != null) {
@@ -239,6 +239,28 @@ class HomeViewModel : BaseViewModel() {
                 if (isauto) {
                     UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
                 }
+            }
+        }
+    }
+    fun deleteSelect() {
+        launchUI {
+            LogUtils.d("deleteSelect", Thread.currentThread().name)
+            launchFlow {
+                    LogUtils.d("deleteSelect", Thread.currentThread().name)
+                    for (mediainfo in selectData.value!!) {
+                        //todo 删除
+                        try {
+                            File(mediainfo.filePath).delete()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    selectData.value!!.clear()
+                    //更新相册
+                    UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildMediaScanWorkerRequest())
+
+            }.flowOn(Dispatchers.IO).collect {
+
             }
         }
     }

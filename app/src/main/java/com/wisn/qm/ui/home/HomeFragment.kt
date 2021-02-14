@@ -2,13 +2,13 @@ package com.wisn.qm.ui.home
 
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.blankj.utilcode.util.VibrateUtils
 import com.library.base.BaseFragment
-import androidx.lifecycle.Observer
-import com.blankj.utilcode.util.LogUtils
 import com.library.base.utils.DownloadUtils
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.kotlin.onClick
@@ -17,15 +17,16 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet.BottomListSheetBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.wisn.qm.R
 import com.wisn.qm.task.UploadTaskUitls
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.adapter.HomePagerAdapter
 import com.wisn.qm.ui.home.controller.*
-import java.util.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
+import java.util.*
 
 /**
  * Created by Wisn on 2020/4/30 下午8:03.
@@ -33,10 +34,37 @@ import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
 class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
     val TAG: String = "HomeFragment"
     var pictureController: PictureController? = null
+    var tipDialog:QMUITipDialog? =null
 
     override fun initView(views: View) {
         super.initView(views)
-        LogUtils.d(TAG," HomeFragment.initView")
+        LogUtils.d(TAG, " HomeFragment.initView")
+        item_photo_select_bottom.tv_delete.onClick {
+            VibrateUtils.vibrate(30)
+            QMUIDialog.MessageDialogBuilder(context)
+                    .setTitle("删除本地文件")
+                    .setSkinManager(QMUISkinManager.defaultInstance(context))
+                    .setMessage("确定要删除这些本地文件吗?")
+                    .addAction("取消") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .addAction("确定") { dialog, _ ->
+                        dialog.dismiss()
+                        tipDialog = QMUITipDialog.Builder(context)
+                                .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                                .setTipWord("正在删除")
+                                .create()
+                        tipDialog?.show()
+                        pictureController?.onBackPressedExit()
+                        viewModel.deleteSelect()
+                        ToastUtils.showShort("已经删除")
+                        //todo 添加loading dialog
+                    }
+                    .create(R.style.QMUI_Dialog).show()
+//            viewModel.saveMedianInfo(0)
+//            pictureController?.onBackPressedExit()
+//            ToastUtils.showShort("已经添加到上传任务")
+        }
         item_photo_select_bottom.tv_upload.onClick {
             viewModel.saveMedianInfo(0)
             pictureController?.onBackPressedExit()
@@ -77,7 +105,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
         initTabs()
         initPager()
         UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
-        viewModel.checkUpdate().observe(this,Observer {
+        viewModel.checkUpdate().observe(this, Observer {
             QMUIDialog.MessageDialogBuilder(context)
                     .setTitle("更新提醒")
                     .setSkinManager(QMUISkinManager.defaultInstance(context))
@@ -87,7 +115,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                     }
                     .addAction("下载") { dialog, _ ->
                         dialog.dismiss()
-                        DownloadUtils.addDownload(requireContext(),it.downloadURL!!,"更新","更新版本号${it.buildVersion} (build${it.buildBuildVersion})")
+                        DownloadUtils.addDownload(requireContext(), it.downloadURL!!, "更新", "更新版本号${it.buildVersion} (build${it.buildBuildVersion})")
                         ToastUtils.showShort("已添加升级下载任务")
                     }
                     .create(R.style.QMUI_Dialog).show()
@@ -95,13 +123,19 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
     }
 
     override fun onBackPressed() {
-        LogUtils.d(TAG," HomeFragment.onBackPressed")
+        LogUtils.d(TAG, " HomeFragment.onBackPressed")
+        if (Exit()) {
+            super.onBackPressed()
+        }
+    }
+
+    fun Exit():Boolean {
         if (item_photo_select_bottom?.visibility == View.VISIBLE) {
             showPictureControl(false)
             pictureController?.onBackPressedExit();
-        } else {
-            super.onBackPressed()
+            return false
         }
+        return true
     }
 
     override fun layoutId(): Int {

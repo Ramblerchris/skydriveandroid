@@ -54,8 +54,11 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
 
     override fun onBackPressed() {
         LogUtils.d(" mBackStack(backStackEntryCount):"+supportFragmentManager.backStackEntryCount)
-//        LogUtils.d(" mBackStack(fragments size):"+supportFragmentManager.fragments.size)
-
+        LogUtils.d(" mBackStack(fragments size):"+supportFragmentManager.fragments.size)
+        val get = supportFragmentManager.fragments.get(0);
+        if (get is HomeFragment && !get.Exit()) {
+            return
+        }
         if (supportFragmentManager.backStackEntryCount <= 1 ) {
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_HOME)

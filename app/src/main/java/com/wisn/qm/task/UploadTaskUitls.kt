@@ -20,8 +20,8 @@ object UploadTaskUitls {
     fun buildUploadRequest(inputdata: Data?, clazz: KClass<out Worker>): WorkRequest {
         val build = Constraints.Builder()
                 .setRequiresCharging(GlobalConfig.ChargingUpload)
-                .setRequiresBatteryNotLow(GlobalConfig.lowBatteryUpload)
-                .setRequiredNetworkType(NetworkType.CONNECTED)
+//                .setRequiresBatteryNotLow(GlobalConfig.lowBatteryUpload)
+//                .setRequiredNetworkType(NetworkType.CONNECTED)
                 .setRequiresStorageNotLow(false)
                 .build()
         val constraints = OneTimeWorkRequest.Builder(clazz.java)
