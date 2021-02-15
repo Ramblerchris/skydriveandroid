@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.Utils
 import com.library.base.base.BaseViewModel
 import com.library.base.config.GlobalUser
 import com.library.base.config.UserBean
+import com.library.base.event.Message
 import com.wisn.qm.BuildConfig
 import com.wisn.qm.mode.DataRepository
 import com.wisn.qm.mode.beans.FileType
@@ -18,7 +19,7 @@ import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UploadBean
 import com.wisn.qm.mode.net.ApiNetWork
-import com.wisn.qm.task.UploadTaskUitls
+import com.wisn.qm.task.TaskUitls
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -208,12 +209,12 @@ class HomeViewModel : BaseViewModel() {
                     for (mediainfo in selectData.value!!) {
                         mediainfo.pid = dirinfo.id
                         mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                        uploadlist.add(UploadTaskUitls.buidUploadBean(mediainfo))
+                        uploadlist.add(TaskUitls.buidUploadBean(mediainfo))
                     }
                     LogUtils.d("uploadlist size", uploadlist.size)
                     AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
                     if (isauto) {
-                        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
+                        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
                     }
                 }
 
@@ -233,16 +234,17 @@ class HomeViewModel : BaseViewModel() {
                 //子线程
                 mediainfo.pid = dirinfo.id
                 mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                val buidUploadBean = UploadTaskUitls.buidUploadBean(mediainfo)
+                val buidUploadBean = TaskUitls.buidUploadBean(mediainfo)
                 LogUtils.d("upload mediainfo", mediainfo)
                 AppDataBase.getInstanse().uploadBeanDao?.insertUploadBean(buidUploadBean)
                 if (isauto) {
-                    UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
+                    TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
                 }
             }
         }
     }
     fun deleteSelect() {
+       defUi.msgEvent.value = Message(100,"正在删除")
         launchUI {
             LogUtils.d("deleteSelect", Thread.currentThread().name)
             launchFlow {
@@ -251,13 +253,14 @@ class HomeViewModel : BaseViewModel() {
                         //todo 删除
                         try {
                             File(mediainfo.filePath).delete()
+                            AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
                     }
                     selectData.value!!.clear()
                     //更新相册
-                    UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildMediaScanWorkerRequest())
+                    TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildMediaScanWorkerRequest())
 
             }.flowOn(Dispatchers.IO).collect {
 

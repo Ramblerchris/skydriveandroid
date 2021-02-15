@@ -8,7 +8,7 @@ import com.wisn.qm.mode.db.beans.UploadBean
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
-object UploadTaskUitls {
+object TaskUitls {
 //    val constraints: Constraints by lazy {
 //        Constraints.Builder()
 //                .setRequiresCharging(GlobalConfig.lowBatteryUpload)

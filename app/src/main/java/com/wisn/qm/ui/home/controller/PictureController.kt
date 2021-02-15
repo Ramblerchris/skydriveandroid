@@ -17,13 +17,16 @@ import com.wisn.qm.ui.home.picture.PictureAdapterV2
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.library.base.layoutmanager.MGridLayoutManager
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
-import com.wisn.qm.task.UploadTaskUitls
+import com.wisn.qm.task.TaskUitls
 import com.wisn.qm.ui.home.picture.PictureCallBack
 
 
@@ -38,6 +41,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
     private val swiperefresh: SwipeRefreshLayout
     private val leftCancel: Button
     private val title: QMUIQQFaceView
+    var tipDialog:QMUITipDialog? =null
 
     override val layoutId: Int
         get() = R.layout.home_controller_picture
@@ -55,7 +59,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
         leftCancel.setOnClickListener {
             showPictureControl(false)
         }
-        gridLayoutManager = GridLayoutManager(context, 3)
+        gridLayoutManager = MGridLayoutManager(context, 3)
         recyclerView = findViewById(R.id.recyclerView)
         swiperefresh = findViewById(R.id.swiperefresh)
         //设置进度View样式的大小，只有两个值DEFAULT和LARGE，表示默认和较大
@@ -87,6 +91,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
                     LogUtils.d(" mHomeViewModel. updateHomeMedialist")
                     scantip.visibility = View.GONE
                     swiperefresh?.isRefreshing = false
+                    tipDialog?.dismiss()
                     if (it.isNullOrEmpty()) {
                         var item_empty: View = View.inflate(context, R.layout.item_empty, null)
                         var empty_tip = item_empty.findViewById<TextView>(R.id.empty_tip)
@@ -94,18 +99,29 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
                         image.setImageResource(R.mipmap.share_ic_blank_album)
                         empty_tip.setText("本地相册为空,快去拍照吧！")
                         mAdapter.setEmptyView(item_empty)
-                    } else {
-                        mHomeViewModel.count=it.size
-                        mAdapter.setNewInstance(it as MutableList<MediaInfo>)
                     }
+                    mAdapter.setNewInstance(it as MutableList<MediaInfo>)
+                    mHomeViewModel.count=it.size
                 })
+        homeViewModel?.defUi?.msgEvent?.observe(mhomeFragment, Observer {
+            if (it.code == 100) {
+                tipDialog = QMUITipDialog.Builder(context)
+                        .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                        .setTipWord(it.msg)
+                        .create()
+                tipDialog?.show()
+            } else {
+                ToastUtils.showShort("已经删除")
+                tipDialog?.dismiss()
+            }
+        })
         /* LiveEventBus
                  .get(ConstantKey.updatePhotoList, Int::class.java)
                  .observe(mHomeFragment, Observer {
                      LogUtils.d(" mHomeViewModel.updatePhotoList")
                      UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildMediaScanWorkerRequest())
                  })*/
-        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildMediaScanWorkerRequest())
+        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildMediaScanWorkerRequest())
     }
 
     override fun showPictureControl(isShow: Boolean?) {
@@ -135,7 +151,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
 
     override fun onRefresh() {
         LogUtils.d(" PictureController .onRefresh")
-        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildMediaScanWorkerRequest())
+        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildMediaScanWorkerRequest())
 
     }
 }

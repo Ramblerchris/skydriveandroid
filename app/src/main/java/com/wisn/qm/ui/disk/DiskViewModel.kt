@@ -10,7 +10,7 @@ import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.DiskUploadBean
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.net.ApiNetWork
-import com.wisn.qm.task.UploadTaskUitls
+import com.wisn.qm.task.TaskUitls
 import com.wisn.qm.ui.view.ViewPosition
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -177,7 +177,7 @@ class DiskViewModel : BaseViewModel() {
             }
             LogUtils.d("uploadlist size", uploadlist.size)
             AppDataBase.getInstanse().diskUploadBeanDao?.insertDiskUploadBeanList(uploadlist)
-            UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildDiskUploadWorkerRequest())
+            TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildDiskUploadWorkerRequest())
         }
     }
 

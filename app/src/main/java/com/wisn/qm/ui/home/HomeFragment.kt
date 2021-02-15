@@ -17,9 +17,8 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet.BottomListSheetBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
-import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.wisn.qm.R
-import com.wisn.qm.task.UploadTaskUitls
+import com.wisn.qm.task.TaskUitls
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.adapter.HomePagerAdapter
 import com.wisn.qm.ui.home.controller.*
@@ -34,7 +33,6 @@ import java.util.*
 class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
     val TAG: String = "HomeFragment"
     var pictureController: PictureController? = null
-    var tipDialog:QMUITipDialog? =null
 
     override fun initView(views: View) {
         super.initView(views)
@@ -50,14 +48,8 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                     }
                     .addAction("确定") { dialog, _ ->
                         dialog.dismiss()
-                        tipDialog = QMUITipDialog.Builder(context)
-                                .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
-                                .setTipWord("正在删除")
-                                .create()
-                        tipDialog?.show()
                         pictureController?.onBackPressedExit()
                         viewModel.deleteSelect()
-                        ToastUtils.showShort("已经删除")
                         //todo 添加loading dialog
                     }
                     .create(R.style.QMUI_Dialog).show()
@@ -104,7 +96,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
         showPictureControl(false)
         initTabs()
         initPager()
-        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
+        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         viewModel.checkUpdate().observe(this, Observer {
             QMUIDialog.MessageDialogBuilder(context)
                     .setTitle("更新提醒")

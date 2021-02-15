@@ -17,7 +17,7 @@ import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UploadBean
 import com.wisn.qm.mode.net.ApiNetWork
-import com.wisn.qm.task.UploadTaskUitls
+import com.wisn.qm.task.TaskUitls
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -135,12 +135,12 @@ class AlbumViewModel : BaseViewModel() {
                 mediainfo.filePath?.let {
                     mediainfo.pid = get.id
                     mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                    uploadlist.add(UploadTaskUitls.buidUploadBean(mediainfo))
+                    uploadlist.add(TaskUitls.buidUploadBean(mediainfo))
                 }
             }
             LogUtils.d("uploadlist size", uploadlist.size)
             AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
-            UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
+            TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         }
     }
 

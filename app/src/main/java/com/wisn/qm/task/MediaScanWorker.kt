@@ -37,13 +37,13 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
                     var start11 = System.currentTimeMillis();
                     LogUtils.d("CCCCCCCMediaScanWorker2 aa " + (start11 - start))
 
-                    val mediaInfoListAll = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoListAllNotDelete()
+                    var mediaInfoListAll = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoListAllNotDelete()
                     var start22 = System.currentTimeMillis();
                     LogUtils.d("CCCCCCCMediaScanWorker2 aaa " + (start22 - start11))
 
                     mediaImageListNew?.let {
-                        if (mediaInfoListAll != null && mediaInfoListAll.isNotEmpty()) {
-                            mediaInfoListAll.addAll(mediaImageListNew)
+                        if (mediaInfoListAll != null && mediaInfoListAll!!.isNotEmpty()) {
+                            mediaInfoListAll!!.addAll(mediaImageListNew)
                         }
                     }
                     var start33 = System.currentTimeMillis();
@@ -57,11 +57,13 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
                     LogUtils.d("CCCCCCCMediaScanWorker2 aaaa " + ( System.currentTimeMillis() - start33))
 
                     var start1 = System.currentTimeMillis();
-
+                    if (mediaInfoListAll==null){
+                        mediaInfoListAll=ArrayList<MediaInfo>()
+                    }
                     // 先通知显示
                     LiveEventBus
                             .get(ConstantKey.updateHomeMedialist)
-                            .post(mediaInfoListAll);
+                            .post(mediaInfoListAll)
                     mediaImageListNew?.let {
                         AppDataBase.getInstanse().mediaInfoDao?.insertMediaInfo(mediaImageListNew)
                     }
