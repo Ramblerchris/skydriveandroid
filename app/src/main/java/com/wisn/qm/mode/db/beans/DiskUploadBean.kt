@@ -80,6 +80,8 @@ data class DiskUploadBean(
             return "未上传"
         } else if (uploadStatus == FileType.UPloadStatus_uploading) {
             return "上传中"
+        }else if (uploadStatus == FileType.UPloadStatus_uploadDelete) {
+            return "文件已经删除"
         }
         return "未上传"
     }

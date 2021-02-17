@@ -87,15 +87,18 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
     }
 
     private suspend fun uploadFile(uploadbean: UploadBean) {
-        var mimetype = uploadbean.mimeType ?: "multipart/form-data"
-        var requestFile = RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
-        val body = MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
-
-        val uploadFile = ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
-        if (uploadFile.isUploadSuccess()) {
-            AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
-            LogUtils.d("0000doWork   " + uploadFile.data())
-
+        val file = File(uploadbean.filePath!!);
+        if(file.exists()){
+            var mimetype = uploadbean.mimeType ?: "multipart/form-data"
+            var requestFile = RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
+            val body = MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
+            val uploadFile = ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
+            if (uploadFile.isUploadSuccess()) {
+                AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
+                LogUtils.d("0000doWork   " + uploadFile.data())
+            }
+        }else{
+            AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadDelete, System.currentTimeMillis())
         }
     }
 }

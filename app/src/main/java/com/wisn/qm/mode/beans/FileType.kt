@@ -11,6 +11,7 @@ object FileType {
     const val UPloadStatus_Noupload = 0;
     const val UPloadStatus_uploading = 1;
     const val UPloadStatus_uploadSuccess = 2;
+    const val UPloadStatus_uploadDelete = 3;
 
 
     const val MediainfoStatus_uploadSuccess = 3;
