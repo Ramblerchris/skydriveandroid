@@ -90,6 +90,8 @@ data class UploadBean(
             return "未上传"
         } else if (uploadStatus == FileType.UPloadStatus_uploading) {
             return "上传中"
+        } else if (uploadStatus == FileType.UPloadStatus_uploadDelete) {
+            return "本地文件已经删除"
         }
         return "未上传"
     }
@@ -103,6 +105,14 @@ data class UploadBean(
         }
         return uploadSuccessTimeStr!!
 
+    }
+
+    fun getStatusStr(): String {
+        if(uploadStatus == FileType.UPloadStatus_uploadSuccess){
+            return "${getUploadTimeStr()} ${getUploadStatusStr()}"
+        }else{
+            return getUploadStatusStr()
+        }
     }
 
     override fun toString(): String {

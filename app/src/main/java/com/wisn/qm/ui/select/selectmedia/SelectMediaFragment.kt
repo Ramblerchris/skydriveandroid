@@ -43,7 +43,7 @@ open class SelectMediaFragment(var maxSelect:Int=-1) : BaseFragment<SelectFileVi
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {
             var intent = Intent()
-            val value = viewModel.selectData().value
+            val value = viewModel.selectMediaData().value
             value?.let {
                 selectMediaCall?.setResult(it)
                 intent.putExtra("data", value)
@@ -71,7 +71,7 @@ open class SelectMediaFragment(var maxSelect:Int=-1) : BaseFragment<SelectFileVi
             }
         })
 
-        viewModel.selectData().observe(this, Observer {
+        viewModel.selectMediaData().observe(this, Observer {
             setTitleTipInfo(it.size)
         })
 

@@ -39,7 +39,7 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
                                 SHAMD5Utils.getSHA1(diskUploadbean.filePath)
                             }
                             diskUploadbean.sha1?.let {
-                                AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanSha1(diskUploadbean.id,it)
+                                AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanSha1(diskUploadbean.id, it)
                             }
                         }
                         position++
@@ -50,14 +50,9 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
                         val uploadFileHitpass = diskUploadbean.sha1?.let {
                             ApiNetWork.newInstance().uploadDiskFileHitpass(diskUploadbean.pid, diskUploadbean.sha1!!)
                         }
-                        if (uploadFileHitpass != null) {
-                            if (uploadFileHitpass.isUploadSuccess()) {
-                                //修改上传成功状态
-                                AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanStatus(diskUploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
-                            } else {
-                                //秒传失败，要重新上传文件
-                                uploadFile(diskUploadbean)
-                            }
+                        if (uploadFileHitpass != null && uploadFileHitpass.isUploadSuccess()) {
+                            //修改上传成功状态
+                            AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanStatus(diskUploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
                         } else {
                             uploadFile(diskUploadbean)
                         }
@@ -88,15 +83,19 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Worke
     }
 
     private suspend fun uploadFile(uploadbean: DiskUploadBean) {
-        var mimetype = uploadbean.mimeType ?: "multipart/form-data"
-        var requestFile = RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
-        val body = MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
+        val file = File(uploadbean.filePath!!);
+        if (file.exists()) {
+            var mimetype = uploadbean.mimeType ?: "multipart/form-data"
+            var requestFile = RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
+            val body = MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
+            val uploadFile = ApiNetWork.newInstance().uploadDiskFile(uploadbean.sha1!!, uploadbean.pid, mimetype, body)
+            if (uploadFile.isUploadSuccess()) {
+                AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
+                LogUtils.d("0000doWork   " + uploadFile.data())
 
-        val uploadFile = ApiNetWork.newInstance().uploadDiskFile(uploadbean.sha1!!, uploadbean.pid, mimetype, body)
-        if (uploadFile.isUploadSuccess()) {
-            AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
-            LogUtils.d("0000doWork   " + uploadFile.data())
-
+            }
+        } else {
+            AppDataBase.getInstanse().diskUploadBeanDao?.updateDiskUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadDelete, System.currentTimeMillis())
         }
     }
 }

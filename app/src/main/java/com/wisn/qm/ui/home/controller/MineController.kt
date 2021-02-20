@@ -68,14 +68,17 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
 
         iv_right.background.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
         mHomeViewModel.getUserInfo().observe(mHomeFragment, Observer {
-            GlobalUser.userinfo?.photo_file_sha1?.let {
-                val imageUrl = Constant.getImageUrl(GlobalUser.userinfo!!.photo_file_sha1)
-                imageUrl?.let {
-                    GlideUtils.loadUrl(imageUrl,iv_header,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar)
+            try {
+                GlobalUser.userinfo?.photo_file_sha1?.let {
+                    val imageUrl = Constant.getImageUrl(GlobalUser.userinfo!!.photo_file_sha1)
+                    imageUrl?.let {
+                        GlideUtils.loadUrl(imageUrl,iv_header,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar)
+                    }
                 }
+                tv_username.text = GlobalUser.userinfo!!.user_name
+                swiperefresh?.isRefreshing = false
+            } catch (e: Exception) {
             }
-            tv_username.text = GlobalUser.userinfo!!.user_name
-            swiperefresh?.isRefreshing = false
         })
 
         mHomeViewModel.updateUserName(null).observe(mHomeFragment, Observer {

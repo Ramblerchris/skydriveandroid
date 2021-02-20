@@ -3,8 +3,6 @@ package com.wisn.qm.ui.upload
 import android.graphics.Color
 import android.graphics.Typeface
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout

@@ -31,7 +31,7 @@ object TaskUitls {
 //                .setInitialDelay(10,TimeUnit.SECONDS)//符合触发条件后，延迟10秒执行
                 //为任务设置Tag标签。设置Tag后，你就可以通过该抱歉跟踪任务的状态WorkManager.getWorkInfosByTagLiveData(String tag)或者取消任务WorkManager.cancelAllWorkByTag(String tag)。
                 .addTag("UploadTag")
-                .setConstraints(build);
+                .setConstraints(build)
         inputdata?.let {
             constraints.setInputData(inputdata)
         }
@@ -39,7 +39,8 @@ object TaskUitls {
     }
 
     fun exeRequest(context: Context, workRequest: WorkRequest): Operation {
-        return WorkManager.getInstance(context).enqueue(workRequest)
+        val enqueue = WorkManager.getInstance(context).enqueue(workRequest)
+        return enqueue;
     }
 
     fun buildUploadRequest(): WorkRequest {

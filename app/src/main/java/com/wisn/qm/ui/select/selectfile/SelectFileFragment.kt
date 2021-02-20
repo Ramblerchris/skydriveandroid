@@ -74,7 +74,7 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
                 mAdapter.setNewData(it)
             }
         })
-        viewModel.currentViewPosition.observe(this, Observer {
+        viewModel.fileCurrentViewPosition.observe(this, Observer {
             linearLayoutManager.scrollToPositionWithOffset(it.lastPosition,it.lastOffset)
         })
         recyclerView?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -93,7 +93,7 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
 //        recyclerView?.setOnScrollChangeListener(object:View.OnScrollChangeListener(){
 //
 //        })
-        viewModel.currentFileName.observe(this, Observer {
+        viewModel.fileCurrentFileName.observe(this, Observer {
             if (it.isNullOrEmpty()) {
                 title.text = "本地文件选择"
             } else {
@@ -124,7 +124,7 @@ class SelectFileFragment : BaseFragment<SelectFileViewModel>(), ClickItem {
 
     override fun click(position: Int, fileBean: FileBean) {
         if (fileBean.isDir) {
-            viewModel.setViewPosition(ViewPosition(lastPosition,lastOffset))
+            viewModel.setFileViewPosition(ViewPosition(lastPosition,lastOffset))
             viewModel.getFileBeanList(File(fileBean.filePath))
         }
     }

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.blankj.utilcode.util.VibrateUtils
 import com.library.base.config.Constant
 import com.library.base.utils.GlideUtils
 import com.qmuiteam.qmui.kotlin.onClick
@@ -41,7 +40,7 @@ class AlbumDetailsPageingAdapter(var editAlbumDetails: EditAlbumDetails, var alb
             oldItem: UserDirBean,
             newItem: UserDirBean
     ): Boolean {
-        return oldItem == newItem
+        return oldItem === newItem
     }
 }) {
 
@@ -49,7 +48,6 @@ class AlbumDetailsPageingAdapter(var editAlbumDetails: EditAlbumDetails, var alb
     protected var map: HashMap<Long, Boolean> = HashMap()
     override fun onBindViewHolder(holder: BaseDataBindlingViewHolder, position: Int) {
         var item=getItem(position)!!
-        val adapterPosition = holder.adapterPosition
         if (item.itemType == FileType.TimeTitle) {
 //            viewHolder.setDataBinding<RvItemAlbumDetailTimetitleBinding>(viewHolder.itemView)
         } else if (item.itemType == FileType.TitleInfo) {
@@ -70,7 +68,7 @@ class AlbumDetailsPageingAdapter(var editAlbumDetails: EditAlbumDetails, var alb
                         notifyDataSetChanged()
                         editAlbumDetails.isShowEdit(true)
                         editAlbumDetails.changeSelectData(true, true, item)
-                        VibrateUtils.vibrate(10)
+//                        VibrateUtils.vibrate(10)
                     }
                     return@OnLongClickListener false
                 })
@@ -78,17 +76,17 @@ class AlbumDetailsPageingAdapter(var editAlbumDetails: EditAlbumDetails, var alb
                     if (isSelectModel) {
                         var isSelect = map.get(item.id!!)
                         if (isSelect == null) {
-                            isSelect = true;
+                            isSelect = true
                         } else {
                             isSelect = !isSelect
                         }
                         map.put(item.id!!, isSelect)
-                        notifyItemChanged(adapterPosition)
+                        notifyItemChanged(position)
                         editAlbumDetails.changeSelectData(false, isSelect, item)
                     } else {
                         //查看大图
 //                        val netPreviewFragment = NetPreviewFragment(this.da, adapterPosition)
-                        albumDetailsFragment.prePic(adapterPosition)
+                        albumDetailsFragment.prePic(position)
                     }
                 }
             }

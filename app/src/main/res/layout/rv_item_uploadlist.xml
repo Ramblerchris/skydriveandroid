@@ -7,7 +7,7 @@
             name="itemData"
             type="com.wisn.qm.mode.db.beans.UploadBean" />
         <variable
-            name="FileType"
+            name="fileType"
             type="com.wisn.qm.mode.beans.FileType" />
     </data>
 
@@ -59,8 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@{itemData.getUploadTimeStr()+itemData.getUploadStatusStr() }"
-            android:textColor="@{itemData.uploadStatus == 2 ? @color/green : @color/red}"
+            android:text="@{itemData.getStatusStr()}"
+            android:textColor="@{itemData.uploadStatus == fileType.UPloadStatus_uploadSuccess ? @color/green : @color/red}"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_header"
             app:layout_constraintStart_toStartOf="@+id/name"

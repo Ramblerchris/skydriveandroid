@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 
 class AlbumViewModel : BaseViewModel() {
     val userdir = MutableLiveData<UserDirBean>()
-    var result = ArrayList<String>()
+    var selectSha1List = ArrayList<String>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var selectData = MutableLiveData<MutableList<UserDirBean>>()
     var userDirListDataSource: UserDirListDataSource? = null
@@ -38,16 +38,16 @@ class AlbumViewModel : BaseViewModel() {
 
     fun editUserDirBean(isinit: Boolean, isAdd: Boolean, userDirBean: UserDirBean?) {
         if (isinit) {
-            selectData().value?.clear();
-            result.clear()
+            selectData().value?.clear()
+            selectSha1List.clear()
         }
         userDirBean?.let {
             if (isAdd) {
                 selectData().value?.add(userDirBean)
-                result.add(userDirBean.sha1!!)
+                selectSha1List.add(userDirBean.sha1!!)
             } else {
                 selectData().value?.remove(userDirBean)
-                result.remove(userDirBean.sha1!!)
+                selectSha1List.remove(userDirBean.sha1!!)
             }
             selectData().value = selectData().value
         }
@@ -98,6 +98,10 @@ class AlbumViewModel : BaseViewModel() {
             val dirlist = ApiNetWork.newInstance().getUserDirlist(pid, pageSize = -1)
             if (dirlist.isSuccess()) {
                 dirlistLD.value = dirlist.data.list
+                selectData().value?.clear()
+                selectSha1List.clear()
+            } else {
+                defUi.toastEvent.value = dirlist.msg()
             }
             dirlist
         })
@@ -107,8 +111,8 @@ class AlbumViewModel : BaseViewModel() {
     fun deletefiles(pid: Long) {
         launchGo({
             var sb = StringBuilder();
-            result.forEachIndexed { index, s ->
-                if (index == (result.size - 1)) {
+            selectSha1List.forEachIndexed { index, s ->
+                if (index == (selectSha1List.size - 1)) {
                     sb.append(s)
                 } else {
                     sb.append(s + ";")

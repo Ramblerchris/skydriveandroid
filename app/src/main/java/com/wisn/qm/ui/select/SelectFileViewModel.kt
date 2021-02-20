@@ -17,19 +17,16 @@ import java.io.File
 import kotlin.collections.ArrayList
 
 class SelectFileViewModel : BaseViewModel() {
-    var mediaImagelistdata = MutableLiveData<MutableList<MediaInfo>>()
     var filelistdata = MutableLiveData<MutableList<FileBean>>()
+    var fileCurrentFileName = MutableLiveData<String>()
+    var fileCurrentViewPosition = MutableLiveData<ViewPosition>()
+    private var filePositionMap = HashMap<String, ViewPosition>()
+    private var fileCurrentFile: File? = null
+    private var fileRootName: String? = null
+
+    var mediaImagelistdata = MutableLiveData<MutableList<MediaInfo>>()
     var mediaSelectList = MutableLiveData<ArrayList<MediaInfo>>()
-    var currentFileName = MutableLiveData<String>()
-    var titleShow = MutableLiveData<String>()
-
-    var currentViewPosition = MutableLiveData<ViewPosition>()
-    private var positionMap = HashMap<String, ViewPosition>()
-    private var currentFile: File? = null
-    private var rootName: String? = null
-
-
-    private var selectIdList = ArrayList<Long>()
+    var mediaTitleShow = MutableLiveData<String>()
 
     fun getMediaImageList(selectList: MutableList<MediaInfo>?): MutableLiveData<MutableList<MediaInfo>> {
 
@@ -62,6 +59,8 @@ class SelectFileViewModel : BaseViewModel() {
                         AppDataBase.getInstanse().mediaInfoDao?.insertMediaInfo(mediaImageList)
                     }
                 }
+                //减小遍历次数
+                var selectIdList = ArrayList<Long>()
                 selectList?.let {
                     selectIdList.clear()
                     for (mediainfo in it) {
@@ -70,12 +69,13 @@ class SelectFileViewModel : BaseViewModel() {
                         }
                     }
                 }
+                //找出已经选择id的 mediainfo
                 var tempposition = 0
                 if (mediaImageList != null && selectList != null && selectList.size > 0) {
                     for (mediainfo in mediaImageList) {
                         if (selectIdList.contains(mediainfo.id)) {
                             mediainfo.isSelect = true
-                            selectData().value?.add(mediainfo)
+                            selectMediaData().value?.add(mediainfo)
                             tempposition++
                         }
                         //优化，不必所有的都遍历完
@@ -93,41 +93,41 @@ class SelectFileViewModel : BaseViewModel() {
         return mediaImagelistdata
     }
 
-    fun changeSelectData(isAdd: Boolean, item: MediaInfo?) {
+    fun changeMediaSelectData(isAdd: Boolean, item: MediaInfo?) {
         if (item != null) {
             if (isAdd) {
-                selectData().value?.add(item)
+                selectMediaData().value?.add(item)
             } else {
-                selectData().value?.remove(item)
+                selectMediaData().value?.remove(item)
             }
-            selectData().value = selectData().value
+            selectMediaData().value = selectMediaData().value
         }
-        titleShow.value = "已选中${selectData().value?.size ?: 0}项"
+        mediaTitleShow.value = "已选中${selectMediaData().value?.size ?: 0}项"
     }
 
 
-    fun selectData(): MutableLiveData<ArrayList<MediaInfo>> {
+    fun selectMediaData(): MutableLiveData<ArrayList<MediaInfo>> {
         if (mediaSelectList.value == null) {
             mediaSelectList.value = ArrayList<MediaInfo>()
         }
         return mediaSelectList
     }
 
-    fun setViewPosition(viewPosition: ViewPosition) {
-        if (currentFile != null) {
-            positionMap.put(currentFile!!.absolutePath, viewPosition)
+    fun setFileViewPosition(viewPosition: ViewPosition) {
+        if (fileCurrentFile != null) {
+            filePositionMap.put(fileCurrentFile!!.absolutePath, viewPosition)
         }
     }
 
 
     fun backFileList(): Boolean {
-        if (currentFile == null || TextUtils.isEmpty(rootName)) {
+        if (fileCurrentFile == null || TextUtils.isEmpty(fileRootName)) {
             return true
         }
-        if (rootName.equals(currentFile!!.absolutePath)) {
+        if (fileRootName.equals(fileCurrentFile!!.absolutePath)) {
             return true
         }
-        val parentFile = currentFile!!.parentFile
+        val parentFile = fileCurrentFile!!.parentFile
         if (parentFile.isDirectory) {
             getFileBeanList(parentFile)
         }
@@ -142,16 +142,16 @@ class SelectFileViewModel : BaseViewModel() {
                 var result: MutableList<FileBean> = ArrayList()
                 LogUtils.d("getFileBeanList ", Thread.currentThread().name)
                 if (selectTargFile != null) {
-                    currentFile = selectTargFile
-                    currentFile?.let {
-                        currentFileName.postValue(it.name)
+                    fileCurrentFile = selectTargFile
+                    fileCurrentFile?.let {
+                        fileCurrentFileName.postValue(it.name)
                     }
                 } else {
-                    currentFile = Environment.getExternalStorageDirectory()
-                    rootName = currentFile?.absolutePath
-                    currentFileName.postValue("/")
+                    fileCurrentFile = Environment.getExternalStorageDirectory()
+                    fileRootName = fileCurrentFile?.absolutePath
+                    fileCurrentFileName.postValue("/")
                 }
-                val listFiles = currentFile!!.listFiles()
+                val listFiles = fileCurrentFile!!.listFiles()
                 val iterator = listFiles.iterator();
                 while (iterator.hasNext()) {
                     val next = iterator.next()
@@ -181,10 +181,10 @@ class SelectFileViewModel : BaseViewModel() {
             }.flowOn(Dispatchers.IO).collect {
                 LogUtils.d("getMediaImageList3 BBB", Thread.currentThread().name)
                 filelistdata.value = it
-                currentFile?.let {
-                    val get = positionMap.get(it.absolutePath)
+                fileCurrentFile?.let {
+                    val get = filePositionMap.get(it.absolutePath)
                     get?.let {
-                        currentViewPosition.value = get
+                        fileCurrentViewPosition.value = get
 
                     }
                 }

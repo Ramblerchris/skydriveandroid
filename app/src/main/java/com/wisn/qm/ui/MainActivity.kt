@@ -12,6 +12,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragmentActivity
 import com.library.base.utils.UploadTip
+import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.arch.annotation.FirstFragments
 import com.qmuiteam.qmui.arch.annotation.LatestVisitRecord

@@ -17,29 +17,30 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+    val TAG:String="MediaScanWorker"
     override fun doWork(): Result {
         GlobalScope.launch {
             try {
                 var s = System.currentTimeMillis();
 
-                LogUtils.d("CCCCCCCMediaScanWorker2 开始")
+                LogUtils.d(TAG," 开始")
 
                 val maxId = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoMaxId();
 
-                LogUtils.d("CCCCCCCMediaScanWorker2  开始!!!")
+                LogUtils.d(TAG,"  查询最大值maxId用时："+(System.currentTimeMillis() - s))
 
                 if (maxId != null && maxId > 0) {
 
-                    LogUtils.d("CCCCCCCMediaScanWorker2  差量aa " + maxId + " ???")
+                    LogUtils.d(TAG, "  差量 $maxId")
                     var start = System.currentTimeMillis();
                     // todo 再次扫描更新
                     val mediaImageListNew = DataRepository.getInstance().getMediaImageAndVideoList(maxId.toString())
                     var start11 = System.currentTimeMillis();
-                    LogUtils.d("CCCCCCCMediaScanWorker2 aa " + (start11 - start))
+                    LogUtils.d(TAG," 查询最大值maxId列表用时： " + (start11 - start))
 
                     var mediaInfoListAll = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoListAllNotDelete()
                     var start22 = System.currentTimeMillis();
-                    LogUtils.d("CCCCCCCMediaScanWorker2 aaa " + (start22 - start11))
+                    LogUtils.d(TAG," 查询不是未删除列表用时： " + (start22 - start11))
 
                     mediaImageListNew?.let {
                         if (mediaInfoListAll != null && mediaInfoListAll!!.isNotEmpty()) {
@@ -48,15 +49,15 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
                     }
                     var start33 = System.currentTimeMillis();
 
-                    LogUtils.d("CCCCCCCMediaScanWorker2 aaaa " + (start33 - start22))
+                    LogUtils.d(TAG," 合并新的和旧的列表用时 " + (start33 - start22))
 
 
                     mediaInfoListAll?.sortByDescending {
                         it.createTime
                     }
-                    LogUtils.d("CCCCCCCMediaScanWorker2 aaaa " + ( System.currentTimeMillis() - start33))
+                    LogUtils.d(TAG," 按照创建时间排序用时 " + ( System.currentTimeMillis() - start33))
 
-                    var start1 = System.currentTimeMillis();
+                    var start1 = System.currentTimeMillis()
                     if (mediaInfoListAll==null){
                         mediaInfoListAll=ArrayList<MediaInfo>()
                     }
@@ -67,32 +68,35 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
                     mediaImageListNew?.let {
                         AppDataBase.getInstanse().mediaInfoDao?.insertMediaInfo(mediaImageListNew)
                     }
-                    LogUtils.d("CCCCCCCMediaScanWorker2 aaaaa" + (System.currentTimeMillis() - start1))
-                    LogUtils.d("CCCCCCCMediaScanWorker2 bbb" + (System.currentTimeMillis() - s))
-
+                    LogUtils.d(TAG," 插入新增的列表用时" + (System.currentTimeMillis() - start1))
+                    LogUtils.d(TAG," 从扫描到插入的所有的耗时" + (System.currentTimeMillis() - s))
+                    var end2 = System.currentTimeMillis();
                     dealUploadStatus(mediaInfoListAll)
-                    LogUtils.d("CCCCCCCMediaScanWorker2 bbbb" + (System.currentTimeMillis() - s))
+                    LogUtils.d(TAG," 处理已经已经上传和删除数据耗时" + (System.currentTimeMillis() - end2))
 
 
                 } else {
-                    LogUtils.d("CCCCCCCMediaScanWorker2  全量")
+                    LogUtils.d(TAG,"  全量扫描开始")
                     //第一次加载
                     var start = System.currentTimeMillis();
-                    LogUtils.d("CCCCCCCMediaScanWorker2 start" + start)
                     //首次 先扫描，后通知显示
                     val mediaImageList = DataRepository.getInstance().getMediaImageAndVideoList("-1")
+                    LogUtils.d(TAG," 全量处理扫描所有数据耗时" + (System.currentTimeMillis() - start))
+                    LiveEventBus
+                            .get(ConstantKey.updateHomeMedialist)
+                            .post(mediaImageList)
+                    var end2 = System.currentTimeMillis();
                     mediaImageList?.let {
                         mediaImageList?.sortByDescending {
                             it.createTime
                         }
-                        var end2 = System.currentTimeMillis();
-                        LogUtils.d("CCCCCCCMediaScanWorker2 end2 耗时" + (end2 - end2))
+                        LogUtils.d(TAG," 全量扫描排序耗时" + (end2 - start))
                         AppDataBase.getInstanse().mediaInfoDao?.insertMediaInfo(mediaImageList)
+                        LogUtils.d(TAG," 全量处理插入所有耗时" + (System.currentTimeMillis() - end2))
                     }
-                    LiveEventBus
-                            .get(ConstantKey.updateHomeMedialist)
-                            .post(mediaImageList);
+                    var end3 = System.currentTimeMillis();
                     dealUploadStatus(mediaImageList)
+                    LogUtils.d(TAG," 全量处理已经已经上传和删除数据耗时" + (System.currentTimeMillis() - end3))
                 }
 
             } catch (e: Exception) {

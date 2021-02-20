@@ -48,16 +48,12 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                         val uploadFileHitpass = uploadbean.sha1?.let {
                             ApiNetWork.newInstance().uploadFileHitpass(uploadbean.pid, uploadbean.sha1!!)
                         }
-                        if (uploadFileHitpass != null) {
-                            if (uploadFileHitpass.isUploadSuccess()) {
-                                //修改上传成功状态
-                                AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
-                                AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_uploadSuccess)
-                            } else {
-                                //秒传失败，要重新上传文件
-                                uploadFile(uploadbean)
-                            }
+                        if (uploadFileHitpass != null && uploadFileHitpass.isUploadSuccess()) {
+                            //修改上传成功状态
+                            AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
+                            AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_uploadSuccess)
                         } else {
+                            //秒传失败，要重新上传文件
                             uploadFile(uploadbean)
                         }
                         UploadTip.tipVibrate()
@@ -95,10 +91,12 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
             val uploadFile = ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
             if (uploadFile.isUploadSuccess()) {
                 AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
+                AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_uploadSuccess)
                 LogUtils.d("0000doWork   " + uploadFile.data())
             }
         }else{
             AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadDelete, System.currentTimeMillis())
+            AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_Deleted)
         }
     }
 }

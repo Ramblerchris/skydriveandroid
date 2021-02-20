@@ -63,13 +63,13 @@ class SelectMediaAdapter(var selectPictureCallBack: SelectFileViewModel, var max
                         .into(it)
                 dataBinding.image.onClick {
                     //如果是要选中
-                    if (maxSelect > 0 && !item.isSelect && selectPictureCallBack.selectData().value?.size!! >= maxSelect) {
+                    if (maxSelect > 0 && !item.isSelect && selectPictureCallBack.selectMediaData().value?.size!! >= maxSelect) {
                         ToastUtils.showShort("最多选择${maxSelect}张")
                         return@onClick
                     }
                     item.isSelect = !item.isSelect
                     notifyItemChanged(adapterPosition)
-                    selectPictureCallBack.changeSelectData(item.isSelect, item)
+                    selectPictureCallBack.changeMediaSelectData(item.isSelect, item)
                 }
                 dataBinding.ivSelect.visibility = View.VISIBLE
                 if (item.isSelect) {

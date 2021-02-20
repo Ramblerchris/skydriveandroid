@@ -9,11 +9,11 @@ import android.view.View
 import android.widget.Button
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragment
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
@@ -30,11 +30,6 @@ import com.wisn.qm.ui.netpreview.NetPreviewFragment
 import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.Exception
 
 
 class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.OnRefreshListener, EditAlbumDetails {
@@ -86,18 +81,23 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
         rightButton.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         rightButton.setOnClickListener {
             if (isShowEdit) {
-                QMUIDialog.MessageDialogBuilder(context)
-                        .setTitle("确定要删除吗？")
-                        .setSkinManager(QMUISkinManager.defaultInstance(context))
+                if (viewModel.selectSha1List.size <= 0) {
+                    ToastUtils.showShort("请选择要删除的文件")
+                } else {
+                    QMUIDialog.MessageDialogBuilder(context)
+                            .setTitle("确定要删除吗？")
+                            .setSkinManager(QMUISkinManager.defaultInstance(context))
 //                        .setMessage("确定要删除${item.filename}相册吗?")
-                        .addAction("取消") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .addAction("确定") { dialog, _ ->
-                            dialog.dismiss()
-                            viewModel.deletefiles(get.id)
-                        }
-                        .create(R.style.QMUI_Dialog).show()
+                            .addAction("取消") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .addAction("确定") { dialog, _ ->
+                                dialog.dismiss()
+                                viewModel.deletefiles(get.id)
+                                albumPictureAdapter.notifyDataSetChanged()
+                            }
+                            .create(R.style.QMUI_Dialog).show()
+                }
             } else {
                 val selectPictureFragment = SelectMediaFragment()
                 selectPictureFragment.arguments = Bundle()
