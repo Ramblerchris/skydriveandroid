@@ -24,8 +24,18 @@
                 android:layout_height="match_parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <include
+        android:id="@+id/item_emptya"
+        layout="@layout/item_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/qmui_topbar_height"
+        android:background="?attr/qmui_skin_support_color_background"
+        android:fitsSystemWindows="true" />
 
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     <com.qmuiteam.qmui.widget.QMUITopBarLayout
         android:id="@+id/topbar"

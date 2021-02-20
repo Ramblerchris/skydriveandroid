@@ -1,72 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="itemData"
-            type="com.wisn.qm.mode.db.beans.UserDirBean" />
-        <variable
-            name="AlbumController"
-            type="com.wisn.qm.ui.home.controller.AlbumController" />
-    </data>
-    <com.qmuiteam.qmui.layout.QMUIConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/rootview"
-        android:layout_width="match_parent"
+<com.qmuiteam.qmui.layout.QMUIConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="12dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="4dp"
+    android:background="@color/qmui_config_color_white"
+    android:clickable="true"
+    app:qmui_backgroundColor="@color/qmui_config_color_white"
+    app:qmui_radius="4dp"
+    app:qmui_shadowElevation="6dp">
+
+
+    <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
+        android:id="@+id/iv_header"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/cloud_album_icon_album_default"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:qmui_corner_radius="2dp" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/des"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@+id/iv_header"
+        app:layout_constraintStart_toEndOf="@+id/iv_header"
+        app:layout_constraintTop_toTopOf="@+id/iv_header"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_default="wrap"
+        tools:text="12345678901234" />
+
+    <TextView
+        android:id="@+id/des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="4dp"
-        android:clickable="true"
-        android:background="@color/qmui_config_color_white"
-        app:qmui_backgroundColor="@color/qmui_config_color_white"
-        app:qmui_radius="4dp"
-        app:qmui_shadowElevation="6dp">
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_header"
+        app:layout_constraintStart_toStartOf="@+id/name"
+        app:layout_constraintTop_toBottomOf="@+id/name"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="2020年08月23日" />
 
-
-        <com.qmuiteam.qmui.widget.QMUIRadiusImageView2
-            android:id="@+id/iv_header"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@mipmap/cloud_album_icon_album_default"
-            android:scaleType="centerCrop"
-            app:qmui_corner_radius="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@{itemData.filename}"
-            tools:text="12345678901234"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintWidth_default="wrap"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintBottom_toTopOf="@+id/des"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/iv_header"
-            app:layout_constraintStart_toEndOf="@+id/iv_header"
-            app:layout_constraintTop_toTopOf="@+id/iv_header"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/des"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@{itemData.createattimestr}"
-            tools:text="2020年08月23日"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_header"
-            app:layout_constraintStart_toStartOf="@+id/name"
-            app:layout_constraintTop_toBottomOf="@+id/name"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-    </com.qmuiteam.qmui.layout.QMUIConstraintLayout>
-</layout>
+    <TextView
+        android:id="@+id/share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/album_share_bg"
+        android:paddingLeft="10dp"
+        android:paddingTop="2dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="2dp"
+        android:text="分享"
+        android:textColor="@color/exo_white"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="分享" />
+    <!--            android:visibility="@{itemData.status == fileType.UPloadStatus_uploadSuccess ? @color/green : @color/red}"
+    -->
+</com.qmuiteam.qmui.layout.QMUIConstraintLayout>

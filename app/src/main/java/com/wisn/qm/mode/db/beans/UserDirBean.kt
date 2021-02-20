@@ -52,6 +52,18 @@ data class UserDirBean(
         @SerializedName("type")
         var type: Int?,
 
+        @ColumnInfo(name = "isShare")
+        @SerializedName("isShare")
+        var isShare: Int?,
+
+        @ColumnInfo(name = "isShareFromMe")
+        @SerializedName("isShareFromMe")
+        var isShareFromMe: Int?,
+
+        @ColumnInfo(name = "ShareFrom")
+        @SerializedName("ShareFrom")
+        var ShareFrom: String?,
+
         @ColumnInfo(name = "ftype")
         @SerializedName("ftype")
         var ftype: Int?,

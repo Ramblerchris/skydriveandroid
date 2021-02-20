@@ -16,8 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VibrateUtils
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.listener.OnItemLongClickListener
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
@@ -27,20 +25,22 @@ import com.qmuiteam.qmui.widget.popup.QMUIPopup
 import com.qmuiteam.qmui.widget.popup.QMUIPopups
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
+import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.ui.album.details.AlbumDetailsPageingFragment
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
 import com.wisn.qm.ui.home.adapter.AlbumAdapter
+import kotlinx.android.synthetic.main.home_controller_album.view.*
 import java.util.*
 
 
 /**
  * Created by Wisn on 2020/6/5 下午11:25.
  */
-class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewModel: HomeViewModel?) : BaseHomeController(context, mhomeFragment, homeViewModel), SwipeRefreshLayout.OnRefreshListener {
+class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewModel: HomeViewModel?) : BaseHomeController(context, mhomeFragment, homeViewModel), SwipeRefreshLayout.OnRefreshListener,AlbumAdapter.CallBack {
     private val topbar: QMUITopBarLayout = findViewById(R.id.topbar)
-    private val mAdapter by lazy { AlbumAdapter() }
+    private val mAdapter by lazy { AlbumAdapter(this) }
     private val recyclerView: RecyclerView
     private val swiperefresh: SwipeRefreshLayout
     var mGlobalAction: QMUIPopup? =null
@@ -73,27 +73,29 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
         mHomeViewModel.getUserDirlist().observe(mhomeFragment!!, Observer {
             swiperefresh?.isRefreshing = false
             LogUtils.d("updateAlbum!!!!!!!!!!!!!!!!!!!!!!!!!!1")
-            if (it.isNullOrEmpty()) {
-                mAdapter.setEmptyView(R.layout.item_empty)
-            } else {
-                mAdapter.setNewInstance(it)
-            }
-        })
-        mAdapter.setOnItemClickListener { baseQuickAdapter: BaseQuickAdapter<*, *>, view: View, i: Int ->
-            mHomeControlListener.let {
-                val albumDetailsFragment = AlbumDetailsPageingFragment()
-                albumDetailsFragment.arguments = Bundle()
-                albumDetailsFragment.requireArguments().putSerializable(ConstantKey.albuminfo, mAdapter.getItem(i))
-                mHomeControlListener.startFragmentByView(albumDetailsFragment)
-            }
-        }
-        mAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
-            override fun onItemLongClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int): Boolean {
-                showGlobalActionPopup(view.findViewById(R.id.name),position)
-                return true
-            }
 
+            if (it.isNullOrEmpty()) {
+                item_emptya.visibility=View.VISIBLE
+            } else {
+                item_emptya.visibility=View.GONE
+                mAdapter.setNewData(it)
+            }
         })
+
+//        mAdapter.callback=setOnItemClickListener { baseQuickAdapter: BaseQuickAdapter<*, *>, view: View, i: Int ->
+//            mHomeControlListener.let {
+//                val albumDetailsFragment = AlbumDetailsPageingFragment()
+//                albumDetailsFragment.arguments = Bundle()
+//                albumDetailsFragment.requireArguments().putSerializable(ConstantKey.albuminfo, mAdapter.getItem(i))
+//                mHomeControlListener.startFragmentByView(albumDetailsFragment)
+//            }
+//        }
+//        mAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
+//            override fun onItemLongClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int): Boolean {
+//                showGlobalActionPopup(view.findViewById(R.id.name),position)
+//                return true
+//            }
+//        })
         LiveEventBus
                 .get(ConstantKey.updateAlbum, Int::class.java)
                 .observe(mhomeFragment!!, Observer {
@@ -110,45 +112,51 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
         val onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, l ->
             if (position == 0) {
                 val item = mAdapter.getItem(index)
-                val builder = QMUIDialog.EditTextDialogBuilder(context)
-                builder.setTitle("修改相册名称")
-                        .setSkinManager(QMUISkinManager.defaultInstance(context))
-                        .setPlaceholder("在此输入新相册名称")
-                        .setDefaultText(item.filename)
-                        .setInputType(InputType.TYPE_CLASS_TEXT)
-                        .addAction("取消") { dialog, index -> dialog.dismiss() }
-                        .addAction("确定") { dialog, index ->
-                            val text: CharSequence = builder.editText.text
-                            if (!TextUtils.isEmpty(text)) {
-                                dialog.dismiss()
-                                mHomeViewModel.updateUserDirName(item.id, text.toString())
-                            } else {
-                                ToastUtils.showShort("请输入相册名称")
+                item?.let {
+                    val builder = QMUIDialog.EditTextDialogBuilder(context)
+                    builder.setTitle("修改相册名称")
+                            .setSkinManager(QMUISkinManager.defaultInstance(context))
+                            .setPlaceholder("在此输入新相册名称")
+                            .setDefaultText(item.filename)
+                            .setInputType(InputType.TYPE_CLASS_TEXT)
+                            .addAction("取消") { dialog, index -> dialog.dismiss() }
+                            .addAction("确定") { dialog, index ->
+                                val text: CharSequence = builder.editText.text
+                                if (!TextUtils.isEmpty(text)) {
+                                    dialog.dismiss()
+                                    mHomeViewModel.updateUserDirName(item.id, text.toString())
+                                } else {
+                                    ToastUtils.showShort("请输入相册名称")
+                                }
                             }
-                        }
-                val create=builder.create(R.style.QMUI_Dialog)
-                builder.editText.selectAll()
-                create.show()
+                    val create=builder.create(R.style.QMUI_Dialog)
+                    builder.editText.selectAll()
+                    create.show()
+                }
+
 
             } else if (position == 1) {
                 val item = mAdapter.getItem(index)
-                VibrateUtils.vibrate(10)
-                QMUIDialog.MessageDialogBuilder(context)
-                        .setTitle("删除相册")
-                        .setSkinManager(QMUISkinManager.defaultInstance(context))
-                        .setMessage("确定要删除 ${item.filename} 相册吗?")
-                        .addAction("取消") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .addAction("确定") { dialog, _ ->
-                            dialog.dismiss()
-                            mHomeViewModel.deleteDirs(item.id.toString()).observe(mHomeFragment, Observer {
-                                if (it) {
-                                    mHomeViewModel.getUserDirlist()
-                                }
-                            })
-                        }
-                        .create(R.style.QMUI_Dialog).show()
+                item?.let {
+                    VibrateUtils.vibrate(10)
+                    QMUIDialog.MessageDialogBuilder(context)
+                            .setTitle("删除相册")
+                            .setSkinManager(QMUISkinManager.defaultInstance(context))
+                            .setMessage("确定要删除 ${it.filename} 相册吗?")
+                            .addAction("取消") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .addAction("确定") { dialog, _ ->
+                                dialog.dismiss()
+                                mHomeViewModel.deleteDirs(it?.id.toString()).observe(mHomeFragment, Observer {
+                                    if (it) {
+                                        mHomeViewModel.getUserDirlist()
+                                    }
+                                })
+                            }
+                            .create(R.style.QMUI_Dialog).show()
+                }
+
             }
             mGlobalAction?.dismiss()
         }
@@ -170,4 +178,19 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
     override fun onRefresh() {
         mHomeViewModel.getUserDirlist()
     }
+
+    override fun AlbumLongClick(itemView: View, position: Int, item: UserDirBean) {
+        showGlobalActionPopup(itemView.findViewById(R.id.name), position)
+
+    }
+
+    override fun AlbumClick(itemView: View, position: Int, item: UserDirBean) {
+        mHomeControlListener.let {
+            val albumDetailsFragment = AlbumDetailsPageingFragment()
+            albumDetailsFragment.arguments = Bundle()
+            albumDetailsFragment.requireArguments().putSerializable(ConstantKey.albuminfo, mAdapter.getItem(position))
+            mHomeControlListener.startFragmentByView(albumDetailsFragment)
+        }
+    }
+
 }
