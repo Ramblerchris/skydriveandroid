@@ -80,8 +80,8 @@ class ApiNetWork {
     /**
      * 当前用户所有文件夹
      */
-    suspend fun getUserFileAlllist(): BaseResult<PageBean<List<UserDirBean>>> {
-        return getServie().getUserFileAlllist()
+    suspend fun getUserFileAlllist(@Query("pid") pid: Long, @Query("pageSize") pageSize: Long? = 20, @Query("lastId") lastId: Long? = -1): BaseResult<PageBean<MutableList<UserDirBean>>> {
+        return getServie().getUserFileAlllist(pid,pageSize,lastId)
     }
 
     /**
@@ -159,8 +159,8 @@ class ApiNetWork {
     /**
      * 删除文件夹
      */
-    suspend fun deleteDirs(ids: String): BaseResult<Boolean> {
-        return getServie().deleteDirs(ids)
+    suspend fun updateDirStatus(ids: String,  status: Int): BaseResult<Boolean> {
+        return getServie().updateDirStatus(ids,status)
     }
 
     /**

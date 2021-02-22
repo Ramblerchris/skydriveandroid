@@ -103,14 +103,44 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                     mHomeViewModel.getUserDirlist()
                 })
     }
+    val type_Delete=1
+    val type_Share=2
+    val type_cancelShare=3
+    val type_updateAlbumName=4
 
-    private fun showGlobalActionPopup(v: View,index:Int) {
+    private fun showGlobalActionPopup(v: View,index:Int, item: UserDirBean) {
         val datalist: ArrayList<String?> = ArrayList()
-        datalist.add("修改相册名称")
-        datalist.add("删除相册")
+        val typelist: ArrayList<Int?> = ArrayList()
+
+        if (item.isShare == 1) {
+            //分享中
+            if (item.isShareFromMe == 1) {
+                //分享来之我的
+                datalist.add("取消公开共享")
+                typelist.add(type_cancelShare)
+                datalist.add("修改相册名称")
+                typelist.add(type_updateAlbumName)
+            } else {
+                //别人分享的只能修改名称
+                datalist.add("修改相册名称")
+                typelist.add(type_updateAlbumName)
+            }
+        } else {
+            //未分享的
+            datalist.add("公开共享")
+            typelist.add(type_Share)
+            datalist.add("修改相册名称")
+            typelist.add(type_updateAlbumName)
+            datalist.add("删除相册")
+            typelist.add(type_Delete)
+        }
+        if (typelist.size == 0) {
+            return
+        }
         val adapter: ArrayAdapter<String?> = ArrayAdapter(context, R.layout.simple_list_item, datalist)
         val onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, position, l ->
-            if (position == 0) {
+            val get = typelist.get(position)
+            if (get == type_updateAlbumName) {
                 val item = mAdapter.getItem(index)
                 item?.let {
                     val builder = QMUIDialog.EditTextDialogBuilder(context)
@@ -135,7 +165,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                 }
 
 
-            } else if (position == 1) {
+            } else if (get == type_Delete) {
                 val item = mAdapter.getItem(index)
                 item?.let {
                     VibrateUtils.vibrate(10)
@@ -148,7 +178,51 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                             }
                             .addAction("确定") { dialog, _ ->
                                 dialog.dismiss()
-                                mHomeViewModel.deleteDirs(it?.id.toString()).observe(mHomeFragment, Observer {
+                                mHomeViewModel.updateDirStatus(it?.id.toString(),-1).observe(mHomeFragment, Observer {
+                                    if (it) {
+                                        mHomeViewModel.getUserDirlist()
+                                    }
+                                })
+                            }
+                            .create(R.style.QMUI_Dialog).show()
+                }
+
+            } else if (get == type_Share) {
+                val item = mAdapter.getItem(index)
+                item?.let {
+                    VibrateUtils.vibrate(10)
+                    QMUIDialog.MessageDialogBuilder(context)
+                            .setTitle("相册公开共享")
+                            .setSkinManager(QMUISkinManager.defaultInstance(context))
+                            .setMessage("确定要公开共享 ${it.filename} 相册给其他用户吗?")
+                            .addAction("取消") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .addAction("公开共享") { dialog, _ ->
+                                dialog.dismiss()
+                                mHomeViewModel.updateDirStatus(it?.id.toString(),2).observe(mHomeFragment, Observer {
+                                    if (it) {
+                                        mHomeViewModel.getUserDirlist()
+                                    }
+                                })
+                            }
+                            .create(R.style.QMUI_Dialog).show()
+                }
+
+            } else if (get == type_cancelShare) {
+                val item = mAdapter.getItem(index)
+                item?.let {
+                    VibrateUtils.vibrate(10)
+                    QMUIDialog.MessageDialogBuilder(context)
+                            .setTitle("取消相册公开共享")
+                            .setSkinManager(QMUISkinManager.defaultInstance(context))
+                            .setMessage("确定要取消公开 ${it.filename} 相册给其他用户吗?")
+                            .addAction("取消") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .addAction("取消公开共享") { dialog, _ ->
+                                dialog.dismiss()
+                                mHomeViewModel.updateDirStatus(it?.id.toString(),1).observe(mHomeFragment, Observer {
                                     if (it) {
                                         mHomeViewModel.getUserDirlist()
                                     }
@@ -180,7 +254,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
     }
 
     override fun AlbumLongClick(itemView: View, position: Int, item: UserDirBean) {
-        showGlobalActionPopup(itemView.findViewById(R.id.name), position)
+        showGlobalActionPopup(itemView.findViewById(R.id.name), position,item)
 
     }
 

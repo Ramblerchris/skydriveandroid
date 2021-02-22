@@ -78,10 +78,10 @@ interface Api {
     suspend fun deleteUserfilesByPidAndSha1s(@Query("pid") pid: Long, @Query("sha1s") sha1s: String): BaseResult<Any>
 
     /**
-     * 获取当前用户所有文件夹
+     * 获取当前用户文件夹下所有文件
      */
     @GET("/userfile/getlist")
-    suspend fun getUserFileAlllist(): BaseResult<PageBean<List<UserDirBean>>>
+    suspend fun getUserFileAlllist(@Query("pid") pid: Long, @Query("pageSize") pageSize: Long? = 20, @Query("lastId") lastId: Long? = -1): BaseResult<PageBean<MutableList<UserDirBean>>>
 
     /**
      * 单文件上传
@@ -127,9 +127,10 @@ interface Api {
     /**
      * 删除文件夹
      * ids=5;17;18;
+     * status 1 可用/2 分享状态/ -1 已删除
      */
-    @POST("/userfile/deleteDir")
-    suspend fun deleteDirs(@Query("ids") ids: String): BaseResult<Boolean>
+    @POST("/userfile/updateDirStatus")
+    suspend fun updateDirStatus(@Query("ids") ids: String, @Query("status") status: Int): BaseResult<Boolean>
 
     /***********************************蒲公英更新*******************************************/
 

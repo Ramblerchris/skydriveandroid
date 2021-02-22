@@ -67,7 +67,7 @@
         android:paddingTop="2dp"
         android:paddingRight="10dp"
         android:paddingBottom="2dp"
-        android:text="分享"
+        android:text="公开共享中"
         android:textColor="@color/exo_white"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"

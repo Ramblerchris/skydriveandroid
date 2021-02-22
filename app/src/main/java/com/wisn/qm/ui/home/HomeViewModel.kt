@@ -119,9 +119,9 @@ class HomeViewModel : BaseViewModel() {
         return userBean
     }
 
-    fun deleteDirs(ids: String): MutableLiveData<Boolean> {
+    fun updateDirStatus(ids: String,status :Int): MutableLiveData<Boolean> {
         launchGo({
-            val deleteDirss = ApiNetWork.newInstance().deleteDirs(ids)
+            val deleteDirss = ApiNetWork.newInstance().updateDirStatus(ids,status)
             if (deleteDirss.isSuccess()) {
                 deleteDirs.value = true
             }
@@ -186,12 +186,6 @@ class HomeViewModel : BaseViewModel() {
         })
     }
 
-    fun selectData(): MutableLiveData<MutableList<MediaInfo>> {
-        if (selectData.value == null) {
-            selectData.value = ArrayList<MediaInfo>()
-        }
-        return selectData
-    }
 
     fun saveMedianInfo(position: Int) {
         saveMedianInfo(position, true)
@@ -266,10 +260,6 @@ class HomeViewModel : BaseViewModel() {
 
             }
         }
-    }
-
-    fun saveMedianInfo(position: Int, mediainfo: MediaInfo) {
-        saveMedianInfo(position, mediainfo, true)
     }
 
     private suspend fun getDirInfo(position: Int): UserDirBean? {

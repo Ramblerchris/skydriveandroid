@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.blankj.utilcode.util.LogUtils
 import com.library.base.BaseApp
 import com.wisn.qm.mode.db.beans.*
 import com.wisn.qm.mode.db.dao.*
@@ -34,7 +35,7 @@ abstract class AppDataBase : RoomDatabase() {
 //                    database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN isShare "+" INTEGER NOT NULL DEFAULT 0 ")
 //                    database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN isShareFromMe "+" INTEGER  NOT NULL DEFAULT 0 ")
 //                    database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN ShareFrom TEXT "+" NOT NULL DEFAULT ")
-
+                LogUtils.d("MIGRATION_app1_2")
                     database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN isShare INTEGER  ")
                     database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN isShareFromMe  INTEGER    ")
                     database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN ShareFrom    TEXT  ")

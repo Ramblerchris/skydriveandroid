@@ -27,7 +27,7 @@ class UserDirListDataSource : PagingSource<PageKey, UserDirBean>() {
             var currentPage = params.key ?: PageKey(-1, -1, pageSize = 20);
             //仓库层请求数据
             Log.d("UserDirListDataSource", "请求第${currentPage}页")
-            val dirlist = ApiNetWork.newInstance().getUserDirlist(currentPage.pid, currentPage.pageSize, currentPage.lastId)
+            val dirlist = ApiNetWork.newInstance().getUserFileAlllist(currentPage.pid, currentPage.pageSize, currentPage.lastId)
             var nextPage = if (dirlist.isSuccess() && dirlist.data != null && currentPage.lastId != dirlist.data.nextpageid && dirlist.data.list.size > 0) {
                 //是否有下一页
                 PageKey(currentPage.pid, dirlist.data.nextpageid, pageSize = 20)

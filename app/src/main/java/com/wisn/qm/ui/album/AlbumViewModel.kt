@@ -81,7 +81,9 @@ class AlbumViewModel : BaseViewModel() {
             .cachedIn(viewModelScope)
             .asLiveData(viewModelScope.coroutineContext)
 
-
+    /**
+     * 新建文件夹
+     */
     fun addUserDir(filename: String): MutableLiveData<UserDirBean> {
         launchGo({
             val dirlist = ApiNetWork.newInstance().addUserDir(-1, filename)
