@@ -21,11 +21,17 @@ interface UploadBeanDao {
     @Query("select * from uploadbean where uploadStatus =:uploadStatus")
     suspend fun getUploadBeanListPreUpload(uploadStatus: Int): List<UploadBean>
 
+    @Query("select count(*) from uploadbean where uploadStatus =:uploadStatus")
+    suspend fun getCountByStatus(uploadStatus: Int): Int
+
     @Query("update uploadbean set uploadStatus =:uploadStatus,uploadSuccessTime=:uploadSuccessTime where id=:id ")
     suspend fun updateUploadBeanStatus(id: Long, uploadStatus: Int,uploadSuccessTime: Long)
 
     @Query("select * from uploadbean order by id desc")
     suspend fun getUploadBeanListAll(): MutableList<UploadBean>
+
+    @Query("select * from uploadbean  where id=:id ")
+    suspend fun getUploadBeanById(id: Long): UploadBean
 
 
 }

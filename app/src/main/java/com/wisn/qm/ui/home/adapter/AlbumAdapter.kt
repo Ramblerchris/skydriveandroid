@@ -30,7 +30,7 @@ class AlbumAdapter(var callback :CallBack,var data: MutableList<UserDirBean> = A
             if (get.isShareFromMe == 1) {
                 holder.share.text = "我的共享相册"
             } else {
-                holder.share.text = "${get.ShareFrom}的共享相册"
+                holder.share.text = "${get.ShareFrom} 共享相册"
             }
         } else {
             holder.share.visibility = View.GONE

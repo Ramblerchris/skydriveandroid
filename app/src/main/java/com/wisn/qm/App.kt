@@ -4,9 +4,11 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.Utils
 import com.library.base.BaseApp
 import com.library.base.config.GlobalUser
 import com.tencent.bugly.crashreport.CrashReport
+import com.wisn.qm.task.TaskUitls
 import com.wisn.qm.ui.SplashActivity
 import io.github.skyhacker2.sqliteonweb.SQLiteOnWeb
 
@@ -37,5 +39,10 @@ open class App : BaseApp() {
             intentOf.flags = FLAG_ACTIVITY_NEW_TASK
             startActivity(intentOf)
         }*/
+    }
+
+    override fun netAvailabble() {
+        super.netAvailabble()
+        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
     }
 }

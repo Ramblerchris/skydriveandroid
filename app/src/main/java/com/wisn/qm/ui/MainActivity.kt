@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.Utils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragmentActivity
 import com.library.base.utils.UploadTip
@@ -25,6 +26,7 @@ import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.util.QMUIViewOffsetHelper
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
+import com.wisn.qm.task.TaskUitls
 import com.wisn.qm.ui.home.HomeFragment
 
 @FirstFragments(value = [HomeFragment::class])
@@ -54,6 +56,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
     }
 
     override fun onBackPressed() {
+        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         LogUtils.d(" mBackStack(backStackEntryCount):"+supportFragmentManager.backStackEntryCount)
         LogUtils.d(" mBackStack(fragments size):"+supportFragmentManager.fragments.size)
         val get = supportFragmentManager.fragments.get(0);

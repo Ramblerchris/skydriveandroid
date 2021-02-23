@@ -12,36 +12,39 @@ import java.net.URL
 object NetCheckUtils {
     const val check = "user/checknet"
    private suspend fun isConnect(url: String ,timeout:Int): Boolean {
-        return withContext(Dispatchers.IO) {
-            var result: Boolean = false
-            try {
-                LogUtils.d("NetCheckUtils", url)
-                // 统一资源
-                val url = URL(url)
-                // 连接类的父类，抽象类
-                val urlConnection = url.openConnection()
-                // http的连接类
-                val httpURLConnection = urlConnection as HttpURLConnection
-                // 设定请求的方法，默认是GET
-                httpURLConnection.requestMethod = "GET"
-                httpURLConnection.connectTimeout = timeout
-                httpURLConnection.readTimeout = timeout
-                // 设置字符编码
-                httpURLConnection.setRequestProperty("Charset", "UTF-8")
-                // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
-                httpURLConnection.connect()
-                if (httpURLConnection.responseCode == HttpURLConnection.HTTP_OK) {
-                    result = true
-                }
-            } catch (e: MalformedURLException) {
-                e.printStackTrace()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            result
-        }
+       if (!url.startsWith("http")) {
+           return false
+       }
+       return withContext(Dispatchers.IO) {
+           var result = false
+           try {
+               LogUtils.d("NetCheckUtils", url)
+               // 统一资源
+               val url = URL(url)
+               // 连接类的父类，抽象类
+               val urlConnection = url.openConnection()
+               // http的连接类
+               val httpURLConnection = urlConnection as HttpURLConnection
+               // 设定请求的方法，默认是GET
+               httpURLConnection.requestMethod = "GET"
+               httpURLConnection.connectTimeout = timeout
+               httpURLConnection.readTimeout = timeout
+               // 设置字符编码
+               httpURLConnection.setRequestProperty("Charset", "UTF-8")
+               // 打开到此 URL 引用的资源的通信链接（如果尚未建立这样的连接）。
+               httpURLConnection.connect()
+               if (httpURLConnection.responseCode == HttpURLConnection.HTTP_OK) {
+                   result = true
+               }
+           } catch (e: MalformedURLException) {
+               e.printStackTrace()
+           } catch (e: IOException) {
+               e.printStackTrace()
+           } catch (e: Exception) {
+               e.printStackTrace()
+           }
+           result
+       }
     }
 
     /**

@@ -151,6 +151,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
 
                 override fun onPageSelected(position: Int) {
                     QMUIStatusBarHelper.setStatusBarLightMode(activity)
+                    TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
 
                     /* if (position == 1 || position == 2 || position == 3) {
                          QMUIStatusBarHelper.setStatusBarLightMode(activity)

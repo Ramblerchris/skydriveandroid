@@ -108,32 +108,39 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
 
     private suspend fun dealUploadStatus(mediaImageList: MutableList<MediaInfo>?) {
         try {
-            var allSha1sByUser = ApiNetWork.newInstance().getAllSha1sByUser();
+            var allSha1sByUser = ApiNetWork.newInstance().getAllSha1sByUser()
             val data = allSha1sByUser?.data
             val iterator = mediaImageList?.iterator() ?: return
             var isUpdate = false;
             while (iterator.hasNext()) {
                 val mediainfo = iterator.next() as MediaInfo
-                val contains = data?.contains(mediainfo.sha1)
-                contains?.let {
-                    if (contains) {
-                        isUpdate = true
-                        mediainfo.uploadStatus = FileType.MediainfoStatus_uploadSuccess
-                        mediainfo.id?.let {
-                            AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_uploadSuccess)
+                if( mediainfo.uploadStatus !=FileType.MediainfoStatus_uploadSuccess){
+                    //如果没有上传成功的再次检查
+                    val contains = data?.contains(mediainfo.sha1)
+                    contains?.let {
+                        if (contains) {
+                            isUpdate = true
+                            mediainfo.uploadStatus = FileType.MediainfoStatus_uploadSuccess
+                            mediainfo.id?.let {
+                                AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_uploadSuccess)
+                            }
                         }
                     }
                 }
                 var file = File(mediainfo.filePath)
                 if (!file.exists()) {
                     AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
-                    iterator.remove()
+//                    iterator.remove()
                 }
             }
             if (isUpdate) {
+                var mediaInfoListAll = AppDataBase.getInstanse().mediaInfoDao?.getMediaInfoListAllNotDelete()
+                mediaInfoListAll?.sortByDescending {
+                    it.createTime
+                }
                 LiveEventBus
                         .get(ConstantKey.updateHomeMedialist)
-                        .post(mediaImageList);
+                        .post(mediaInfoListAll);
             }
         } catch (e: Throwable) {
             ExceptionHandle.handleException(e)
