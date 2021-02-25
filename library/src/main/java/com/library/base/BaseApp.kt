@@ -8,6 +8,7 @@ import android.net.Network
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.multidex.MultiDexApplication
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.library.base.config.Constant
 import com.library.base.config.GlobalConfig
@@ -15,6 +16,7 @@ import com.library.base.config.GlobalUser
 import com.qmuiteam.qmui.arch.QMUISwipeBackActivityManager
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
+import com.tencent.mmkv.MMKV
 
 open class BaseApp : MultiDexApplication() {
 
@@ -28,16 +30,19 @@ open class BaseApp : MultiDexApplication() {
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             refwatcher= LeakCanary.install(this)
         }
+        netWorkChangeListener()
     }
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         app = this
         Utils.init(this)
+        val rootDir: String = MMKV.initialize(this)
+        LogUtils.d("BaseApp",rootDir)
         QMUISwipeBackActivityManager.init(this)
         GlobalConfig.initConfig()
         Constant.initBaseUrl()
         GlobalUser.initData()
-        netWorkChangeListener()
+
     }
     open fun loginEvent(){
     }
