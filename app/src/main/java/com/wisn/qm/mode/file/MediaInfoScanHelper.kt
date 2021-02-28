@@ -5,6 +5,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.library.base.BaseApp
 import com.library.base.utils.FormatStrUtils
 import com.library.base.utils.SHAMD5Utils
+import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.MediaInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -96,6 +97,10 @@ class MediaInfoScanHelper {
 
     suspend fun getMediaVideoList(maxid: String): MutableList<MediaInfo> {
         return withContext(Dispatchers.IO) {
+            var videoMediaInfoMaxId = AppDataBase.getInstanse().mediaInfoDao?.getVideoMediaInfoMaxId();
+            if (videoMediaInfoMaxId == null) {
+                videoMediaInfoMaxId =0
+            }
             val arrayOf = arrayOf(
                     MediaStore.Video.Media._ID,
                     MediaStore.Video.Media.DATA,
@@ -112,19 +117,26 @@ class MediaInfoScanHelper {
             val query = BaseApp.app.contentResolver.query(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                     arrayOf,
-                    MediaStore.Video.Media._ID + ">? and( "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Video.Media.MIME_TYPE + "=?) ",
+//                    MediaStore.Video.Media._ID + " > ? and( "
+//                    MediaStore.Video.Media._ID + " > "+videoMediaInfoMaxId+" and( "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=? or "
+//                            + MediaStore.Video.Media.MIME_TYPE + "=?) ",
+//
+////                    arrayOf(videoMediaInfoMaxId.toString(), "video/mp4", "video/3gp", "video/aiv", "video/rmvb", "video/vob", "video/flv",
+//                    arrayOf( "video/mp4", "video/3gp", "video/aiv", "video/rmvb", "video/vob", "video/flv",
+//                            "video/mkv", "video/mov", "video/mpg"),
+//                    MediaStore.Video.Media._ID + " > ? and( "
+                    MediaStore.Video.Media._ID + " >=? ",
 
-                    arrayOf(maxid, "video/mp4", "video/3gp", "video/aiv", "video/rmvb", "video/vob", "video/flv",
-                            "video/mkv", "video/mov", "video/mpg"),
+//                    arrayOf(videoMediaInfoMaxId.toString(), "video/mp4", "video/3gp", "video/aiv", "video/rmvb", "video/vob", "video/flv",
+                    arrayOf( videoMediaInfoMaxId.toString()),
                     MediaStore.Video.Media.DATE_ADDED
 //                MediaStore.Images.Media.DATE_ADDED + " desc"
             )

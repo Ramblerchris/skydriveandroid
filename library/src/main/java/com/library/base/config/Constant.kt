@@ -1,12 +1,11 @@
 package com.library.base.config
-import com.blankj.utilcode.util.SPUtils
 import com.library.base.utils.KV
 
 
 object Constant {
     const val TypeDir = 1
     const val TypeFile = -1
-    var BASE_URL = "http://192.168.0.100:9996/"
+    var BASE_URL = ""
 
     fun getImageUrl(sha1: String?): String {
         if (sha1.isNullOrEmpty()) {

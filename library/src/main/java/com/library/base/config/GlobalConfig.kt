@@ -1,6 +1,5 @@
 package com.library.base.config
 
-import com.blankj.utilcode.util.SPUtils
 import com.library.base.utils.KV
 
 

@@ -11,8 +11,8 @@ android {
         applicationId "com.we.gallerymanager"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 1026
-        versionName "1.0.26"
+        versionCode 1027
+        versionName "1.0.27"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -33,18 +33,18 @@ android {
     buildTypes {
         release {
             manifestPlaceholders = [appName     : "@string/app_name"]
-            minifyEnabled false
-            zipAlignEnabled false // Zipalign优化
-            shrinkResources false // 移除无用的resource文件
+            minifyEnabled true
+            zipAlignEnabled true // Zipalign优化
+            shrinkResources true // 移除无用的resource文件
             debuggable false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             manifestPlaceholders = [appName     : "@string/app_name_debug"]
-            minifyEnabled true
-            zipAlignEnabled true // Zipalign优化
-            shrinkResources true // 移除无用的resource文件
+            minifyEnabled false
+            zipAlignEnabled false // Zipalign优化
+            shrinkResources false // 移除无用的resource文件
             debuggable true
             applicationIdSuffix ".debug"
             signingConfig signingConfigs.release
