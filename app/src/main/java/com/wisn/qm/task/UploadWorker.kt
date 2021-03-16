@@ -30,7 +30,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
 //                val newInstance = AppDataBaseHelper.newInstance(Utils.getApp())
                 val Noupload = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
                 Noupload?.let {
-                    if(it>0){
+                    if (it > 0) {
                         val uploadDataList = AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanListPreUpload(FileType.UPloadStatus_Noupload)
                         dealUpload(uploadDataList)
                     }
