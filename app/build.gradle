@@ -4,13 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.we.gallerymanager"
-        minSdkVersion 19
-        targetSdkVersion 29
+        minSdkVersion 21
+        targetSdkVersion 30
         versionCode 1028
         versionName "1.0.28"
         multiDexEnabled true
@@ -76,7 +76,8 @@ android {
         javaMaxHeapSize "4g"
     }
 }
-def releaseTime() {
+
+static def releaseTime() {
     return new Date().format("MMdd_hhmm", TimeZone.getTimeZone("Asia/Shanghai"))
 }
 //def qmui_arch_version = '2.0.0-alpha08'
@@ -86,6 +87,6 @@ dependencies {
     implementation project(":library")
     implementation project(":player")
     implementation project(":playerexo")
-    kapt "androidx.room:room-compiler:2.2.5" // For Kotlin use kapt instead of annotationProcessor
+    kapt "androidx.room:room-compiler:2.2.6" // For Kotlin use kapt instead of annotationProcessor
 
 }

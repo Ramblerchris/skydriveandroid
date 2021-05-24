@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragment
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
@@ -52,13 +53,13 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
         right.setOnClickListener {
             val text = et_albumName?.text?.trim()
             if (text.isNullOrEmpty()) {
-                ToastUtils.showShort("请输入相册名称")
+                MToastUtils.show("请输入相册名称")
             } else {
                 text.run {
 //                    hideSoftInput(et_albumName?.windowToken,false)
                     KeyboardUtils.hideSoftInput(et_albumName)
                     viewModel.addUserDir(text.toString()).observe(this@NewAlbumFragment, Observer {
-//                    ToastUtils.showShort(it.toString())
+//                    MToastUtils.show(it.toString())
                         var ait=it
                         val selectDate = newAlbumAdapter.getSelectDate()
                         selectDate?.let {

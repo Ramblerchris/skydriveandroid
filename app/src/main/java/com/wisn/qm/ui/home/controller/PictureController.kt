@@ -21,6 +21,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.layoutmanager.MGridLayoutManager
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.wisn.qm.mode.ConstantKey
@@ -111,7 +112,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
                         .create()
                 tipDialog?.show()
             } else {
-                ToastUtils.showShort("已经删除")
+                MToastUtils.show("已经删除")
                 tipDialog?.dismiss()
             }
         })

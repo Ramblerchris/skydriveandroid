@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.widget.QMUITopBarLayout
@@ -156,7 +157,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                                     dialog.dismiss()
                                     mHomeViewModel.updateUserDirName(item.id, text.toString())
                                 } else {
-                                    ToastUtils.showShort("请输入相册名称")
+                                    MToastUtils.show("请输入相册名称")
                                 }
                             }
                     val create=builder.create(R.style.QMUI_Dialog)

@@ -9,10 +9,9 @@ import com.wisn.qm.mode.net.ApiNetWork
 
 class UserViewModel : BaseViewModel() {
 
-    private var login = MutableLiveData<String>()
     private var register = MutableLiveData<String>()
 
-    fun login(phone: String, password: String): MutableLiveData<String> {
+    fun login(phone: String, password: String){
         launchGo({
             val loginresult = ApiNetWork.newInstance().login(phone, password);
             if (loginresult.isSuccess()) {
@@ -23,11 +22,11 @@ class UserViewModel : BaseViewModel() {
                     GlobalUser.saveUserInfo(userInfo.data)
                     defUi.msgEvent.value = Message(100)
                 }
+            }else{
+                defUi.toastEvent.value = loginresult.msg()
             }
-            login.value = loginresult.msg()
             loginresult
         })
-        return login
     }
 
     fun singout() {
@@ -46,8 +45,9 @@ class UserViewModel : BaseViewModel() {
             val registerResult = ApiNetWork.newInstance().register(phone, password, password1);
             if (registerResult.isSuccess()) {
                 defUi.msgEvent.value = Message(100)
+            }else{
+                defUi.toastEvent.value =registerResult.msg()
             }
-            register.value = registerResult.msg()
             registerResult
         })
         return register

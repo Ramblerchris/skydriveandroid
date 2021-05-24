@@ -149,7 +149,7 @@ class ExoSourceHelper {
                         }
                     }
                 } else {
-                    mHttpDataSourceFactory!!.defaultRequestProperties[key!!] = value!!
+                    mHttpDataSourceFactory!!.defaultRequestProperties[key] = value
                 }
             }
         }

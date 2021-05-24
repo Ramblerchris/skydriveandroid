@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.library.base.base.BaseViewModel
 import com.library.base.base.ViewModelFactory
 import com.library.base.event.Message
+import com.library.base.utils.MToastUtils
 import java.lang.reflect.ParameterizedType
 
 abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
@@ -45,14 +46,14 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
 
     private fun registerDefUIChange() {
         viewModel.defUi.showDialog.observe(this, Observer {
-//            ToastUtils.showShort("show")
+//            MToastUtils.show("show")
         })
         viewModel.defUi.disDialog.observe(this, Observer {
-//            ToastUtils.showShort("diss")
+//            MToastUtils.show("diss")
 
         })
         viewModel.defUi.toastEvent.observe(this, Observer {
-            ToastUtils.showShort(it)
+            MToastUtils.show(it)
         })
         viewModel.defUi.msgEvent.observe(this, Observer {
             handleEvent(it)

@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseFragment
 import com.library.base.config.GlobalConfig
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
@@ -93,7 +94,7 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
 
     override fun onClick(v: View?) {
         if (v == versionItem) {
-            ToastUtils.showShort("当前为最新版本")
+            MToastUtils.show("当前为最新版本")
         } else if (v == about) {
             MessageDialogBuilder(activity)
                     .setTitle("关于APP")

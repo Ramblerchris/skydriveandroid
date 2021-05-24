@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragment
 import com.library.base.config.Constant
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
@@ -153,10 +153,10 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
                                         if (text != null && text.length > 0) {
                                             dialog.dismiss()
                                             viewModel.addUserDir(text.toString()).observe(this, Observer {
-                                                ToastUtils.showShort("添加文件成功")
+                                                MToastUtils.show("添加文件成功")
                                             })
                                         } else {
-                                            ToastUtils.showShort("请输入文件名称")
+                                            MToastUtils.show("请输入文件名称")
                                         }
                                     }
                                     .create(R.style.QMUI_Dialog).show()
@@ -189,7 +189,7 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
                                 dialog.dismiss()
                                 viewModel.updateUserDirName(item.id, text.toString())
                             } else {
-                                ToastUtils.showShort("请输入${tip}名称")
+                                MToastUtils.show("请输入${tip}名称")
                             }
                         }
                 val create=builder.create(R.style.QMUI_Dialog)

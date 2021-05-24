@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseFragment
+import com.library.base.utils.MToastUtils
 import com.wisn.qm.R
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.android.synthetic.main.fragment_register.et_password
@@ -54,20 +55,18 @@ class RegisterFragment : BaseFragment<UserViewModel>() {
         var password = et_password?.text.toString()
         var etPassword2 = et_password2?.text.toString()
         if (phone.isEmpty()) {
-            ToastUtils.showShort("请输入手机号")
+            MToastUtils.show("请输入手机号")
             return;
         }
         if (password.isEmpty()) {
-            ToastUtils.showShort("请设置密码")
+            MToastUtils.show("请设置密码")
             return;
         }
         if (etPassword2.isEmpty()) {
-            ToastUtils.showShort("请再次确认密码")
+            MToastUtils.show("请再次确认密码")
             return;
         }
-        viewModel.register(phone, password, et_password.text.toString()).observe(this, Observer {
-            ToastUtils.showShort(it)
-        })
+        viewModel.register(phone, password, et_password.text.toString())
     }
 
     private fun initTopBar() {

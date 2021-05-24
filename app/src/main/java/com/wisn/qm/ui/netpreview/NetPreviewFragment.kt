@@ -116,7 +116,7 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
                          .setOnSheetItemClickListener { dialog, itemView, position, tag ->
                              dialog.dismiss()
                              mHomeViewModel.saveMedianInfo(position,false)
-                             ToastUtils.showShort("已经添加到上传任务")
+                             MToastUtils.show("已经添加到上传任务")
                          }
                  for (dirlist in values) {
                      builder.addItem(dirlist.filename)
@@ -135,7 +135,7 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
             //收藏
             /* val get = data.get( vp_content?.currentItem!!)
              mHomeViewModel.saveMedianInfo(0, get,false)
-             ToastUtils.showShort("已经添加到上传任务")*/
+             MToastUtils.show("已经添加到上传任务")*/
         }
         iv_back?.setOnClickListener {
             popBackStack()
@@ -160,7 +160,7 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
                     val get = data.get(position)
                     videoView.setUrl(Constant.getImageUrl(get.sha1!!)!!)
                     videoView.iViewController?.addIViewItemControllerOne(viewholder.preview, true)
-                    viewholder?.content.addView(videoView, 0)
+                    viewholder.content.addView(videoView, 0)
                     videoView.start()
                     playPosition = position
                     return@forEach
@@ -189,25 +189,25 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
 
     override fun onDestroy() {
         super.onDestroy()
-        videoView?.release()
+        videoView.release()
 //        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
 
     }
 
     override fun onResume() {
         super.onResume()
-        videoView?.resume()
+        videoView.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        videoView?.pause()
+        videoView.pause()
 
     }
 
     override fun onStop() {
         super.onStop()
-        videoView?.stop()
+        videoView.stop()
     }
 
 

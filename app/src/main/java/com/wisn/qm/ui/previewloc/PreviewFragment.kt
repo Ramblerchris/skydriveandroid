@@ -13,6 +13,7 @@ import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.base.ViewModelFactory
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
@@ -119,7 +120,7 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
                         .setOnSheetItemClickListener { dialog, itemView, position, tag ->
                             dialog.dismiss()
                             mHomeViewModel.saveMedianInfo(position, false)
-                            ToastUtils.showShort("已经添加到上传任务")
+                            MToastUtils.show("已经添加到上传任务")
                         }
                 for (dirlist in values) {
                     builder.addItem(dirlist.filename)
@@ -137,7 +138,7 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
         tv_upload?.onClick {
             val get = data.get(vp_content?.currentItem!!)
             mHomeViewModel.saveMedianInfo(0, get, false)
-            ToastUtils.showShort("已经添加到上传任务")
+            MToastUtils.show("已经添加到上传任务")
         }
         iv_back?.onClick {
             popBackStack()

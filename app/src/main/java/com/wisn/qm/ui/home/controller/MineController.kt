@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.library.base.config.Constant
 import com.library.base.config.GlobalUser
 import com.library.base.utils.GlideUtils
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView2
@@ -113,12 +114,12 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                 mHomeControlListener.startFragmentByView(SettingFragment())
             }
         } else if (v == collection) {
-            ToastUtils.showShort("开发中")
+            MToastUtils.show("开发中")
         } else if (v == uploadlist) {
             val uploadListFragment = UploadListFragment()
             mHomeControlListener.startFragmentByView(uploadListFragment)
         } else if (v == delete) {
-            ToastUtils.showShort("开发中")
+            MToastUtils.show("开发中")
         } else if (v == pan) {
             mHomeControlListener.startFragmentByView(DiskListFragment())
 //            mHomeControlListener.startFragmentByView(TestVideoPlayerFragment())
@@ -162,7 +163,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
 //                                GlideUtils.loadUrl(it,iv_header,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar)
                             }.launch(null)
                         } else if (position == 1) {
-//                            ToastUtils.showShort("开发中")
+//                            MToastUtils.show("开发中")
                            var select: SelectMediaFragment = SelectMediaFragment(1)
                             select.selectMediaCall=object: SelectMediaCall {
                                 override fun setResult(result: ArrayList<MediaInfo>) {
@@ -175,7 +176,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                             }
                             mHomeFragment.startFragment(select)
                         } else {
-                            ToastUtils.showShort("开发中")
+                            MToastUtils.show("开发中")
                         }
                     }
             builder.addItem("拍照")
@@ -183,7 +184,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
 //            builder.addItem("查看大图")
             builder.build().show()
         } else {
-            ToastUtils.showShort("开发中")
+            MToastUtils.show("开发中")
         }
     }
 

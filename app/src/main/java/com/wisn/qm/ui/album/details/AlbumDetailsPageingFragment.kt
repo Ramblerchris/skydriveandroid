@@ -13,9 +13,9 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragment
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
@@ -82,7 +82,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
         rightButton.setOnClickListener {
             if (isShowEdit) {
                 if (viewModel.selectSha1List.size <= 0) {
-                    ToastUtils.showShort("请选择要删除的文件")
+                    MToastUtils.show("请选择要删除的文件")
                 } else {
                     QMUIDialog.MessageDialogBuilder(context)
                             .setTitle("确定要删除吗？")

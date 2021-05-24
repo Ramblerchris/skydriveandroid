@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.multidex.MultiDexApplication
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
+import com.coder.zzq.smartshow.core.SmartShow
 import com.library.base.config.Constant
 import com.library.base.config.GlobalConfig
 import com.library.base.config.GlobalUser
@@ -42,7 +43,7 @@ open class BaseApp : MultiDexApplication() {
         GlobalConfig.initConfig()
         Constant.initBaseUrl()
         GlobalUser.initData()
-
+        SmartShow.init(this)
     }
     open fun loginEvent(){
     }

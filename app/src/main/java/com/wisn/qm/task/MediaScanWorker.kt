@@ -1,6 +1,7 @@
 package com.wisn.qm.task
 
 import android.content.Context
+import android.text.TextUtils
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
@@ -109,15 +110,14 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
     private suspend fun dealUploadStatus(mediaImageList: MutableList<MediaInfo>?) {
         try {
             var allSha1sByUser = ApiNetWork.newInstance().getAllSha1sByUser()
-            val data = allSha1sByUser?.data
-            val iterator = mediaImageList?.iterator() ?: return
-            var isUpdate = false;
-            while (iterator.hasNext()) {
-                val mediainfo = iterator.next() as MediaInfo
+            val data = allSha1sByUser.data
+            mediaImageList?: return
+            var isUpdate = false
+            for (mediainfo in mediaImageList){
                 if( mediainfo.uploadStatus !=FileType.MediainfoStatus_uploadSuccess){
                     //如果没有上传成功的再次检查
-                    val contains = data?.contains(mediainfo.sha1)
-                    contains?.let {
+                    if (!TextUtils.isEmpty(mediainfo.sha1)) {
+                        val contains = data.contains(mediainfo.sha1)
                         if (contains) {
                             isUpdate = true
                             mediainfo.uploadStatus = FileType.MediainfoStatus_uploadSuccess
@@ -128,9 +128,9 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
                     }
                 }
                 var file = File(mediainfo.filePath)
-                if (!file.exists()) {
+                if (!file.exists() ||file.length() <= 0 ) {
+                    isUpdate = true
                     AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
-//                    iterator.remove()
                 }
             }
             if (isUpdate) {

@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.databinding.RvItemPictureImageBinding
@@ -64,7 +65,7 @@ class SelectMediaAdapter(var selectPictureCallBack: SelectFileViewModel, var max
                 dataBinding.image.onClick {
                     //如果是要选中
                     if (maxSelect > 0 && !item.isSelect && selectPictureCallBack.selectMediaData().value?.size!! >= maxSelect) {
-                        ToastUtils.showShort("最多选择${maxSelect}张")
+                        MToastUtils.show("最多选择${maxSelect}张")
                         return@onClick
                     }
                     item.isSelect = !item.isSelect

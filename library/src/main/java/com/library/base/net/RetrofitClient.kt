@@ -1,14 +1,16 @@
 package com.library.base.net
 
-import com.aleyn.mvvm.network.interceptor.LoggingInterceptor
+import com.library.BuildConfig
 import com.library.base.config.Constant
 import com.library.base.net.inteceptor.AuthInterceptor
+import com.library.base.net.inteceptor.HttpLoggingInterceptor
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
+import java.util.logging.Level
 
 class RetrofitClient {
 
@@ -20,11 +22,16 @@ class RetrofitClient {
     }
 
     private fun getOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
+        val builder = OkHttpClient.Builder()
                 .connectTimeout(20L, TimeUnit.SECONDS)
-                .addNetworkInterceptor(AuthInterceptor())
-                .addNetworkInterceptor(LoggingInterceptor())
-                .writeTimeout(300L, TimeUnit.SECONDS)
+                .addNetworkInterceptor(AuthInterceptor());
+        if (BuildConfig.DEBUG) {
+            var httpLoggingInterceptor = HttpLoggingInterceptor("SkyDriveNet")
+            httpLoggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
+            httpLoggingInterceptor.setColorLevel(Level.INFO)
+            builder.addNetworkInterceptor(httpLoggingInterceptor)
+        }
+        return builder.writeTimeout(300L, TimeUnit.SECONDS)
                 .connectionPool(ConnectionPool(8, 15, TimeUnit.SECONDS))
                 .build()
     }

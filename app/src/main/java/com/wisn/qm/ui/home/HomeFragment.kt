@@ -5,11 +5,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.blankj.utilcode.util.VibrateUtils
 import com.library.base.BaseFragment
 import com.library.base.utils.DownloadUtils
+import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
@@ -55,12 +55,12 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                     .create(R.style.QMUI_Dialog).show()
 //            viewModel.saveMedianInfo(0)
 //            pictureController?.onBackPressedExit()
-//            ToastUtils.showShort("已经添加到上传任务")
+//            MToastUtils.show("已经添加到上传任务")
         }
         item_photo_select_bottom.tv_upload.onClick {
             viewModel.saveMedianInfo(0)
             pictureController?.onBackPressedExit()
-            ToastUtils.showShort("已经添加到上传任务")
+            MToastUtils.show("已经添加到上传任务")
         }
         item_photo_select_bottom.tv_addto.onClick {
             val values = viewModel.getUserDirlist().value;
@@ -76,7 +76,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                         .setOnSheetItemClickListener { dialog, itemView, position, tag ->
                             dialog.dismiss()
                             viewModel.saveMedianInfo(position)
-                            ToastUtils.showShort("已经添加到上传任务")
+                            MToastUtils.show("已经添加到上传任务")
                             pictureController?.onBackPressedExit();
                         }
                 for (dirlist in values) {
@@ -108,7 +108,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                     .addAction("下载") { dialog, _ ->
                         dialog.dismiss()
                         DownloadUtils.addDownload(requireContext(), it.downloadURL!!, "更新", "更新版本号${it.buildVersion} (build${it.buildBuildVersion})")
-                        ToastUtils.showShort("已添加升级下载任务")
+                        MToastUtils.show("已添加升级下载任务")
                     }
                     .create(R.style.QMUI_Dialog).show()
         })

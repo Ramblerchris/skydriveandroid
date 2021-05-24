@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseFragment
+import com.library.base.utils.MToastUtils
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -56,16 +57,16 @@ class LoginFragment : BaseFragment<UserViewModel>() {
         var phone = et_phone?.text.toString();
         var password = et_password?.text.toString()
         if (phone.isNullOrEmpty()) {
-            ToastUtils.showShort("请输入手机号")
+            MToastUtils.show("请输入手机号")
             return;
         }
         if (password.isNullOrEmpty()) {
-            ToastUtils.showShort("请输入密码")
+            MToastUtils.show("请输入密码")
             return;
         }
         //            hideSoftInput(et_password.windowToken,false)
         KeyboardUtils.hideSoftInput(et_password)
-        viewModel.login(phone, password).observe(this, Observer { ToastUtils.showShort(it) })
+        viewModel.login(phone, password)
     }
 
     override fun onResume() {

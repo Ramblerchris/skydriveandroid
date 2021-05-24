@@ -16,7 +16,7 @@ object ImageUtils {
 
     }
 
-    fun getBitmapDegree(path: String?): Int {
+    fun getBitmapDegree(path: String): Int {
         var degree = 0
         try {
             val exifInterface = ExifInterface(path)
@@ -50,7 +50,7 @@ object ImageUtils {
         return returnBm
     }
 
-    fun getOrientation(imagePath: String?): Int {
+    fun getOrientation(imagePath: String): Int {
         val degree = 0
         try {
             val exifInterface = ExifInterface(imagePath)
