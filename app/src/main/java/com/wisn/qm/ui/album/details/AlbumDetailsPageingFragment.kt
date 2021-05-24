@@ -154,6 +154,8 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
                         item_empty.empty_tip.setText("相册为空,快去添吧！")
                         swiperefresh.visibility = View.GONE
                         item_empty.visibility = View.VISIBLE
+                        isShowEdit=false;
+                        isShowEdit(isShowEdit)
                     }
                 }
                 is LoadState.Loading -> {
@@ -200,7 +202,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
 
     override fun onRefresh() {
         albumPictureAdapter.refresh()
-//        viewModel.getUserDirlist(get.id)
+        viewModel.getUserDirlist(get.id)
         LogUtils.d("onRefresh")
 
     }

@@ -31,7 +31,8 @@ interface MediaInfoDao {
     @Query("update mediainfo set uploadStatus =:uploadStatus where sha1=:sha1")
     suspend fun updateMediaInfoStatusBySha1(sha1: String, uploadStatus: Int)
 
-    @Query("select MAX(id) from mediainfo where  uploadStatus!=${FileType.MediainfoStatus_Deleted}")
+//    @Query("select MAX(id) from mediainfo where  uploadStatus!=${FileType.MediainfoStatus_Deleted}")
+    @Query("select MAX(id) from mediainfo")
     suspend fun getMediaInfoMaxId():Long
 
 
