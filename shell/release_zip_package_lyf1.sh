@@ -17,7 +17,7 @@ RELEASE_KEY_PASSWORD=$(prop "RELEASE_KEY_PASSWORD")
 RELEASE_STOREFILE=$(prop "RELEASE_STOREFILE")
 RELEASE_STOREPASSWORD=$(prop "RELEASE_STOREPASSWORD")
 RELEASE_KEY_ALIAS=$(prop "RELEASE_KEY_ALIAS")
-buildtools25=$(prop "sdk.dir")/build-tools/25.0.2
+buildtools25=$(prop "sdk.dir")/build-tools/29.0.3
 
 #这种方法不能处理key中包含.的情况
 #while read line;
@@ -102,10 +102,38 @@ echo ${uploadPath}
 
 
 #开始上传蒲公英
-curl -F "file=@"${uploadPath} -F "buildInstallType=2"  -F "buildPassword=603777"  -F "buildUpdateDescription=正式版" -F "uKey=ed639f2e5cac76e08c1eb24b775c2b69" -F "_api_key=30ddd93225add3ed02677a8ae9722d80" https://www.pgyer.com/apiv2/app/upload
+#curl -F "file=@"${uploadPath} -F "buildInstallType=2"  -F "buildPassword=603777"  -F "buildUpdateDescription=正式版" -F "uKey=ed639f2e5cac76e08c1eb24b775c2b69" -F "_api_key=30ddd93225add3ed02677a8ae9722d80" https://www.pgyer.com/apiv2/app/upload
+#curl -F "file=@"${uploadPath} -F "buildInstallType=1"   -F "buildUpdateDescription=正式版" -F "uKey=ed639f2e5cac76e08c1eb24b775c2b69" -F "_api_key=30ddd93225add3ed02677a8ae9722d80" https://www.pgyer.com/apiv2/app/upload
 #result=`git log --pretty=format:"%s" -n 10`
 #curl -F "file=@"${uploadPath} -F "updateDescription=内测体验版 ${result}" -F "uKey=ed639f2e5cac76e08c1eb24b775c2b69"  -F "_api_key=30ddd93225add3ed02677a8ae9722d80"  https://qiniu-storage.pgyer.com/apiv1/app/upload
 #curl -F "file=@/Users/mac/Desktop/backup/Android_lyf_mall1/app/build/outputs/channels/tiyanban_debug_7.0.59_1119_1045_com.umaman.laiyifen_7059_jiagu.apk" -F "buildInstallType=2"  -F "buildPassword=603777"  -F "updateDescription=内测体验版" -F "uKey=ed639f2e5cac76e08c1eb24b775c2b69" -F "_api_key=30ddd93225add3ed02677a8ae9722d80" https://www.pgyer.com/apiv2/app/upload
+
+
+uploadFileResult=pg_get_upload_file_result.json
+let is_completed=-1
+let is_completedFag=0
+while ((is_completedFag<=3))
+do
+  let is_completedFag++
+  if  [ "$is_completed" != 0 ];then
+    echo "尝试第 $is_completedFag 次上传"
+    #开始上传蒲公英
+    temp=  curl -F "file=@"${uploadPath} \
+        -F "buildInstallType=1"  \
+        -F "buildUpdateDescription=正式版"  \
+        -F "uKey=ed639f2e5cac76e08c1eb24b775c2b69"  \
+        -F "_api_key=30ddd93225add3ed02677a8ae9722d80"  \
+        https://www.pgyer.com/apiv2/app/upload>${uploadFileResult}
+
+      is_completed=` jq .code ${uploadFileResult} | sed 's/\"//g' `
+  fi
+done
+rm -rf ${uploadFileResult}
+ if  [ "$is_completed" == 0 ];then
+   echo "pg上传成功"
+ else
+   echo "pg上传失败"
+ fi
 
 
 rm -rf ${backup_Dir}/

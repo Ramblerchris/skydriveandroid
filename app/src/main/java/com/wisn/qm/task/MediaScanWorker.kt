@@ -128,6 +128,7 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
                     }
                 }
                 var file = File(mediainfo.filePath)
+                //文件不存在或者文件的大小为0 都不要展示
                 if (!file.exists() ||file.length() <= 0 ) {
                     isUpdate = true
                     AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
