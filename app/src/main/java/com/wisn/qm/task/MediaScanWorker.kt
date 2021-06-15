@@ -91,7 +91,7 @@ class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker
                         mediaImageList?.sortByDescending {
                             it.createTime
                         }
-                        LogUtils.d(TAG," 全量扫描排序耗时" + (end2 - start))
+                        LogUtils.d(TAG," 全量扫描排序耗时" + (System.currentTimeMillis() - end2))
                         AppDataBase.getInstanse().mediaInfoDao?.insertMediaInfo(mediaImageList)
                         LogUtils.d(TAG," 全量处理插入所有耗时" + (System.currentTimeMillis() - end2))
                     }
