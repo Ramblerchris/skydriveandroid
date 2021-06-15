@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="?attr/qmui_skin_support_color_background"
     android:clipChildren="false"
     android:fitsSystemWindows="true"
-    app:qmui_skin_background="?attr/app_skin_common_background">
+    app:qmui_skin_background="?attr/qmui_skin_support_color_background">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_marginTop="?attr/qmui_topbar_height"
-        android:background="?attr/qmui_skin_support_color_background"
-        android:fitsSystemWindows="true">
+        android:background="?attr/qmui_skin_support_color_background">
 
         <EditText
             android:id="@+id/et_phone"
@@ -24,12 +24,14 @@
             android:layout_marginLeft="30dp"
             android:layout_marginTop="30dp"
             android:layout_marginRight="30dp"
-            android:background="@null"
-            android:hint="请输入手机号"
+            android:textSize="18dp"
+            android:background="@drawable/shape_button"
+            android:hint="请输入手机号码"
             android:inputType="number"
             android:maxLines="1"
             android:singleLine="true"
             android:text=""
+            android:gravity="center"
             android:textCursorDrawable="@drawable/shape_et_cursor"
             android:imeOptions="actionNext"
             android:nextFocusForward="@+id/et_password"
@@ -43,9 +45,11 @@
             android:layout_marginLeft="30dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="30dp"
-            android:background="@null"
+            android:textSize="18dp"
+            android:background="@drawable/shape_button"
             android:hint="请输入登录密码"
             android:maxLines="1"
+            android:gravity="center"
             android:singleLine="true"
             android:text=""
             android:textCursorDrawable="@drawable/shape_et_cursor"
@@ -59,6 +63,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="30dp"
+            android:textSize="18dp"
             android:clickable="true"
             android:gravity="center"
             android:padding="10dp"
@@ -83,15 +88,11 @@
             android:layout_marginTop="10dp"
             android:gravity="center|right"
             android:text="注册"
+            android:textSize="18dp"
             app:layout_constraintEnd_toEndOf="@+id/login"
             app:layout_constraintTop_toBottomOf="@+id/login" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.qmuiteam.qmui.widget.QMUITopBarLayout
-        android:id="@+id/topbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/qmui_config_color_white"
-        android:fitsSystemWindows="true" />
+
 </com.qmuiteam.qmui.widget.QMUIWindowInsetLayout>

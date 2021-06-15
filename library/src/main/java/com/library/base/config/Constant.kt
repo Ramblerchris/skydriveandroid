@@ -1,4 +1,5 @@
 package com.library.base.config
+import com.blankj.utilcode.util.LogUtils
 import com.library.base.utils.KV
 
 
@@ -29,6 +30,8 @@ object Constant {
     fun initBaseUrl() {
 //        BASE_URL = SPUtils.getInstance().getString(SpConstant.TAGBASE_URL)
         BASE_URL = KV.getStr(SpConstant.TAGBASE_URL)
+        LogUtils.d("BASE_URL",BASE_URL)
+
     }
 
 
@@ -38,6 +41,7 @@ object Constant {
 //            SPUtils.getInstance().put(SpConstant.TAGBASE_URL, BASE_URL)
            KV.saveStr(SpConstant.TAGBASE_URL, BASE_URL)
         }
+        LogUtils.d("BASE_URL",BASE_URL)
         return BASE_URL
     }
 

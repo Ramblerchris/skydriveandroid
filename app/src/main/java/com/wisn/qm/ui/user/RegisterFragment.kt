@@ -7,7 +7,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseFragment
 import com.library.base.utils.MToastUtils
 import com.wisn.qm.R
@@ -71,11 +70,12 @@ class RegisterFragment : BaseFragment<UserViewModel>() {
 
     private fun initTopBar() {
         val addLeftBackImageButton = topbar?.addLeftBackImageButton();
-        addLeftBackImageButton?.setColorFilter(Color.BLACK);
+        addLeftBackImageButton?.setColorFilter(Color.BLACK)
         addLeftBackImageButton?.setOnClickListener { popBackStack() }
-        val title = topbar?.setTitle("注册");
-        title?.setTextColor(Color.BLACK)
-        title?.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
+
+//        val title = topbar?.setTitle("注册");
+//        title?.setTextColor(Color.BLACK)
+//        title?.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
 
     }
 

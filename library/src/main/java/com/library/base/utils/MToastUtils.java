@@ -1,4 +1,5 @@
 package com.library.base.utils;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Looper;
@@ -16,29 +17,28 @@ public class MToastUtils {
 
     public static void show(String msg) {
 
-    if (TextUtils.isEmpty(msg)) {
-        return;
-    }
-
-    try {
-        if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+        if (TextUtils.isEmpty(msg)) {
             return;
         }
-//        SmartToast.show(msg);
-        SmartToast
-                .classic()
-                .config()
-                .backgroundColor(Color.parseColor("#99000000"))
-                .msgColorResource(R.color.exo_white)
-                .msgSize(14)
-                .apply()
-                .showInCenter(msg);
-//            ToastUtils.show(msg);
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
 
+        try {
+            if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+                return;
+            }
+//        SmartToast.show(msg);
+            SmartToast
+                    .classic()
+                    .config()
+                    .backgroundColor(Color.parseColor("#99000000"))
+                    .msgColorResource(R.color.exo_white)
+                    .msgSize(14)
+                    .apply()
+                    .showInCenter(msg);
+//            ToastUtils.show(msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static void show(int msg) {

@@ -1,5 +1,6 @@
 package com.wisn.qm.mode.net
 
+import com.blankj.utilcode.util.LogUtils
 import com.library.base.config.UserBean
 import com.library.base.net.RetrofitClient
 import com.wisn.qm.mode.beans.BaseResult
@@ -31,7 +32,8 @@ class ApiNetWork {
     }
 
     fun updateBaseUrl(ip: String) {
-        val instance = RetrofitClient.getInstance();
+        val instance = RetrofitClient.getInstance()
+        LogUtils.d("updateBaseUrl",ip)
         instance.updateBaseUrl(ip)
         mService = instance.create(Api::class.java)
     }

@@ -20,6 +20,7 @@ class MediaInfoScanHelper {
                     MediaStore.Images.Media._ID,
                     MediaStore.Images.Media.DATA,
                     MediaStore.Images.Media.WIDTH,
+                    MediaStore.Images.Media.ALBUM,
                     MediaStore.Images.Media.HEIGHT,
                     MediaStore.Images.Media.ORIENTATION,
                     MediaStore.Images.Media.DISPLAY_NAME,
@@ -41,6 +42,7 @@ class MediaInfoScanHelper {
             query?.let {
                 try {
                     query.moveToFirst()
+                    val ALBUM = query.getColumnIndex(MediaStore.Images.Media.ALBUM)
                     val filePathIndex = query.getColumnIndex(MediaStore.Images.Media.DATA)
                     val fileNameIndex1 = query.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
                     val createTimeIndex2 = query.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)
@@ -56,6 +58,7 @@ class MediaInfoScanHelper {
                         // 获取图片的路径
 
                         val filePath: String = query.getString(filePathIndex)
+                        val ALBUM: String = query.getString(ALBUM)
                         //获取图片名称
                         val fileName: String = query.getString(fileNameIndex1)
                         //获取图片时间
@@ -69,6 +72,7 @@ class MediaInfoScanHelper {
                         //获取图片类型
                         val mimeType: String = query.getString(
                                 mimeTypeIndex)
+                        LogUtils.d("ALBUM.ALBUM:", ALBUM,filePath)
                         if (filePath.isNullOrEmpty()) {
                             continue
                         }

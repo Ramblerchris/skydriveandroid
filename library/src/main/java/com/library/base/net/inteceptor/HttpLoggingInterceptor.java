@@ -119,7 +119,6 @@ public class HttpLoggingInterceptor implements Interceptor {
                 }
 
                 if (logBody && hasRequestBody) {
-                    logArrays.add("\t" + "Content-type: " + requestBody.contentType());
                     if (isPlaintext(requestBody.contentType())) {
                         try {
                             Request copy = request.newBuilder().build();
