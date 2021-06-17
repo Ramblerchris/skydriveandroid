@@ -1,6 +1,7 @@
 package com.wisn.qm.mode
 
 import com.wisn.qm.mode.db.AppDataBase
+import com.wisn.qm.mode.db.beans.Folder
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.file.MediaInfoScanHelper
@@ -32,6 +33,10 @@ class DataRepository private constructor(val apiNetWork: ApiNetWork, val appData
         val await = mediaImageList.await();
         await.addAll(mediaVideoList.await())
         return await
+    }
+
+    suspend fun getMediaImageAndVideoListNoSha1(addVideo: Boolean): ArrayList<Folder> {
+        return mediaInfohelper.getMediaImageVidoeListNoSha1(addVideo)
     }
 
     suspend fun getUserDirlist(isUserCache: Boolean): MutableList<UserDirBean>? {

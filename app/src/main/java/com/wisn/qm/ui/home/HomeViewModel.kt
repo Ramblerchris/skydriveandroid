@@ -15,6 +15,7 @@ import com.wisn.qm.mode.DataRepository
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.beans.Update
 import com.wisn.qm.mode.db.AppDataBase
+import com.wisn.qm.mode.db.beans.Folder
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UploadBean
@@ -30,13 +31,14 @@ import okhttp3.RequestBody
 import java.io.File
 
 class HomeViewModel : BaseViewModel() {
-    private val titleStr = "照片"
+    private val titleStr = "相册"
     var count: Int = 0
         set(value){
             field=value
             updateHomeTitle()
         }
     var selectData = MutableLiveData<MutableList<MediaInfo>>()
+    var folderData = MutableLiveData<ArrayList<Folder>>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var userdirBean = MutableLiveData<UserDirBean>()
     var usernameData = MutableLiveData<String>()
@@ -258,6 +260,21 @@ class HomeViewModel : BaseViewModel() {
 
             }.flowOn(Dispatchers.IO).collect {
 
+            }
+        }
+    }
+
+    fun folderData() {
+//       defUi.msgEvent.value = Message(100,"正在加载")
+        launchUI {
+            LogUtils.d("folderData launchUI", Thread.currentThread().name)
+            launchFlow {
+                LogUtils.d("folderData launchFlow", Thread.currentThread().name)
+                val mediaImageVidoeListNoSha1 =
+                    DataRepository.getInstance().mediaInfohelper.getMediaImageVidoeListNoSha1(true)
+                folderData.postValue(mediaImageVidoeListNoSha1)
+            }.flowOn(Dispatchers.IO).collect {
+                LogUtils.d("folderData collect", Thread.currentThread().name)
             }
         }
     }

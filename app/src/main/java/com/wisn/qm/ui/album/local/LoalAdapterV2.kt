@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.home.picture
+package com.wisn.qm.ui.album.local
 
 import android.view.View
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -16,8 +16,8 @@ import com.wisn.qm.ui.previewloc.PreviewFragment
  * Created by Wisn on 2020/6/6 下午6:14.
  */
 
-class PictureAdapterV2(pictureController: PictureCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
-    protected var pictureController: PictureCallBack
+class LoalAdapterV2(pictureController: LocalCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
+    protected var pictureController: LocalCallBack
     open var isSelectModel: Boolean = false
     protected var map: HashMap<Long, Boolean> = HashMap()
 

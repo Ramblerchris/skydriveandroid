@@ -7,6 +7,7 @@ object FileType {
     const val VideoViewItem = 2
     const val UploadProgressItem = 3
     const val TitleInfo = 4
+    const val Album = 5
 
     const val UPloadStatus_Noupload = 0;
     const val UPloadStatus_uploading = 1;
