@@ -11,6 +11,7 @@ import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.config.Constant
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.we.playerexo.ExoPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
@@ -43,6 +44,7 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
 
     override fun initView(views: View) {
         super.initView(views)
+        QMUIStatusBarHelper.setStatusBarDarkMode(activity)
 //        var mHomeViewModel = ViewModelProvider(requireActivity(), ViewModelFactory()).get(HomeViewModel::class.java)
 
         group_content?.visibility = View.GONE
@@ -190,6 +192,7 @@ class NetPreviewFragment(var data: MutableList<UserDirBean>, var position: Int) 
     override fun onDestroy() {
         super.onDestroy()
         videoView.release()
+        QMUIStatusBarHelper.setStatusBarLightMode(activity)
 //        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
 
     }

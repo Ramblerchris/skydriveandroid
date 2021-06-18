@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import androidx.recyclerview.widget.GridLayoutManager
 import com.library.base.BaseFragment
+import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
 import com.wisn.qm.mode.db.beans.Folder
@@ -18,10 +19,10 @@ import kotlinx.android.synthetic.main.fragment_newalbum.topbar
 import kotlinx.android.synthetic.main.fragment_register.*
 
 
-class LocalAlbumFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(), LocalCallBack {
+class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(), LocalCallBack {
     lateinit var title: QMUIQQFaceView
     lateinit var leftCancel: Button
-    val newAlbumAdapter by lazy { LoalAdapterV2(this) }
+    val newAlbumAdapter by lazy { LoalAlbumImageListAdapterV2(this) }
 
     override fun layoutId(): Int {
         return R.layout.fragment_localalbum
@@ -93,8 +94,9 @@ class LocalAlbumFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(), L
     ) {
      }
 
-    override fun getHomeFragment(): HomeFragment {
-        return HomeFragment();
+    override fun getQMUIFragment(): QMUIFragment {
+       return this
     }
+
 
 }

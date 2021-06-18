@@ -1,5 +1,6 @@
 package com.wisn.qm.ui.previewloc
 
+import android.app.StatusBarManager
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Px
@@ -16,6 +17,7 @@ import com.library.base.base.ViewModelFactory
 import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.we.player.player.exo.AndroidMediaPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
@@ -52,6 +54,7 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
 
     override fun initView(views: View) {
         super.initView(views)
+        QMUIStatusBarHelper.setStatusBarDarkMode(activity)
         var mHomeViewModel = ViewModelProvider(requireActivity(), ViewModelFactory()).get(HomeViewModel::class.java)
 
         group_content?.visibility = View.GONE
@@ -207,7 +210,8 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
 
     override fun onDestroy() {
         super.onDestroy()
-        videoView?.release()
+        videoView.release()
+        QMUIStatusBarHelper.setStatusBarLightMode(activity)
 //        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
 
     }
@@ -215,18 +219,18 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
 
     override fun onResume() {
         super.onResume()
-        videoView?.resume()
+        videoView.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        videoView?.pause()
+        videoView.pause()
 
     }
 
     override fun onStop() {
         super.onStop()
-        videoView?.stop()
+        videoView.stop()
     }
 
 

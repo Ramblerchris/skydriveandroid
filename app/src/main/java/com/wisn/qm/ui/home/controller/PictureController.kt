@@ -15,7 +15,7 @@ import com.qmuiteam.qmui.widget.QMUITopBarLayout
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
-import com.wisn.qm.ui.home.album.AlbumAdapterV2
+import com.wisn.qm.ui.home.album.LocalAlbumAdapterV2
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
@@ -34,7 +34,7 @@ import com.wisn.qm.ui.home.album.PictureCallBack
  */
 class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewModel: HomeViewModel?) : BaseHomeController(context, mhomeFragment, homeViewModel), PictureCallBack, SwipeRefreshLayout.OnRefreshListener {
     private val topbar: QMUITopBarLayout = findViewById(R.id.topbar)
-    private val mAdapter by lazy { AlbumAdapterV2(this) }
+    private val mAdapter by lazy { LocalAlbumAdapterV2(this) }
     private var gridLayoutManager: GridLayoutManager
     private val recyclerView: RecyclerView
     private val swiperefresh: SwipeRefreshLayout
@@ -162,7 +162,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
 }
 
 
-open class SpanSizeLookup(var adapterV2: AlbumAdapterV2) : GridLayoutManager.SpanSizeLookup() {
+open class SpanSizeLookup(var adapterV2: LocalAlbumAdapterV2) : GridLayoutManager.SpanSizeLookup() {
     override fun getSpanSize(position: Int): Int {
 
         val get = adapterV2.data[position]

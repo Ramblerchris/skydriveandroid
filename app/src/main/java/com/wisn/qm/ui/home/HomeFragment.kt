@@ -182,7 +182,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
         val picture = qmuiTabBuilder
                 .setNormalDrawable(ContextCompat.getDrawable(requireContext(), R.mipmap.ic_tab_picture_normal))
                 .setSelectedDrawable(ContextCompat.getDrawable(requireContext(), R.mipmap.ic_tab_picture_checked))
-                .setText("照片")
+                .setText("相册")
                 .build(context)
         val album = qmuiTabBuilder
                 .setNormalDrawable(ContextCompat.getDrawable(requireContext(), R.mipmap.ic_tab_album_normal))

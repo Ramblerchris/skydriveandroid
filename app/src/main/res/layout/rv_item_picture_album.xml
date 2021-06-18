@@ -33,6 +33,9 @@
         android:layout_marginTop="8dp"
         android:textColor="#333"
         android:textSize="16sp"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image"
         tools:text="标题测试" />

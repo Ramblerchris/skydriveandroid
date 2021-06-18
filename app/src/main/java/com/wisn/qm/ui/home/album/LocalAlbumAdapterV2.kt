@@ -9,13 +9,13 @@ import com.qmuiteam.qmui.widget.QMUIRadiusImageView
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.Folder
-import com.wisn.qm.ui.album.local.LocalAlbumFragment
+import com.wisn.qm.ui.album.local.LocalAlbumImageListFragment
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.
  */
 
-class AlbumAdapterV2(pictureController: PictureCallBack?) : BaseMultiItemQuickAdapter<Folder, BaseViewHolder>() {
+class LocalAlbumAdapterV2(pictureController: PictureCallBack?) : BaseMultiItemQuickAdapter<Folder, BaseViewHolder>() {
     protected var pictureController: PictureCallBack
     open var isSelectModel: Boolean = false
 
@@ -35,7 +35,6 @@ class AlbumAdapterV2(pictureController: PictureCallBack?) : BaseMultiItemQuickAd
 
 
     override fun convert(holder: BaseViewHolder, item: Folder) {
-        val adapterPosition = holder.adapterPosition
         if (item.itemType == FileType.Album) {
            var image= holder.getView<QMUIRadiusImageView>(R.id.image)
            var title= holder.getView<TextView>(R.id.title)
@@ -44,7 +43,7 @@ class AlbumAdapterV2(pictureController: PictureCallBack?) : BaseMultiItemQuickAd
             title.setText(item.name)
             count.setText("${item.images.size}")
             holder.itemView.onClick {
-                pictureController.getHomeFragment().startFragment(LocalAlbumFragment(item))
+                pictureController.getHomeFragment().startFragment(LocalAlbumImageListFragment(item))
             }
         }
 

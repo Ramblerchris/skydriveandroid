@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.utils.MToastUtils
@@ -31,7 +30,7 @@ import com.wisn.qm.ui.album.details.AlbumDetailsPageingFragment
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
-import com.wisn.qm.ui.home.adapter.AlbumAdapter
+import com.wisn.qm.ui.home.adapter.OnLineAlbumAdapter
 import kotlinx.android.synthetic.main.home_controller_album.view.*
 import java.util.*
 
@@ -39,9 +38,9 @@ import java.util.*
 /**
  * Created by Wisn on 2020/6/5 下午11:25.
  */
-class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewModel: HomeViewModel?) : BaseHomeController(context, mhomeFragment, homeViewModel), SwipeRefreshLayout.OnRefreshListener,AlbumAdapter.CallBack {
+class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewModel: HomeViewModel?) : BaseHomeController(context, mhomeFragment, homeViewModel), SwipeRefreshLayout.OnRefreshListener,OnLineAlbumAdapter.CallBack {
     private val topbar: QMUITopBarLayout = findViewById(R.id.topbar)
-    private val mAdapter by lazy { AlbumAdapter(this) }
+    private val mAdapter by lazy { OnLineAlbumAdapter(this) }
     private val recyclerView: RecyclerView
     private val swiperefresh: SwipeRefreshLayout
     var mGlobalAction: QMUIPopup? =null

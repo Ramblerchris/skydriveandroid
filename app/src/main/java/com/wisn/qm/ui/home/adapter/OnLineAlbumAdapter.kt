@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.library.base.utils.ImageAdapter
 import com.wisn.qm.R
 import com.wisn.qm.mode.db.beans.UserDirBean
-import com.wisn.qm.ui.home.adapter.AlbumAdapter.RvItemAlbumViewHolder
+import com.wisn.qm.ui.home.adapter.OnLineAlbumAdapter.RvItemAlbumViewHolder
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.
  */
-class AlbumAdapter(var callback :CallBack,var data: MutableList<UserDirBean> = ArrayList()) : RecyclerView.Adapter<RvItemAlbumViewHolder>() {
+class OnLineAlbumAdapter(var callback :CallBack, var data: MutableList<UserDirBean> = ArrayList()) : RecyclerView.Adapter<RvItemAlbumViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvItemAlbumViewHolder {
         return RvItemAlbumViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item_album, parent, false))
@@ -35,9 +35,9 @@ class AlbumAdapter(var callback :CallBack,var data: MutableList<UserDirBean> = A
         } else {
             holder.share.visibility = View.GONE
         }
-        holder.itemView.setOnClickListener { callback?.AlbumClick(holder.itemView,position,get) }
+        holder.itemView.setOnClickListener { callback.AlbumClick(holder.itemView,position,get) }
         holder.itemView.setOnLongClickListener {
-            callback?.AlbumLongClick(holder.itemView,position,get)
+            callback.AlbumLongClick(holder.itemView,position,get)
             false
         }
     }

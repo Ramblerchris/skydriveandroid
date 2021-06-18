@@ -16,7 +16,7 @@ import com.wisn.qm.ui.previewloc.PreviewFragment
  * Created by Wisn on 2020/6/6 下午6:14.
  */
 
-class LoalAdapterV2(pictureController: LocalCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
+class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
     protected var pictureController: LocalCallBack
     open var isSelectModel: Boolean = false
     protected var map: HashMap<Long, Boolean> = HashMap()
@@ -97,7 +97,7 @@ class LoalAdapterV2(pictureController: LocalCallBack?) : BaseMultiItemQuickAdapt
                     } else {
                         //查看大图
                         val previewFragment = PreviewFragment(data, adapterPosition)
-                        pictureController.getHomeFragment().startFragment(previewFragment)
+                        pictureController.getQMUIFragment().startFragment(previewFragment)
                     }
                 }
                 if (isSelectModel) {
