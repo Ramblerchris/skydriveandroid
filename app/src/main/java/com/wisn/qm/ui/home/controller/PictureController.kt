@@ -3,6 +3,8 @@ package com.wisn.qm.ui.home.controller
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Parcelable
+import android.util.SparseArray
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -20,6 +22,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.library.base.layoutmanager.MGridLayoutManager
 import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
+import com.qmuiteam.qmui.util.QMUIViewHelper
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
@@ -38,6 +41,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
     private val leftCancel: Button
     private val title: QMUIQQFaceView
     var tipDialog:QMUITipDialog? =null
+    private val mDiffRecyclerViewSaveStateId = QMUIViewHelper.generateViewId()
 
     override val layoutId: Int
         get() = R.layout.home_controller_picture
@@ -81,7 +85,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
         mHomeViewModel.titleShow.observe(mHomeFragment, Observer {
             title.text = it
         })
-        mHomeViewModel?.folderData?.observe(mhomeFragment, Observer {
+        mHomeViewModel.folderData.observe(mhomeFragment, Observer {
             LogUtils.d(" mHomeViewModel. updateHomeMedialist")
             scantip.visibility = View.GONE
             swiperefresh?.isRefreshing = false
@@ -109,7 +113,21 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
                 tipDialog?.dismiss()
             }
         })
-        mHomeViewModel?.folderData()
+        mHomeViewModel.folderData()
+    }
+
+    override fun dispatchSaveInstanceState(container: SparseArray<Parcelable?>?) {
+        val id: Int = recyclerView.getId()
+        recyclerView.setId(mDiffRecyclerViewSaveStateId)
+        super.dispatchSaveInstanceState(container)
+        recyclerView.setId(id)
+    }
+
+    override fun dispatchRestoreInstanceState(container: SparseArray<Parcelable?>?) {
+        val id: Int = recyclerView.getId()
+        recyclerView.setId(mDiffRecyclerViewSaveStateId)
+        super.dispatchRestoreInstanceState(container)
+        recyclerView.setId(id)
     }
 
     override fun showPictureControl(isShow: Boolean?) {
@@ -139,7 +157,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
 
     override fun onRefresh() {
         LogUtils.d(" PictureController .onRefresh")
-        mHomeViewModel?.folderData()
+        mHomeViewModel.folderData()
     }
 }
 

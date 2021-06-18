@@ -76,6 +76,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
 
     override fun onCreateRootView(fragmentContainerId: Int): RootView {
          customRootView=  CustomRootView(this, fragmentContainerId);
+//        customRootView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS)
         return customRootView
     }
 
