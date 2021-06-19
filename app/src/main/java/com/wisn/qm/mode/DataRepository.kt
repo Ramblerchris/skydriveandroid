@@ -1,5 +1,6 @@
 package com.wisn.qm.mode
 
+import com.blankj.utilcode.util.LogUtils
 import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.Folder
 import com.wisn.qm.mode.db.beans.MediaInfo
@@ -36,7 +37,49 @@ class DataRepository private constructor(val apiNetWork: ApiNetWork, val appData
     }
 
     suspend fun getMediaImageAndVideoListNoSha1(addVideo: Boolean): ArrayList<Folder> {
-        return mediaInfohelper.getMediaImageVidoeListNoSha1(addVideo)
+        //查看db list
+        val mediaInfoListAllNotDeleteFromDB = appDataBase.mediaInfoDao?.getMediaInfoListAllNotDelete()
+        //获取最新的所有系统media数据
+        val mediaInfoListAllFromSystem = mediaInfohelper.getMediaImageVidoeListNoSha1(addVideo)
+        //对比系统media 获取需要更新和删除的记录 并插入到db
+        var result: ArrayList<MediaInfo>
+        if (mediaInfoListAllNotDeleteFromDB != null && mediaInfoListAllNotDeleteFromDB.size > 0) {
+            result=ArrayList();
+            //db 中已经存在，找出差异
+            val same: HashSet<Long> = HashSet()
+            //用来存放DB中的id
+            for (mediainfo in mediaInfoListAllNotDeleteFromDB) {
+                if (mediainfo.id != null) {
+                    same.add(mediainfo.id!!)
+                }
+            }
+            for (mediainfo in mediaInfoListAllFromSystem) {
+                if (mediainfo.id != null) {
+                    if (same.add(mediainfo.id!!)) {
+                        //db中没有
+                        result.add(mediainfo)
+                    } else {
+                        //db 已经插入了
+                        continue
+                    }
+                }
+            }
+            LogUtils.d("差量："+result.size)
+            if(result.size>0){
+                //将差量插入新的数据到db中
+                appDataBase.mediaInfoDao?.insertMediaInfo(result)
+                result.addAll(mediaInfoListAllNotDeleteFromDB)
+            }else{
+                result= mediaInfoListAllNotDeleteFromDB as ArrayList<MediaInfo>
+            }
+
+        } else {
+            //db 没有存在，全量插入
+            result=mediaInfoListAllFromSystem
+            appDataBase.mediaInfoDao?.insertMediaInfo(result)
+        }
+        //获取最终的list
+        return  mediaInfohelper.getFolderByMediaInfoList(result)
     }
 
     suspend fun getUserDirlist(isUserCache: Boolean): MutableList<UserDirBean>? {

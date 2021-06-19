@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.home.album
+package com.wisn.qm.ui.home.localalbum
 
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.HomeFragment

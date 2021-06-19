@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import com.wisn.qm.mode.db.beans.User;
 
+@Deprecated
 @Dao
 public interface UserDao {
     @Insert

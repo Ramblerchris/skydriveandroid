@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.home.album
+package com.wisn.qm.ui.home.localalbum
 
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter

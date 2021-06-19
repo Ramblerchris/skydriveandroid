@@ -95,7 +95,7 @@ class MediaInfoScanHelper {
                             SHAMD5Utils.getSHA1(filePath)
                         }
 
-                        if ("downloading" != getExtensionName(filePath)) { //过滤未下载完成的文件
+                        if (isSafePath(filePath)) { //过滤未下载完成的文件
 //                            LogUtils.d("width:", width, " height:", height)
                             val element = MediaInfo(
                                 id,
@@ -205,7 +205,7 @@ class MediaInfoScanHelper {
                         val shA1 = filePath?.let {
                             SHAMD5Utils.getSHA1(filePath)
                         }
-                        if ("downloading" != getExtensionName(filePath)) { //过滤未下载完成的文件
+                        if (isSafePath(filePath)) { //过滤未下载完成的文件
                             LogUtils.d("width:", width, " height:", height)
                             val element = MediaInfo(
                                 id,
@@ -244,32 +244,228 @@ class MediaInfoScanHelper {
 
     }
 
-    open suspend fun getMediaImageVidoeListNoSha1(addVideo: Boolean): ArrayList<Folder> {
+    open suspend fun getMediaImageVidoeListNoSha1(addVideo: Boolean): ArrayList<MediaInfo> {
         return withContext(Dispatchers.IO) {
             val mediaImageListNoSha1 = getMediaImageListNoSha1()
             if(addVideo){
                 val mediaVideoListNoSha1 = getMediaVideoListNoSha1()
                 mediaImageListNoSha1.addAll(mediaVideoListNoSha1)
             }
-            val splitFolder = splitFolder("全部相册", mediaImageListNoSha1)
-            //按照时间排序
-            for (i in splitFolder.indices) {
-                Collections.sort(splitFolder.get(i).images, kotlin.Comparator { o1, o2 ->
-                    return@Comparator when {
-                        o1.createTime == o2.createTime -> {
-                            0
-                        }
-                        o1.createTime!! > o2.createTime!! -> {
-                            -1
-                        }
-                        else -> {
-                            1
-                        }
-                    }
-                })
-            }
-            splitFolder
+            mediaImageListNoSha1
         }
+    }
+
+    open suspend fun getMediaImageVidoeFolderListNoSha1(addVideo: Boolean): ArrayList<Folder> {
+        return withContext(Dispatchers.IO) {
+            val mediaImageListNoSha1 = getMediaImageListNoSha1()
+            if(addVideo){
+                val mediaVideoListNoSha1 = getMediaVideoListNoSha1()
+                mediaImageListNoSha1.addAll(mediaVideoListNoSha1)
+            }
+            getFolderByMediaInfoList(mediaImageListNoSha1)
+        }
+    }
+
+    open fun getFolderByMediaInfoList(mediaImageListNoSha1: ArrayList<MediaInfo>): ArrayList<Folder> {
+        val splitFolder = splitFolder("全部相册", mediaImageListNoSha1)
+        //按照时间排序
+        for (i in splitFolder.indices) {
+            Collections.sort(splitFolder.get(i).images, kotlin.Comparator { o1, o2 ->
+                return@Comparator when {
+                    o1.createTime == o2.createTime -> {
+                        0
+                    }
+                    o1.createTime!! > o2.createTime!! -> {
+                        -1
+                    }
+                    else -> {
+                        1
+                    }
+                }
+            })
+        }
+        return splitFolder
+    }
+
+
+    private fun getMediaImageListNoSha1(): ArrayList<MediaInfo> {
+
+        val query = BaseApp.app.contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            mediaIamgeArrayof,
+            null,
+            null,
+            MediaStore.Images.Media.DATE_ADDED + " desc"
+        )
+        var result = ArrayList<MediaInfo>()
+        query?.let {
+            try {
+                query.moveToFirst()
+                val filePathIndex = query.getColumnIndex(MediaStore.Images.Media.DATA)
+                val fileNameIndex1 = query.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                val createTimeIndex2 = query.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)
+                val idIndex3 = query.getColumnIndex(MediaStore.Images.Media._ID)
+                val fileSizeIndex4 = query.getColumnIndex(MediaStore.Images.Media.SIZE)
+                val latitudeIndex5 = query.getColumnIndex(MediaStore.Images.Media.LATITUDE)
+                val longitudeIndex6 = query.getColumnIndex(MediaStore.Images.Media.LONGITUDE)
+                val widthIndex7 = query.getColumnIndex(MediaStore.Images.Media.WIDTH)
+                val heightIndex8 = query.getColumnIndex(MediaStore.Images.Media.HEIGHT)
+                val mimeTypeIndex = query.getColumnIndex(MediaStore.Images.Media.MIME_TYPE)
+
+                while (query.moveToNext()) {
+                    // 获取图片的路径
+
+                    val filePath: String = query.getString(filePathIndex)
+                    //获取图片名称
+                    val fileName: String = query.getString(fileNameIndex1)
+                    //获取图片时间
+                    val createTime: Long = query.getLong(createTimeIndex2)
+                    val id: Long = query.getLong(idIndex3)
+                    val fileSize: Long = query.getLong(fileSizeIndex4)
+                    val latitude: Float = query.getFloat(latitudeIndex5)
+                    val longitude: Float = query.getFloat(longitudeIndex6)
+                    val width: Int = query.getInt(widthIndex7)
+                    val height: Int = query.getInt(heightIndex8)
+                    //获取图片类型
+                    val mimeType: String = query.getString(
+                        mimeTypeIndex
+                    )
+                    if (filePath.isNullOrEmpty()) {
+                        continue
+                    }
+                    if (isSafePath(filePath)) { //过滤未下载完成的文件
+//                            LogUtils.d("width:", width, " height:", height)
+                        val element = MediaInfo(
+                            id,
+                            fileName,
+                            filePath,
+                            fileSize,
+                            -1,
+                            mimeType,
+                            false,
+                            createTime,
+                            null,
+                            latitude,
+                            longitude,
+                            width,
+                            height
+                        )
+                        result.add(element)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                query.close()
+            }
+            LogUtils.d("result.size:", result.size)
+        }
+        return result
+    }
+
+    private fun getMediaVideoListNoSha1(): ArrayList<MediaInfo> {
+        //扫描视频
+        val where = (MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=? or "
+                + MediaStore.Video.Media.MIME_TYPE + "=?")
+        val whereArgs = arrayOf(
+            "video/mp4", "video/3gp", "video/aiv", "video/rmvb", "video/vob", "video/flv",
+            "video/mkv", "video/mov", "video/mpg"
+        )
+        val query = BaseApp.app.contentResolver.query(
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            mediaVideoArrayof,
+//            where,
+            null,
+//            whereArgs,
+            null,
+            MediaStore.Video.Media.DATE_ADDED + " desc"
+        )
+        var result = ArrayList<MediaInfo>()
+        query?.let {
+            try {
+                query.moveToFirst()
+                val idcolumnIndex = query.getColumnIndex(MediaStore.Video.Media._ID)
+                val filePathcolumnIndex1 = query.getColumnIndex(MediaStore.Video.Media.DATA)
+                val widthcolumnIndex2 = query.getColumnIndex(MediaStore.Video.Media.WIDTH)
+                val heightcolumnIndex3 = query.getColumnIndex(MediaStore.Video.Media.HEIGHT)
+                val fileNamecolumnIndex4 = query.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)
+                val createTimecolumnIndex5 = query.getColumnIndex(MediaStore.Video.Media.DATE_ADDED)
+                val fileSizecolumnIndex6 = query.getColumnIndex(MediaStore.Video.Media.SIZE)
+                val durationcolumnIndex7 = query.getColumnIndex(MediaStore.Video.Media.DURATION)
+                val mimeTypecolumnIndex8 = query.getColumnIndex(MediaStore.Images.Media.MIME_TYPE)
+                val latitudecolumnIndex9 = query.getColumnIndex(MediaStore.Video.Media.LATITUDE)
+                val longitudecolumnIndex10 = query.getColumnIndex(MediaStore.Video.Media.LONGITUDE)
+
+                while (query.moveToNext()) {
+                    val id: Long = query.getLong(idcolumnIndex)
+                    // 获取图片的路径
+                    val filePath: String = query.getString(filePathcolumnIndex1)
+                    val width: Int = query.getInt(widthcolumnIndex2)
+                    val height: Int = query.getInt(heightcolumnIndex3)
+                    //获取图片名称
+                    val fileName: String = query.getString(fileNamecolumnIndex4)
+                    //获取图片时间
+                    val createTime: Long = query.getLong(createTimecolumnIndex5)
+                    val fileSize: Long = query.getLong(fileSizecolumnIndex6)
+                    val duration: Long = query.getLong(durationcolumnIndex7)
+                    //获取图片类型
+                    val mimeType: String = query.getString(mimeTypecolumnIndex8)
+                    val latitude: Float = query.getFloat(latitudecolumnIndex9)
+                    val longitude: Float = query.getFloat(longitudecolumnIndex10)
+                    if (fileSize < 1024 || filePath.isNullOrEmpty()) {
+                        continue
+                    }
+                    if (isSafePath(filePath)) { //过滤未下载完成的文件
+                        LogUtils.d("width:", width, " height:", height)
+                        val element = MediaInfo(
+                            id,
+                            fileName,
+                            filePath,
+                            fileSize,
+                            duration,
+                            mimeType,
+                            true,
+                            createTime,
+                            null,
+                            latitude,
+                            longitude,
+                            width,
+                            height
+                        )
+                        var createTimess = FormatStrUtils.getFormatTimeStr(duration)
+                        element.timestr = createTimess
+//                            element.timestr = converted
+//                            LogUtils.d("AAAAABBB${SystemClock.elapsedRealtime()}  createTime:" + createTime + " duration" + duration + "timestr" + element.timestr)
+//                            LogUtils.d(element.toString())
+                        result.add(element)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                query.close()
+            }
+            LogUtils.d("result.size:", result.size)
+        }
+        return result
+
+    }
+
+    private fun isSafePath(filePath: String):Boolean{
+        return true;
+//        return "downloading" != getExtensionName(filePath)
+    }
+
+
+    fun getExtensionName(dotname: String): String {
+        return dotname?.substring(dotname.lastIndexOf("."))
     }
 
     /**
@@ -279,7 +475,7 @@ class MediaInfoScanHelper {
      *
      * @return
      */
-    private fun splitFolder(
+    open fun splitFolder(
         title: String,
         images: ArrayList<MediaInfo>
     ): ArrayList<Folder> {
@@ -333,181 +529,6 @@ class MediaInfoScanHelper {
         folders.add(newFolder)
         return newFolder
     }
-
-    private fun getMediaImageListNoSha1(): ArrayList<MediaInfo> {
-
-        val query = BaseApp.app.contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            mediaIamgeArrayof,
-            null,
-            null,
-            MediaStore.Images.Media.DATE_ADDED + " desc"
-        )
-        var result = ArrayList<MediaInfo>()
-//        var sha1list = ArrayList<String>()
-        query?.let {
-            try {
-                query.moveToFirst()
-                val filePathIndex = query.getColumnIndex(MediaStore.Images.Media.DATA)
-                val fileNameIndex1 = query.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
-                val createTimeIndex2 = query.getColumnIndex(MediaStore.Images.Media.DATE_ADDED)
-                val idIndex3 = query.getColumnIndex(MediaStore.Images.Media._ID)
-                val fileSizeIndex4 = query.getColumnIndex(MediaStore.Images.Media.SIZE)
-                val latitudeIndex5 = query.getColumnIndex(MediaStore.Images.Media.LATITUDE)
-                val longitudeIndex6 = query.getColumnIndex(MediaStore.Images.Media.LONGITUDE)
-                val widthIndex7 = query.getColumnIndex(MediaStore.Images.Media.WIDTH)
-                val heightIndex8 = query.getColumnIndex(MediaStore.Images.Media.HEIGHT)
-                val mimeTypeIndex = query.getColumnIndex(MediaStore.Images.Media.MIME_TYPE)
-
-                while (query.moveToNext()) {
-                    // 获取图片的路径
-
-                    val filePath: String = query.getString(filePathIndex)
-                    //获取图片名称
-                    val fileName: String = query.getString(fileNameIndex1)
-                    //获取图片时间
-                    val createTime: Long = query.getLong(createTimeIndex2)
-                    val id: Long = query.getLong(idIndex3)
-                    val fileSize: Long = query.getLong(fileSizeIndex4)
-                    val latitude: Float = query.getFloat(latitudeIndex5)
-                    val longitude: Float = query.getFloat(longitudeIndex6)
-                    val width: Int = query.getInt(widthIndex7)
-                    val height: Int = query.getInt(heightIndex8)
-                    //获取图片类型
-                    val mimeType: String = query.getString(
-                        mimeTypeIndex
-                    )
-                    if (filePath.isNullOrEmpty()) {
-                        continue
-                    }
-                    if ("downloading" != getExtensionName(filePath)) { //过滤未下载完成的文件
-//                            LogUtils.d("width:", width, " height:", height)
-                        val element = MediaInfo(
-                            id,
-                            fileName,
-                            filePath,
-                            fileSize,
-                            -1,
-                            mimeType,
-                            false,
-                            createTime,
-                            null,
-                            latitude,
-                            longitude,
-                            width,
-                            height
-                        )
-                        result.add(element)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                query.close()
-            }
-            LogUtils.d("result.size:", result.size)
-        }
-        return result
-    }
-
-    private fun getMediaVideoListNoSha1(): ArrayList<MediaInfo> {
-        //扫描视频
-        val where = (MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=? or "
-                + MediaStore.Video.Media.MIME_TYPE + "=?")
-        val whereArgs = arrayOf(
-            "video/mp4", "video/3gp", "video/aiv", "video/rmvb", "video/vob", "video/flv",
-            "video/mkv", "video/mov", "video/mpg"
-        )
-        val query = BaseApp.app.contentResolver.query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-            mediaVideoArrayof,
-            where,
-            whereArgs,
-            MediaStore.Video.Media.DATE_ADDED + " desc"
-        )
-        var result = ArrayList<MediaInfo>()
-        query?.let {
-            try {
-                query.moveToFirst()
-                val idcolumnIndex = query.getColumnIndex(MediaStore.Video.Media._ID)
-                val filePathcolumnIndex1 = query.getColumnIndex(MediaStore.Video.Media.DATA)
-                val widthcolumnIndex2 = query.getColumnIndex(MediaStore.Video.Media.WIDTH)
-                val heightcolumnIndex3 = query.getColumnIndex(MediaStore.Video.Media.HEIGHT)
-                val fileNamecolumnIndex4 = query.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)
-                val createTimecolumnIndex5 = query.getColumnIndex(MediaStore.Video.Media.DATE_ADDED)
-                val fileSizecolumnIndex6 = query.getColumnIndex(MediaStore.Video.Media.SIZE)
-                val durationcolumnIndex7 = query.getColumnIndex(MediaStore.Video.Media.DURATION)
-                val mimeTypecolumnIndex8 = query.getColumnIndex(MediaStore.Images.Media.MIME_TYPE)
-                val latitudecolumnIndex9 = query.getColumnIndex(MediaStore.Video.Media.LATITUDE)
-                val longitudecolumnIndex10 = query.getColumnIndex(MediaStore.Video.Media.LONGITUDE)
-
-                while (query.moveToNext()) {
-                    val id: Long = query.getLong(idcolumnIndex)
-                    // 获取图片的路径
-                    val filePath: String = query.getString(filePathcolumnIndex1)
-                    val width: Int = query.getInt(widthcolumnIndex2)
-                    val height: Int = query.getInt(heightcolumnIndex3)
-                    //获取图片名称
-                    val fileName: String = query.getString(fileNamecolumnIndex4)
-                    //获取图片时间
-                    val createTime: Long = query.getLong(createTimecolumnIndex5)
-                    val fileSize: Long = query.getLong(fileSizecolumnIndex6)
-                    val duration: Long = query.getLong(durationcolumnIndex7)
-                    //获取图片类型
-                    val mimeType: String = query.getString(mimeTypecolumnIndex8)
-                    val latitude: Float = query.getFloat(latitudecolumnIndex9)
-                    val longitude: Float = query.getFloat(longitudecolumnIndex10)
-                    if (fileSize < 1024 || filePath.isNullOrEmpty()) {
-                        continue
-                    }
-                    if ("downloading" != getExtensionName(filePath)) { //过滤未下载完成的文件
-                        LogUtils.d("width:", width, " height:", height)
-                        val element = MediaInfo(
-                            id,
-                            fileName,
-                            filePath,
-                            fileSize,
-                            duration,
-                            mimeType,
-                            true,
-                            createTime,
-                            null,
-                            latitude,
-                            longitude,
-                            width,
-                            height
-                        )
-                        var createTimess = FormatStrUtils.getFormatTimeStr(duration)
-                        element.timestr = createTimess
-//                            element.timestr = converted
-//                            LogUtils.d("AAAAABBB${SystemClock.elapsedRealtime()}  createTime:" + createTime + " duration" + duration + "timestr" + element.timestr)
-//                            LogUtils.d(element.toString())
-                        result.add(element)
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                query.close()
-            }
-            LogUtils.d("result.size:", result.size)
-        }
-        return result
-
-    }
-
-
-    fun getExtensionName(dotname: String): String {
-        return dotname?.substring(dotname.lastIndexOf("."))
-    }
-
 
     companion object {
         private var mediaInfo: MediaInfoScanHelper? = null

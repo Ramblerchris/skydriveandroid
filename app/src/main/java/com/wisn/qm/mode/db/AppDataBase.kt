@@ -41,7 +41,7 @@ abstract class AppDataBase : RoomDatabase() {
                     database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN ShareFrom    TEXT  ")
                 }
             }
-            Room.databaseBuilder(BaseApp.app, AppDataBase::class.java, "wdata")
+            Room.databaseBuilder(BaseApp.app, AppDataBase::class.java, "skydriver")
 //            .allowMainThreadQueries()
                     .addMigrations(MIGRATION_app1_2)
                     .build()

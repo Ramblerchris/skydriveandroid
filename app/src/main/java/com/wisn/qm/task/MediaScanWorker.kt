@@ -17,6 +17,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
+/**
+ * 通过最大id 的方式更新扫描，这种方式会造成有些数据无法扫描到
+ */
+@Deprecated("采用新的比较更新方式")
 class MediaScanWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
     val TAG:String="MediaScanWorker"
     override fun doWork(): Result {

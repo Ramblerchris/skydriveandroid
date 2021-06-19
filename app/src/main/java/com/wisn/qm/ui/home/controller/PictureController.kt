@@ -15,7 +15,7 @@ import com.qmuiteam.qmui.widget.QMUITopBarLayout
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
-import com.wisn.qm.ui.home.album.LocalAlbumAdapterV2
+import com.wisn.qm.ui.home.localalbum.LocalAlbumAdapterV2
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.LogUtils
@@ -26,7 +26,7 @@ import com.qmuiteam.qmui.util.QMUIViewHelper
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
-import com.wisn.qm.ui.home.album.PictureCallBack
+import com.wisn.qm.ui.home.localalbum.PictureCallBack
 
 
 /**

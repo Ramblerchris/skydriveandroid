@@ -12,6 +12,10 @@
     android:background="@color/qmui_config_color_white"
     android:clickable="true"
     app:qmui_backgroundColor="@color/qmui_config_color_white"
+    app:qmui_borderWidth="1dp"
+    app:qmui_border_width="1dp"
+    app:qmui_border_color="@color/exo_white"
+    app:qmui_borderColor="@color/exo_white"
     app:qmui_radius="4dp"
     app:qmui_shadowElevation="6dp">
 

@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 /**
  * Created by Wisn on 2020/6/6 下午5:07.
  */
+@Deprecated
 @Entity
 public class User {
     @PrimaryKey(autoGenerate = true)

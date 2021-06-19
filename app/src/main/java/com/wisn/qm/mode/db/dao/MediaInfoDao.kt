@@ -19,7 +19,7 @@ interface MediaInfoDao {
     @Query("select * from mediainfo")
     suspend fun getMediaInfoListAll(): MutableList<MediaInfo>
 
-    @Query("select * from mediainfo  where uploadStatus !=${FileType.MediainfoStatus_Deleted} ")
+    @Query("select * from mediainfo  where uploadStatus !=${FileType.MediainfoStatus_Deleted} order by createtime desc ")
     suspend fun getMediaInfoListAllNotDelete(): MutableList<MediaInfo>
 
     @Query("select * from mediainfo where uploadStatus =:uploadStatus")

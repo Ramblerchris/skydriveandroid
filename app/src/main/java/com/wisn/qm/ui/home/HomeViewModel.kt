@@ -271,7 +271,7 @@ class HomeViewModel : BaseViewModel() {
             launchFlow {
                 LogUtils.d("folderData launchFlow", Thread.currentThread().name)
                 val mediaImageVidoeListNoSha1 =
-                    DataRepository.getInstance().mediaInfohelper.getMediaImageVidoeListNoSha1(true)
+                    DataRepository.getInstance().getMediaImageAndVideoListNoSha1(true)
                 folderData.postValue(mediaImageVidoeListNoSha1)
             }.flowOn(Dispatchers.IO).collect {
                 LogUtils.d("folderData collect", Thread.currentThread().name)
