@@ -9,7 +9,7 @@ import com.qmuiteam.qmui.widget.QMUIRadiusImageView
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.Folder
-import com.wisn.qm.ui.album.local.LocalAlbumImageListFragment
+import com.wisn.qm.ui.album.localimagelist.LocalAlbumImageListFragment
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.

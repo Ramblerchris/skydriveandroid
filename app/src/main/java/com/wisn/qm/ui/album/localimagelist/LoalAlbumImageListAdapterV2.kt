@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.album.local
+package com.wisn.qm.ui.album.localimagelist
 
 import android.view.View
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
@@ -28,6 +28,8 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
         this.pictureController = pictureController!!
     }
 
+
+
     fun updateSelect(isSelectModel: Boolean?) {
         isSelectModel?.let {
             this.isSelectModel = isSelectModel
@@ -47,10 +49,8 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
         super.onItemViewHolderCreated(viewHolder, viewType)
         if (viewType == FileType.TimeTitle) {
             viewHolder.setDataBinding<RvItemPictureImageBinding>(viewHolder.itemView)
-//            viewHolder.dataBinding = DataBindingUtil.bind<RvItemPictureImageBinding>(viewHolder.itemView)
         } else if (viewType == FileType.ImageViewItem||viewType == FileType.VideoViewItem) {
             viewHolder.setDataBinding<RvItemPictureTitleBinding>(viewHolder.itemView)
-//            viewHolder.dataBinding = DataBindingUtil.bind<RvItemPictureTitleBinding>(viewHolder.itemView)
         }
     }
 
@@ -72,12 +72,13 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
 //                        .into(it)
                 dataBinding.image.setOnLongClickListener(View.OnLongClickListener {
                     if (!isSelectModel) {
+                        //不是选择模式
                         map.clear()
                         pictureController.showPictureControl(true)
 //                        item.isSelect = true
                         map.put(item.id!!, true)
-                        notifyItemChanged(adapterPosition)
-//                        select(holder.adapterPosition)
+                        this.isSelectModel=true
+                        notifyDataSetChanged()
                         pictureController.changeSelectData(true, isSelectModel, true, item)
                     }
                     return@OnLongClickListener false
@@ -91,8 +92,7 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                             isSelect = !isSelect
                         }
                         map.put(item.id!!, isSelect)
-                        notifyItemChanged(adapterPosition)
-//                        select(holder.adapterPosition)
+                        notifyDataSetChanged()
                         pictureController.changeSelectData(false, isSelectModel, isSelect, item)
                     } else {
                         //查看大图
@@ -104,10 +104,8 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                     dataBinding.ivSelect.visibility = View.VISIBLE
                     var isSelect = map.get(item.id!!)
                     if (isSelect == null || !isSelect!!) {
-//                        dataBinding.ivSelect.setBackgroundColor(context.resources.getColor(R.color.qmui_config_color_white))
                         dataBinding.ivSelect.setBackgroundResource(R.mipmap.ic_image_unselected)
                     } else {
-//                        dataBinding.ivSelect.setBackgroundColor(context.resources.getColor(R.color.qmui_config_color_red))
                         dataBinding.ivSelect.setBackgroundResource(R.mipmap.ic_image_selected)
                     }
                 } else {

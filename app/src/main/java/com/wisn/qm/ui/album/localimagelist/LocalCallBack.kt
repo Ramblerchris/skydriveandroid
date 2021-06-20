@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.album.local
+package com.wisn.qm.ui.album.localimagelist
 
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.wisn.qm.mode.db.beans.MediaInfo

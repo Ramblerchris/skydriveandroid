@@ -44,5 +44,10 @@
         android:layout_height="wrap_content"
         android:background="@color/qmui_config_color_white"
         android:fitsSystemWindows="true" />
+    <include
+        layout="@layout/item_photo_select_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_gravity="bottom" />
 
 </com.qmuiteam.qmui.widget.QMUIWindowInsetLayout>

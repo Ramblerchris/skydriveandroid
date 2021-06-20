@@ -295,7 +295,9 @@ class MediaInfoScanHelper {
             mediaIamgeArrayof,
             null,
             null,
-            MediaStore.Images.Media.DATE_ADDED + " desc"
+            //添加desc 后不能及时扫描最新的 照片
+//            MediaStore.Images.Media.DATE_ADDED + " desc"
+            MediaStore.Images.Media.DATE_ADDED
         )
         var result = ArrayList<MediaInfo>()
         query?.let {
@@ -385,7 +387,9 @@ class MediaInfoScanHelper {
             null,
 //            whereArgs,
             null,
-            MediaStore.Video.Media.DATE_ADDED + " desc"
+            //添加desc 后不能及时扫描最新的 照片
+//            MediaStore.Video.Media.DATE_ADDED + " desc"
+            MediaStore.Video.Media.DATE_ADDED
         )
         var result = ArrayList<MediaInfo>()
         query?.let {
