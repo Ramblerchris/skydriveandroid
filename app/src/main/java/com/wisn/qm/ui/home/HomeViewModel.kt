@@ -37,7 +37,7 @@ class HomeViewModel : BaseViewModel() {
             field=value
             updateHomeTitle()
         }
-    var selectData = MutableLiveData<MutableList<MediaInfo>>()
+    var selectLocalMediainfoListData = MutableLiveData<MutableList<MediaInfo>>()
     var folderData = MutableLiveData<ArrayList<Folder>>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var userdirBean = MutableLiveData<UserDirBean>()
@@ -49,22 +49,22 @@ class HomeViewModel : BaseViewModel() {
 
 
     fun changeSelectData(isinit: Boolean, isSelectModel: Boolean, isAdd: Boolean, item: MediaInfo?) {
-        if (selectData.value == null) {
-            selectData.value = ArrayList<MediaInfo>()
+        if (selectLocalMediainfoListData.value == null) {
+            selectLocalMediainfoListData.value = ArrayList<MediaInfo>()
         }
         if (isinit) {
-            selectData.value?.clear()
+            selectLocalMediainfoListData.value?.clear()
         }
         if (isSelectModel) {
             if (item != null) {
                 if (isAdd) {
-                    selectData.value?.add(item)
+                    selectLocalMediainfoListData.value?.add(item)
                 } else {
-                    selectData.value?.remove(item)
+                    selectLocalMediainfoListData.value?.remove(item)
                 }
-                selectData.value = selectData.value
+                selectLocalMediainfoListData.value = selectLocalMediainfoListData.value
             }
-            titleShow.value = "已选中${selectData.value?.size ?: 0}项"
+            titleShow.value = "已选中${selectLocalMediainfoListData.value?.size ?: 0}项"
         } else {
             updateHomeTitle()
         }
@@ -202,7 +202,7 @@ class HomeViewModel : BaseViewModel() {
                     LogUtils.d("saveMedianInfo", Thread.currentThread().name)
                     //子线程
                     var uploadlist = ArrayList<UploadBean>()
-                    for (mediainfo in selectData.value!!) {
+                    for (mediainfo in selectLocalMediainfoListData.value!!) {
                         mediainfo.pid = dirinfo.id
                         mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
                         uploadlist.add(TaskUitls.buidUploadBean(mediainfo))
@@ -245,7 +245,7 @@ class HomeViewModel : BaseViewModel() {
             LogUtils.d("deleteSelect", Thread.currentThread().name)
             launchFlow {
                     LogUtils.d("deleteSelect", Thread.currentThread().name)
-                    for (mediainfo in selectData.value!!) {
+                    for (mediainfo in selectLocalMediainfoListData.value!!) {
                         //todo 删除
                         try {
                             File(mediainfo.filePath).delete()
@@ -254,7 +254,7 @@ class HomeViewModel : BaseViewModel() {
                             e.printStackTrace()
                         }
                     }
-                    selectData.value!!.clear()
+                    selectLocalMediainfoListData.value!!.clear()
                     //更新相册
                     TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildMediaScanWorkerRequest())
 
@@ -278,6 +278,7 @@ class HomeViewModel : BaseViewModel() {
             }
         }
     }
+
 
     private suspend fun getDirInfo(position: Int): UserDirBean? {
         var dirinfo1: UserDirBean? = null

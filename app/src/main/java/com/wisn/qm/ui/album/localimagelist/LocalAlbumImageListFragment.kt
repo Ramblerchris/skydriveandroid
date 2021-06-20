@@ -20,7 +20,6 @@ import com.wisn.qm.mode.db.beans.Folder
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.AlbumViewModel
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_localalbum.*
 import kotlinx.android.synthetic.main.fragment_newalbum.recyclerView
 import kotlinx.android.synthetic.main.fragment_newalbum.topbar
@@ -28,9 +27,9 @@ import kotlinx.android.synthetic.main.item_photo_select_bottom.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
 
 
-class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(), LocalCallBack {
+class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(),
+    LocalCallBack {
     lateinit var title: QMUIQQFaceView
-    lateinit var leftCancel: Button
     val TAG: String = "LocalAlbumImageListFragment"
 
     val newAlbumAdapter by lazy { LoalAlbumImageListAdapterV2(this) }
@@ -41,58 +40,35 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
 
     override fun initView(views: View) {
         super.initView(views)
-        showPictureControl(false);
+        viewModel.getUserDirlist()
+        showPictureControl(false)
         title = topbar?.setTitle(folder.name)!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-       /* leftCancel = topbar?.addLeftTextButton("取消", R.id.topbar_right_add_button)!!
-        leftCancel.setTextColor(Color.BLACK)
-        leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        leftCancel.visibility = View.VISIBLE
-        leftCancel.setOnClickListener {
-            popBackStack()
-        }*/
+        /* leftCancel = topbar?.addLeftTextButton("取消", R.id.topbar_right_add_button)!!
+         leftCancel.setTextColor(Color.BLACK)
+         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
+         leftCancel.visibility = View.VISIBLE
+         leftCancel.setOnClickListener {
+             popBackStack()
+         }*/
+        viewModel.titleStr = folder.name
+        viewModel.titleShow.observe(this, {
+            title.text = it
+        })
         val addLeftBackImageButton = topbar?.addLeftBackImageButton();
         addLeftBackImageButton?.setColorFilter(Color.BLACK)
         addLeftBackImageButton?.setOnClickListener {
             popBackStack()
         }
-        swiperefresh?.isEnabled=false
-       /* var right = topbar?.addRightTextButton("添加", R.id.topbar_right_add_button)!!
-        right.setTextColor(Color.BLACK)
-        right.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        right.setOnClickListener {
-            val text = et_albumName?.text?.trim()
-            if (text.isNullOrEmpty()) {
-                MToastUtils.show("请输入相册名称")
-            } else {
-                text.run {
-//                    hideSoftInput(et_albumName?.windowToken,false)
-                    KeyboardUtils.hideSoftInput(et_albumName)
-                    viewModel.addUserDir(text.toString()).observe(this@LocalAlbumFragment, Observer {
-//                    MToastUtils.show(it.toString())
-                       *//* var ait=it
-                        val selectDate = newAlbumAdapter.getSelectDate()
-                        selectDate?.let {
-                            viewModel.saveMedianInfo( it as ArrayList<MediaInfo>,ait)
-//                            viewModel.saveMedianInfo( it as ArrayList<MediaInfo>,)
-
-                        }
-                        LiveEventBus
-                                .get(ConstantKey.updateAlbum)
-                                .post(1);
-                        popBackStack()*//*
-                    })
-                }
-            }
-        }*/
+        swiperefresh?.isEnabled = false
         var gridLayoutManager = GridLayoutManager(context, 3)
         with(recyclerView!!) {
             adapter = newAlbumAdapter
             layoutManager = gridLayoutManager
         }
+        viewModel.count = folder.images.size
         newAlbumAdapter.setNewData(folder.images)
-
         initEditView()
     }
 
@@ -108,22 +84,18 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
                 }
                 .addAction("确定") { dialog, _ ->
                     dialog.dismiss()
-    //                    viewModel.deleteSelect()
-                    //todo 添加loading dialog
+                    //                    viewModel.deleteSelect()
                 }
                 .create(R.style.QMUI_Dialog).show()
-    //            viewModel.saveMedianInfo(0)
-    //            pictureController?.onBackPressedExit()
-    //            MToastUtils.show("已经添加到上传任务")
         }
         item_photo_select_bottom.tv_upload.onClick {
-    //            viewModel.saveMedianInfo(0)
-    //            pictureController?.onBackPressedExit()
+            viewModel.saveMedianInfo(0)
             MToastUtils.show("已经添加到上传任务")
+            Exit()
         }
         item_photo_select_bottom.tv_addto.onClick {
-            val values = folder.images;
-            values?.let {
+            val value = viewModel.dirLevel1listLD.value
+            if (value != null && value.size > 0) {
                 val builder = QMUIBottomSheet.BottomListSheetBuilder(activity)
                 var addItem = View.inflate(context, R.layout.item_album_new_album, null)
                 builder.setGravityCenter(true)
@@ -134,13 +106,14 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
                     .setNeedRightMark(true)
                     .setOnSheetItemClickListener { dialog, itemView, position, tag ->
                         dialog.dismiss()
-    //                        viewModel.saveMedianInfo(position)
-    //                        MToastUtils.show("已经添加到上传任务")
-    //                        pictureController?.onBackPressedExit();
+                        viewModel.saveMedianInfo(position)
+                        MToastUtils.show("已经添加到上传任务")
+                        Exit()
+                        //                        pictureController?.onBackPressedExit();
                     }
-                for (dirlist in values) {
-    //                    builder.addItem(ContextCompat.getDrawable(context!!, R.mipmap.icon_tabbar_lab), "Item $i")
-                    builder.addItem(dirlist.fileName)
+                for (dirlist in value) {
+                    //                    builder.addItem(ContextCompat.getDrawable(context!!, R.mipmap.icon_tabbar_lab), "Item $i")
+                    builder.addItem(dirlist.filename)
                 }
                 builder.addContentFooterView(addItem)
                 val build = builder.build();
@@ -150,6 +123,7 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
                     startFragment(NewAlbumFragment())
                 }
             }
+
 
         }
     }
@@ -161,7 +135,7 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
         }
     }
 
-    fun Exit():Boolean {
+    fun Exit(): Boolean {
         if (item_photo_select_bottom?.visibility == View.VISIBLE) {
             showPictureControl(false)
             return false
@@ -185,11 +159,11 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
         isAdd: Boolean,
         item: MediaInfo?
     ) {
-
-     }
+        viewModel.changeSelectData(isinit, isSelectModel, isAdd, item)
+    }
 
     override fun getQMUIFragment(): QMUIFragment {
-       return this
+        return this
     }
 
 

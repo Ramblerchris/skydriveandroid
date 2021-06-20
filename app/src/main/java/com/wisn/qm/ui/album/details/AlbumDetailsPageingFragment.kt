@@ -93,7 +93,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
                             }
                             .addAction("确定") { dialog, _ ->
                                 dialog.dismiss()
-                                viewModel.deletefiles(get.id)
+                                viewModel.deleteOnlinefiles(get.id)
                                 albumPictureAdapter.notifyDataSetChanged()
                             }
                             .create(R.style.QMUI_Dialog).show()
@@ -120,7 +120,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
         title.text = get.filename
 
 
-        viewModel.selectData().observe(this, Observer {
+        viewModel.selectOnlineData().observe(this, Observer {
             LogUtils.d(" mHomeViewModel.selectData")
             if (isShowEdit) {
                 title.text = "已选中${it?.size}项"
@@ -141,7 +141,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
 //            Log.d(TAG, "it.append addLoadStateListener " + it.append)
 //            Log.d(TAG, "it.refresh addLoadStateListener " + it.refresh)
             if (!isShowEdit) {
-                title.text = viewModel.getDirListCount(get.filename)
+                title.text = viewModel.getDirOnlineListCount(get.filename)
             }
             when (it.refresh) {
                 is LoadState.NotLoading -> {
@@ -202,7 +202,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
 
     override fun onRefresh() {
         albumPictureAdapter.refresh()
-        viewModel.getUserDirlist(get.id)
+        viewModel.getUserOnlineDirlist(get.id)
         LogUtils.d("onRefresh")
 
     }
@@ -213,19 +213,19 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
             title.text = "已选中${viewModel.selectData.value?.size ?: 0}项"
             rightButton.text = "删除"
         } else {
-            title.text = viewModel.getDirListCount(get.filename)
+            title.text = viewModel.getDirOnlineListCount(get.filename)
             rightButton.text = "添加"
         }
     }
 
     override fun changeSelectData(isinit: Boolean, isAdd: Boolean, userDirBean: UserDirBean?) {
-        viewModel.editUserDirBean(isinit, isAdd, userDirBean)
+        viewModel.editOnlineUserDirBean(isinit, isAdd, userDirBean)
 
     }
 
     open fun prePic(position: Int) {
         //查看大图
-        val netPreviewFragment = NetPreviewFragment(this.viewModel.getDirListAll(), position)
+        val netPreviewFragment = NetPreviewFragment(this.viewModel.getDirOnlineListAll(), position)
         startFragment(netPreviewFragment)
     }
 

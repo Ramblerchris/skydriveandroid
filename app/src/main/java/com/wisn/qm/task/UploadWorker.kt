@@ -30,6 +30,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
 //                val newInstance = AppDataBaseHelper.newInstance(Utils.getApp())
                 val Noupload = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
                 Noupload?.let {
+                    //数量大于0 的情况下开启
                     if (it > 0) {
                         val uploadDataList = AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanListPreUpload(FileType.UPloadStatus_Noupload)
                         dealUpload(uploadDataList)
@@ -48,10 +49,13 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
             var position = 0
             for (uploadbean in uploadDataList) {
                 try {
+                    //查看当前执行的是否已经在其他队列中执行
                     val uploadBeanById = AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanById(uploadbean.id)
                     if (uploadBeanById?.uploadStatus == FileType.UPloadStatus_uploading) {
+                        //正在上传的，直接跳过
                         continue
                     }
+                    //修改为正在上传中，避免其他的任务重置执行
                     AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploading, System.currentTimeMillis())
                     LogUtils.d("0000doWork" + uploadbean.toString())
                     //如果sha1为null 先生成sha1
@@ -60,11 +64,11 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                             SHAMD5Utils.getSHA1(uploadbean.filePath)
                         }
                     }
-                    val uploading = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_uploading)
-                    val Noupload = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
+                    val uploadingCount = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_uploading)
+                    val noUploadCount = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
                     LiveEventBus
                             .get(ConstantKey.uploadingInfo)
-                            .post("上传中${uploading}\n剩余${Noupload}")
+                            .post("上传中${uploadingCount}\n剩余${noUploadCount}")
                     //先尝试秒传
                     val uploadFileHitpass = uploadbean.sha1?.let {
                         ApiNetWork.newInstance().uploadFileHitpass(uploadbean.pid, uploadbean.sha1!!)
@@ -72,7 +76,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                     if (uploadFileHitpass != null && uploadFileHitpass.isUploadSuccess()) {
                         //修改上传成功状态
                         AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
-                        AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_uploadSuccess)
+                        AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(uploadbean.mediainfoid!!, FileType.MediainfoStatus_uploadSuccess)
                     } else {
                         //秒传失败，要重新上传文件
                         uploadFile(uploadbean)
@@ -113,7 +117,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
             val uploadFile = ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
             if (uploadFile.isUploadSuccess()) {
                 AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
-                AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_uploadSuccess)
+                AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(uploadbean.mediainfoid!!, FileType.MediainfoStatus_uploadSuccess)
                 LogUtils.d("0000doWork   " + uploadFile.data())
             }
         } else {

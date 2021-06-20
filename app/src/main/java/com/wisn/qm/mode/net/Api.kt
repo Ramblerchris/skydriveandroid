@@ -84,7 +84,7 @@ interface Api {
     suspend fun getUserFileAlllist(@Query("pid") pid: Long, @Query("pageSize") pageSize: Long? = 20, @Query("lastId") lastId: Long? = -1): BaseResult<PageBean<MutableList<UserDirBean>>>
 
     /**
-     * 单文件上传
+     * 单文件上传，文件上传
      */
     @Multipart
     @POST("/userfile/upload")

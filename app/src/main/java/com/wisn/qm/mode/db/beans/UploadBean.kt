@@ -10,8 +10,8 @@ import com.wisn.qm.mode.beans.FileType
 
 @Entity(tableName = "uploadbean")
 data class UploadBean(
-
-        @SerializedName("id")
+        @ColumnInfo(name = "mediainfoid")
+        @SerializedName("mediainfoid")
         var mediainfoid: Long?,
 
         @ColumnInfo(name = "filename")

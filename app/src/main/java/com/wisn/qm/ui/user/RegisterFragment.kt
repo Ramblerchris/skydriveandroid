@@ -70,7 +70,7 @@ class RegisterFragment : BaseFragment<UserViewModel>() {
 
     private fun initTopBar() {
         val addLeftBackImageButton = topbar?.addLeftBackImageButton();
-        addLeftBackImageButton?.setColorFilter(Color.BLACK)
+//        addLeftBackImageButton?.setColorFilter(Color.BLACK)
         addLeftBackImageButton?.setOnClickListener { popBackStack() }
 
 //        val title = topbar?.setTitle("注册");

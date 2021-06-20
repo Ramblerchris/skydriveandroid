@@ -69,7 +69,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
                         }
                         .addAction("确定") { dialog, _ ->
                             dialog.dismiss()
-                            viewModel.deletefiles(get.id)
+                            viewModel.deleteOnlinefiles(get.id)
                         }
                         .create(R.style.QMUI_Dialog).show()
             } else {
@@ -91,7 +91,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             layoutManager = gridLayoutManager
         }
         title.text = get.filename
-        viewModel.getUserDirlist(get.id).observe(this, Observer {
+        viewModel.getUserOnlineDirlist(get.id).observe(this, Observer {
             swiperefresh?.isRefreshing = false
             albumPictureAdapter.updateSelect(false)
 
@@ -104,7 +104,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
                 albumPictureAdapter.setNewInstance(it)
             }
         })
-        viewModel.selectData().observe(this, Observer {
+        viewModel.selectOnlineData().observe(this, Observer {
             LogUtils.d(" mHomeViewModel.selectData")
             if (isShowEdit) {
                 title.text = "已选中${it?.size}项"
@@ -115,7 +115,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
                 .get(ConstantKey.updatePhotoList, Int::class.java)
                 .observe(this, Observer {
                     LogUtils.d("updatePhotoList")
-                    viewModel.getUserDirlist(get.id)
+                    viewModel.getUserOnlineDirlist(get.id)
                 })
 
     }
@@ -128,7 +128,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
     }
 
     override fun onRefresh() {
-        viewModel.getUserDirlist(get.id)
+        viewModel.getUserOnlineDirlist(get.id)
     }
 
     override fun isShowEdit(isShow: Boolean) {
@@ -143,7 +143,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
     }
 
     override fun changeSelectData(isinit: Boolean, isAdd: Boolean, userDirBean: UserDirBean?) {
-        viewModel.editUserDirBean(isinit, isAdd, userDirBean)
+        viewModel.editOnlineUserDirBean(isinit, isAdd, userDirBean)
 
     }
 
