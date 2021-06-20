@@ -158,8 +158,10 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                         if (position == 0) {
                             //或者可以用更简单的方法
                             mHomeFragment.registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-                                mHomeViewModel.updateUserPhoto(it)
-                                Glide.with(this).load(it).into(iv_header)
+                                it?.let {
+                                    mHomeViewModel.updateUserPhoto(it)
+                                    Glide.with(this).load(it).into(iv_header)
+                                }
 //                                GlideUtils.loadUrl(it,iv_header,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar)
                             }.launch(null)
                         } else if (position == 1) {
