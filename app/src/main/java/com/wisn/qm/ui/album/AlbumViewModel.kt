@@ -42,7 +42,7 @@ class AlbumViewModel : BaseViewModel() {
         }
 
 
-    fun changeSelectData(isinit: Boolean, isSelectModel: Boolean, isAdd: Boolean, item: MediaInfo?) {
+    fun changeSelectData(isinit: Boolean, isSelectModel: Boolean, isSelectAll: Boolean, isAdd: Boolean, selectList: MutableList<MediaInfo>?) {
         if (selectLocalMediainfoListData.value == null) {
             selectLocalMediainfoListData.value = ArrayList<MediaInfo>()
         }
@@ -50,11 +50,11 @@ class AlbumViewModel : BaseViewModel() {
             selectLocalMediainfoListData.value?.clear()
         }
         if (isSelectModel) {
-            if (item != null) {
+            if (selectList != null) {
                 if (isAdd) {
-                    selectLocalMediainfoListData.value?.add(item)
+                    selectLocalMediainfoListData.value?.addAll(selectList)
                 } else {
-                    selectLocalMediainfoListData.value?.remove(item)
+                    selectLocalMediainfoListData.value?.removeAll(selectList)
                 }
                 selectLocalMediainfoListData.value = selectLocalMediainfoListData.value
             }

@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.VibrateUtils
 import com.library.base.BaseFragment
 import com.library.base.utils.MToastUtils
+import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
@@ -30,6 +31,9 @@ import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
 class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(),
     LocalCallBack {
     lateinit var title: QMUIQQFaceView
+    lateinit var    leftCancel:Button
+    lateinit var    addLeftBackImageButton: QMUIAlphaImageButton
+    lateinit var    selectAllButtom: Button
     val TAG: String = "LocalAlbumImageListFragment"
 
     val newAlbumAdapter by lazy { LoalAlbumImageListAdapterV2(this) }
@@ -41,26 +45,32 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
     override fun initView(views: View) {
         super.initView(views)
         viewModel.getUserDirlist()
-        showPictureControl(false)
         title = topbar?.setTitle(folder.name)!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-        /* leftCancel = topbar?.addLeftTextButton("取消", R.id.topbar_right_add_button)!!
-         leftCancel.setTextColor(Color.BLACK)
-         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
-         leftCancel.visibility = View.VISIBLE
-         leftCancel.setOnClickListener {
-             popBackStack()
-         }*/
+        leftCancel = topbar?.addLeftTextButton("取消", R.id.topbar_left_add_button)!!
+        leftCancel.setTextColor(Color.BLACK)
+        leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
+        leftCancel.visibility = View.GONE
+        leftCancel.setOnClickListener {
+            popBackStack()
+        }
+        addLeftBackImageButton = topbar?.addLeftBackImageButton()!!
+        addLeftBackImageButton.setColorFilter(Color.BLACK)
+        addLeftBackImageButton.setOnClickListener {
+            popBackStack()
+        }
+        selectAllButtom = topbar?.addRightTextButton("全选", R.id.topbar_right_add_button)!!
+        selectAllButtom.visibility=View.GONE
+        selectAllButtom.setOnClickListener {
+            val updateSelectAll = newAlbumAdapter.updateSelectAll()
+            updateSelectAllText(updateSelectAll)
+        }
         viewModel.titleStr = folder.name
         viewModel.titleShow.observe(this, {
             title.text = it
         })
-        val addLeftBackImageButton = topbar?.addLeftBackImageButton();
-        addLeftBackImageButton?.setColorFilter(Color.BLACK)
-        addLeftBackImageButton?.setOnClickListener {
-            popBackStack()
-        }
+        showPictureControl(false)
         swiperefresh?.isEnabled = false
         var gridLayoutManager = GridLayoutManager(context, 3)
         with(recyclerView!!) {
@@ -70,6 +80,14 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
         viewModel.count = folder.images.size
         newAlbumAdapter.setNewData(folder.images)
         initEditView()
+    }
+
+    private fun updateSelectAllText(updateSelectAll: Boolean) {
+        if (updateSelectAll) {
+            selectAllButtom.text = "取消全选"
+        } else {
+            selectAllButtom.text = "全选"
+        }
     }
 
     private fun initEditView() {
@@ -148,6 +166,9 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
             if (isShow) {
                 VibrateUtils.vibrate(10)
             }
+            selectAllButtom.visibility = if (isShow) View.VISIBLE else View.GONE
+            leftCancel.visibility = if (isShow) View.VISIBLE else View.GONE
+            addLeftBackImageButton.visibility = if (isShow) View.GONE else View.VISIBLE
             item_photo_select_bottom?.visibility = if (isShow) View.VISIBLE else View.GONE
             newAlbumAdapter.updateSelect(false)
         }
@@ -156,11 +177,15 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
     override fun changeSelectData(
         isinit: Boolean,
         isSelectModel: Boolean,
+        isSelectAll: Boolean,
         isAdd: Boolean,
-        item: MediaInfo?
+        selectList: MutableList<MediaInfo>?
     ) {
-        viewModel.changeSelectData(isinit, isSelectModel, isAdd, item)
+        updateSelectAllText(isSelectAll)
+        viewModel.changeSelectData(isinit, isSelectModel,isSelectAll, isAdd, selectList)
+
     }
+
 
     override fun getQMUIFragment(): QMUIFragment {
         return this

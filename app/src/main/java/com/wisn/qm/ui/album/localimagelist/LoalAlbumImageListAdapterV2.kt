@@ -11,6 +11,7 @@ import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
 import com.wisn.qm.ui.previewloc.PreviewFragment
+import java.util.ArrayList
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.
@@ -19,6 +20,7 @@ import com.wisn.qm.ui.previewloc.PreviewFragment
 class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, BaseDataBindlingViewHolder>() {
     protected var pictureController: LocalCallBack
     open var isSelectModel: Boolean = false
+    open var isSelectAll: Boolean = false
     protected var map: HashMap<Long, Boolean> = HashMap()
 
     init {
@@ -33,9 +35,23 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
     fun updateSelect(isSelectModel: Boolean?) {
         isSelectModel?.let {
             this.isSelectModel = isSelectModel
-            pictureController.changeSelectData(false, isSelectModel, false, null);
+            pictureController.changeSelectData(false, isSelectModel, isSelectAll,false, null);
         }
         notifyDataSetChanged()
+    }
+
+    fun updateSelectAll():Boolean {
+        this.isSelectAll = !isSelectAll
+        if (isSelectAll) {
+            for (mediainfo in data) {
+                map.put(mediainfo.id!!, true)
+            }
+        } else {
+            map.clear()
+        }
+        pictureController.changeSelectData(false, isSelectModel, isSelectAll,isSelectAll, data);
+        notifyDataSetChanged()
+        return this.isSelectAll
     }
 
     /**
@@ -79,7 +95,9 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                         map.put(item.id!!, true)
                         this.isSelectModel=true
                         notifyDataSetChanged()
-                        pictureController.changeSelectData(true, isSelectModel, true, item)
+                        val arrayList = ArrayList<MediaInfo>(1);
+                        arrayList.add(item)
+                        pictureController.changeSelectData(true, isSelectModel,isSelectAll, true,arrayList)
                     }
                     return@OnLongClickListener false
                 })
@@ -93,7 +111,12 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                         }
                         map.put(item.id!!, isSelect)
                         notifyDataSetChanged()
-                        pictureController.changeSelectData(false, isSelectModel, isSelect, item)
+                        if(!isSelect){
+                            isSelectAll=false;
+                        }
+                        val arrayList = ArrayList<MediaInfo>(1);
+                        arrayList.add(item)
+                        pictureController.changeSelectData(false, isSelectModel,isSelectAll, isSelect, arrayList)
                     } else {
                         //查看大图
                         val previewFragment = PreviewFragment(data, adapterPosition)
