@@ -21,7 +21,7 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
     protected var pictureController: LocalCallBack
     open var isSelectModel: Boolean = false
     open var isSelectAll: Boolean = false
-    protected var map: HashMap<Long, Boolean> = HashMap()
+    protected var map: HashMap<Long, MediaInfo> = HashMap()
 
     init {
         addItemType(FileType.TimeTitle, R.layout.rv_item_picture_title)
@@ -44,7 +44,7 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
         this.isSelectAll = !isSelectAll
         if (isSelectAll) {
             for (mediainfo in data) {
-                map.put(mediainfo.id!!, true)
+                map.put(mediainfo.id!!, mediainfo)
             }
         } else {
             map.clear()
@@ -92,9 +92,12 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                         map.clear()
                         pictureController.showPictureControl(true)
 //                        item.isSelect = true
-                        map.put(item.id!!, true)
+                        map.put(item.id!!, item)
                         this.isSelectModel=true
                         notifyDataSetChanged()
+                        if (map.size == data.size) {
+                            isSelectAll = true
+                        }
                         val arrayList = ArrayList<MediaInfo>(1);
                         arrayList.add(item)
                         pictureController.changeSelectData(true, isSelectModel,isSelectAll, true,arrayList)
@@ -103,16 +106,21 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                 })
                 dataBinding.image.onClick {
                     if (isSelectModel) {
-                        var isSelect = map.get(item.id!!)
-                        if (isSelect == null) {
-                            isSelect = true;
+                        var target = map.get(item.id!!)
+                        var isSelect=false;
+                        if (target == null) {
+                            map.put(item.id!!, item)
+                            isSelect=true;
                         } else {
-                            isSelect = !isSelect
+                            map.remove(item.id!!)
                         }
-                        map.put(item.id!!, isSelect)
                         notifyDataSetChanged()
-                        if(!isSelect){
-                            isSelectAll=false;
+                        if (!isSelect) {
+                            isSelectAll = false;
+                        } else {
+                            if (map.size == data.size) {
+                                isSelectAll = true
+                            }
                         }
                         val arrayList = ArrayList<MediaInfo>(1);
                         arrayList.add(item)
@@ -125,8 +133,8 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                 }
                 if (isSelectModel) {
                     dataBinding.ivSelect.visibility = View.VISIBLE
-                    var isSelect = map.get(item.id!!)
-                    if (isSelect == null || !isSelect!!) {
+                    var isSelect = map.containsKey(item.id!!)
+                    if (!isSelect) {
                         dataBinding.ivSelect.setBackgroundResource(R.mipmap.ic_image_unselected)
                     } else {
                         dataBinding.ivSelect.setBackgroundResource(R.mipmap.ic_image_selected)
