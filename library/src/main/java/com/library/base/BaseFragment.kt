@@ -14,6 +14,7 @@ import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.arch.SwipeBackLayout
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
+import com.qmuiteam.qmui.widget.dialog.QMUITipDialog
 import java.lang.reflect.ParameterizedType
 
 abstract class BaseFragment<VM : BaseViewModel> : QMUIFragment() {
@@ -72,13 +73,29 @@ abstract class BaseFragment<VM : BaseViewModel> : QMUIFragment() {
 //        return super.backViewInitOffset(context, dragDirection, moveEdge)
         return QMUIDisplayHelper.dp2px(context, 100)
     }
-
+    var  tipDialog:QMUITipDialog?=null
+    var  runnable:Runnable?=null
     private fun registerDefUIChange() {
         viewModel.defUi.showDialog.observe(viewLifecycleOwner, Observer {
 //            MToastUtils.show("show")
+             runnable = Runnable {
+                 if (tipDialog == null) {
+                     tipDialog = QMUITipDialog.Builder(context)
+                         .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                         .setTipWord("加载中")
+                         .create()
+                 }
+                tipDialog?.show()
+            }
+            views.postDelayed(runnable,100);
+
         })
         viewModel.defUi.disDialog.observe(viewLifecycleOwner, Observer {
 //            MToastUtils.show("diss")
+            if(runnable!=null){
+                views.removeCallbacks(runnable)
+            }
+            tipDialog?.dismiss()
 
         })
         viewModel.defUi.toastEvent.observe(viewLifecycleOwner, Observer {

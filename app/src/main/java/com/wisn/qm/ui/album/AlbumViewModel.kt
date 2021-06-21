@@ -46,7 +46,7 @@ class AlbumViewModel : BaseViewModel() {
         if (selectLocalMediainfoListData.value == null) {
             selectLocalMediainfoListData.value = ArrayList<MediaInfo>()
         }
-        if (isinit) {
+        if (isinit||isSelectAll) {
             selectLocalMediainfoListData.value?.clear()
         }
         if (isSelectModel) {

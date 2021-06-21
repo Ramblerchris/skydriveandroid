@@ -76,38 +76,6 @@ open class BaseViewModel : AndroidViewModel(Utils.getApp()), LifecycleObserver {
             }
         }
     }
-/*
-    fun <T> launchOnlyResult(
-            block: suspend CoroutineScope.() -> IBaseResponse<T>,
-            success: (T) -> Unit,
-            error: (ResponseThrowable) -> Unit = {
-                defUi.toastEvent.postValue("${it.code}: ${it.errMsg}")
-            },
-            complete: suspend CoroutineScope.() -> Unit = {},
-            isShowDialog: Boolean = true
-
-    ) {
-        if (isShowDialog) defUi.disDialog.call()
-        launchUI {
-            handleException({
-                withContext(Dispatchers.IO) {
-                    block().let {
-                        if (it.isSuccess()) {
-                            it.data()
-                        } else throw  ResponseThrowable(it.code(), it.msg())
-                    }.also {
-                        success(it)
-                    }
-                }
-            }, {
-                error(it)
-            }, {
-                defUi.disDialog.call()
-                complete()
-            })
-        }
-
-    }*/
 
     class UIChange {
         val showDialog by lazy { SingleLiveEvent<String>() }
