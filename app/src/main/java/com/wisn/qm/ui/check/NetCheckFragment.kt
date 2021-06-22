@@ -17,6 +17,7 @@ import com.library.base.BaseFragment
 import com.library.base.config.GlobalUser
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
+import com.wisn.qm.BuildConfig
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.user.LoginFragment
@@ -42,6 +43,12 @@ class NetCheckFragment : BaseFragment<NetCheckViewModel>() {
         addLeftBackImageButton?.setOnClickListener {
             popBackStack()
         }
+        if(BuildConfig.DEBUG){
+            title?.onClick {
+                startFragment(LoginFragment())
+            }
+        }
+
     }
 
 
@@ -152,6 +159,6 @@ class NetCheckFragment : BaseFragment<NetCheckViewModel>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel?.destory()
+        viewModel.destory()
     }
 }

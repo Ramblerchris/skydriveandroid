@@ -120,12 +120,4 @@ abstract class BaseFragment<VM : BaseViewModel> : QMUIFragment() {
     }
 
 
-    private fun showDialog() {
-//        if(dialog==null){
-//            dialog=context?.let {
-//                MaterialDialogs(it)
-//            }
-//        }
-    }
-
 }

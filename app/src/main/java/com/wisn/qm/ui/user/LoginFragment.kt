@@ -1,7 +1,9 @@
 package com.wisn.qm.ui.user
 
-import android.graphics.Color
-import android.graphics.Typeface
+import android.text.Editable
+import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -10,9 +12,11 @@ import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.KeyboardUtils
 import com.library.base.BaseFragment
 import com.library.base.utils.MToastUtils
+import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_login.*
+import androidx.core.widget.addTextChangedListener as addTextChangedListener
 
 /**
  * Created by Wisn on 2020/6/6 下午5:06.
@@ -47,7 +51,36 @@ class LoginFragment : BaseFragment<UserViewModel>() {
             }
             return@OnEditorActionListener false
         })
+        et_password.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val toString = et_password.text.toString()
+                if (toString.isNotEmpty()) {
+                    showpassword.visibility = View.VISIBLE
+                } else {
+                    showpassword.visibility = View.GONE
+                }
+            }
+        })
+        showpassword.onClick {
+            isShowPassword = !isShowPassword
+            if (isShowPassword) { //显示密码
+                showpassword.setImageResource(R.mipmap.btn_ps_show)
+                et_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance())
+                et_password.setSelection(et_password.text.length)
+            } else { //隐藏密码
+                showpassword.setImageResource(R.mipmap.btn_ps_hide)
+                et_password.setTransformationMethod(PasswordTransformationMethod.getInstance())
+                et_password.setSelection(et_password.text.length)
+            }
+        }
     }
+    private var isShowPassword = false
 
     private fun commitDate() {
         Log.d(TAG, "测试11" + et_phone?.text.toString())
