@@ -60,7 +60,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
             mHomeControlListener.let {
                 mHomeControlListener.startFragmentByView(NewAlbumFragment())
             }
-            mHomeViewModel.getUserDirlist()
+//            mHomeViewModel.getUserDirlist()
         }
         recyclerView = findViewById(R.id.recyclerView)
         swiperefresh = findViewById(R.id.swiperefresh)

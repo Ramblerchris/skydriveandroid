@@ -9,6 +9,7 @@ import androidx.paging.cachedIn
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.library.base.base.BaseViewModel
+import com.library.base.event.Message
 import com.wisn.qm.mode.DataRepository
 import com.wisn.qm.mode.UserDirListDataSource
 import com.wisn.qm.mode.beans.FileType
@@ -23,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.File
 
 class AlbumViewModel : BaseViewModel() {
     val userdir = MutableLiveData<UserDirBean>()
@@ -64,6 +66,33 @@ class AlbumViewModel : BaseViewModel() {
         }
     }
 
+    fun deleteSelect() {
+//        defUi.msgEvent.value = Message(100,"正在删除")
+        count -= selectLocalMediainfoListData.value!!.size
+        launchUI {
+            LogUtils.d("deleteSelect1", Thread.currentThread().name)
+            launchFlow {
+                LogUtils.d("deleteSelect2", Thread.currentThread().name)
+                for (mediainfo in selectLocalMediainfoListData.value!!) {
+                    //todo 删除
+                    try {
+//                        File(mediainfo.filePath).delete()
+                        AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                selectLocalMediainfoListData.value!!.clear()
+//                titleShow.postValue("已选中${selectLocalMediainfoListData.value?.size ?: 0}项")
+                //更新相册
+                //TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildMediaScanWorkerRequest())
+
+            }.flowOn(Dispatchers.IO).collect {
+                LogUtils.d("deleteSelect3", Thread.currentThread().name)
+
+            }
+        }
+    }
 
     private fun updateHomeTitle() {
         if (count > 0) {

@@ -102,7 +102,9 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
                 }
                 .addAction("确定") { dialog, _ ->
                     dialog.dismiss()
-                    //                    viewModel.deleteSelect()
+                    newAlbumAdapter.deleteSelect()
+                    viewModel.deleteSelect()
+                    Exit()
                 }
                 .create(R.style.QMUI_Dialog).show()
         }

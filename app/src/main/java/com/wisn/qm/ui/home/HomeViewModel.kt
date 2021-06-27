@@ -239,7 +239,7 @@ class HomeViewModel : BaseViewModel() {
             }
         }
     }
-    fun deleteSelect() {
+    /*fun deleteSelect() {
        defUi.msgEvent.value = Message(100,"正在删除")
         launchUI {
             LogUtils.d("deleteSelect", Thread.currentThread().name)
@@ -262,7 +262,7 @@ class HomeViewModel : BaseViewModel() {
 
             }
         }
-    }
+    }*/
 
     fun folderData() {
        defUi.msgEvent.value = Message(100,"刷新中")

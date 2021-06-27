@@ -30,7 +30,14 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
         this.pictureController = pictureController!!
     }
 
-
+    fun deleteSelect(){
+        val values = map.values;
+        for(median in values){
+            remove(median)
+        }
+        map.clear()
+        notifyDataSetChanged()
+    }
 
     fun updateSelect(isSelectModel: Boolean?) {
         isSelectModel?.let {

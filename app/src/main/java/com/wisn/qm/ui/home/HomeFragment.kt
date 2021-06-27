@@ -49,7 +49,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                     .addAction("确定") { dialog, _ ->
                         dialog.dismiss()
                         pictureController?.onBackPressedExit()
-                        viewModel.deleteSelect()
+//                        viewModel.deleteSelect()
                         //todo 添加loading dialog
                     }
                     .create(R.style.QMUI_Dialog).show()

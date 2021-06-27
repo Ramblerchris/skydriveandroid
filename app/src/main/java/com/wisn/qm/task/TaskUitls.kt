@@ -51,6 +51,9 @@ object TaskUitls {
         return buildUploadRequest(null, DiskUploadWorker::class)
     }
 
+    /**
+     * @Deprecated
+     */
     fun buildMediaScanWorkerRequest(): WorkRequest {
         return buildUploadRequest(null, MediaScanWorker::class)
     }
