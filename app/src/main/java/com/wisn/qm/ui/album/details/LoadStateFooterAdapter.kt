@@ -10,6 +10,7 @@ import androidx.paging.LoadStateAdapter
  * @Author: Wisn
  * @CreateDate: 2020/12/22 上午11:45
  */
+@Deprecated("")
 class LoadStateFooterAdapter (private val retry: () -> Unit) :
         LoadStateAdapter<LoadStateViewHolder>() {
 

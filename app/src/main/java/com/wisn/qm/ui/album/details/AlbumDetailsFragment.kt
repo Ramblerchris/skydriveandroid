@@ -23,6 +23,7 @@ import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.AlbumViewModel
 import com.wisn.qm.ui.album.EditAlbumDetails
 import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
+import com.wisn.qm.ui.view.LoadMoreAndFooterView
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
 
@@ -90,11 +91,17 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             adapter = albumPictureAdapter
             layoutManager = gridLayoutManager
         }
+        albumPictureAdapter.loadMoreModule.setOnLoadMoreListener {
+//            getDataList()
+        }
+        albumPictureAdapter.loadMoreModule.loadMoreView = LoadMoreAndFooterView()
+        albumPictureAdapter.loadMoreModule.isAutoLoadMore = true
+        albumPictureAdapter.loadMoreModule.isEnableLoadMoreIfNotFullPage = false
         title.text = get.filename
         viewModel.getUserOnlineDirlist(get.id).observe(this, Observer {
+            albumPictureAdapter.loadMoreModule.isEnableLoadMore = true
             swiperefresh?.isRefreshing = false
             albumPictureAdapter.updateSelect(false)
-
             if (it.isNullOrEmpty()) {
                 var item_empty: View = View.inflate(context, R.layout.item_empty, null)
                 item_empty.image.setImageResource(R.mipmap.share_ic_blank_album)

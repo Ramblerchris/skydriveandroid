@@ -26,12 +26,12 @@ import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.AlbumViewModel
 import com.wisn.qm.ui.album.EditAlbumDetails
-import com.wisn.qm.ui.netpreview.NetPreviewFragment
+import com.wisn.qm.ui.preview.PreviewMediaFragment
 import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
 
-
+@Deprecated("")
 class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.OnRefreshListener, EditAlbumDetails {
     lateinit var title: QMUIQQFaceView
     lateinit var rightButton: Button
@@ -225,7 +225,7 @@ class AlbumDetailsPageingFragment : BaseFragment<AlbumViewModel>(), SwipeRefresh
 
     open fun prePic(position: Int) {
         //查看大图
-        val netPreviewFragment = NetPreviewFragment(this.viewModel.getDirOnlineListAll(), position)
+        val netPreviewFragment = PreviewMediaFragment(this.viewModel.getDirOnlineListAll(), position)
         startFragment(netPreviewFragment)
     }
 

@@ -10,7 +10,7 @@ import com.wisn.qm.databinding.RvItemPictureTitleBinding
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
-import com.wisn.qm.ui.previewloc.PreviewFragment
+import com.wisn.qm.ui.preview.PreviewMediaFragment
 import java.util.ArrayList
 
 /**
@@ -134,7 +134,7 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
                         pictureController.changeSelectData(false, isSelectModel,isSelectAll, isSelect, arrayList)
                     } else {
                         //查看大图
-                        val previewFragment = PreviewFragment(data, adapterPosition)
+                        val previewFragment = PreviewMediaFragment(data, adapterPosition)
                         pictureController.getQMUIFragment().startFragment(previewFragment)
                     }
                 }

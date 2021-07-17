@@ -2,6 +2,7 @@ package com.wisn.qm.mode
 
 import android.util.Log
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.wisn.qm.mode.beans.PageKey
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.net.ApiNetWork
@@ -16,7 +17,7 @@ import java.lang.Exception
  * @Author: Wisn
  * @CreateDate: 2020/12/22 上午11:48
  */
-
+@Deprecated("")
 class UserDirListDataSource : PagingSource<PageKey, UserDirBean>() {
     var  mutableList:ArrayList<UserDirBean> =ArrayList<UserDirBean>()
     var count :Long? = null
@@ -60,6 +61,10 @@ class UserDirListDataSource : PagingSource<PageKey, UserDirBean>() {
             LoadResult.Error(LoadDataError(e))
         }
 
+    }
+
+    override fun getRefreshKey(state: PagingState<PageKey, UserDirBean>): PageKey? {
+        return PageKey(-1, -1, pageSize = 20);
     }
 
 

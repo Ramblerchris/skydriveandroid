@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
+import com.chad.library.adapter.base.module.LoadMoreModule
 import com.library.base.config.Constant
 import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
@@ -15,13 +16,14 @@ import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.ui.album.EditAlbumDetails
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
-import com.wisn.qm.ui.netpreview.NetPreviewFragment
+import com.wisn.qm.ui.preview.PreviewMediaFragment
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.
  */
 
-class AlbumDetailsAdapter(var editAlbumDetails: EditAlbumDetails, var albumDetailsFragment: AlbumDetailsFragment) : BaseMultiItemQuickAdapter<UserDirBean, BaseDataBindlingViewHolder>() {
+class AlbumDetailsAdapter(var editAlbumDetails: EditAlbumDetails, var albumDetailsFragment: AlbumDetailsFragment)
+    : BaseMultiItemQuickAdapter<UserDirBean, BaseDataBindlingViewHolder>() , LoadMoreModule {
     var isSelectModel: Boolean = false
     protected var map: HashMap<Long, Boolean> = HashMap()
 
@@ -103,7 +105,7 @@ class AlbumDetailsAdapter(var editAlbumDetails: EditAlbumDetails, var albumDetai
                         editAlbumDetails.changeSelectData(false, isSelect, item)
                     } else {
                         //查看大图
-                        val netPreviewFragment = NetPreviewFragment(data, adapterPosition)
+                        val netPreviewFragment = PreviewMediaFragment(data, adapterPosition)
                         albumDetailsFragment.startFragment(netPreviewFragment)
 //                        pictureController.getHomeFragment().startFragment(previewFragment)
                     }

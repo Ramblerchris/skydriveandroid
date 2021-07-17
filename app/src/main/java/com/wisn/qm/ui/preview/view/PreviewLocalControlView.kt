@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.previewloc.view
+package com.wisn.qm.ui.preview.view
 
 import android.content.Context
 import android.util.AttributeSet

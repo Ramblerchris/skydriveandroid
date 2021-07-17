@@ -1,4 +1,4 @@
-package com.wisn.qm.ui.netpreview.view
+package com.wisn.qm.ui.preview.view
 
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -21,7 +21,7 @@ import com.wisn.qm.R
  * @Author: Wisn
  * @CreateDate: 2020/11/14 下午10:57
  */
-class PlayNetControlView : FrameLayout, IViewItemController, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+class PlayLocalControlView : FrameLayout, IViewItemController, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     var TAG: String? = "PlayControlView"
 

@@ -269,6 +269,9 @@ object ImageUtils {
     fun isGifImageWithMime(url: String, path: String?): Boolean {
         return  url.toLowerCase().endsWith("gif")||"gif".equals(getImageTypeWithMime(path), ignoreCase = true)
     }
+    fun isGifImageWithMime( path: String?): Boolean {
+        return  "gif".equals(getImageTypeWithMime(path), ignoreCase = true)
+    }
 
     fun isWebpImageWithMime(url: String, path: String?): Boolean {
         return "webp".equals(getImageTypeWithMime(path), ignoreCase = true) || url.toLowerCase().endsWith("webp")

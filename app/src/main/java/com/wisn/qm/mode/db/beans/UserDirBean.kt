@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.google.gson.annotations.SerializedName
+import com.library.base.config.Constant
 import com.wisn.qm.mode.beans.FileType
+import com.wisn.qm.mode.beans.PreviewImage
 import java.io.Serializable
 
 @Entity(tableName = "userdirlist")
@@ -85,7 +87,15 @@ data class UserDirBean(
         @SerializedName("updatattimestr")
         var updatattimestr: String?
 
-        ) : MultiItemEntity, Serializable {
+        ) : MultiItemEntity, Serializable , PreviewImage {
+    override val isLocal: Boolean
+        get() = false
+    override val isThumbLocal: Boolean
+        get() = false
+    override val resourcePath: String
+        get() = Constant.getImageUrl(sha1)
+    override val resourceThumbNailPath: String
+        get() = Constant.getImageUrlThumb(sha1)
     override var itemType: Int = 0
         get() {
             if (ftype == 1) {

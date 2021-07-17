@@ -24,6 +24,7 @@ import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
  * @Author: Wisn
  * @CreateDate: 2020/12/21 下午6:45
  */
+@Deprecated("")
 class AlbumDetailsPageingAdapter(var editAlbumDetails: EditAlbumDetails, var albumDetailsFragment: AlbumDetailsPageingFragment,val update: ((Int, UserDirBean?, AlbumDetailsPageingAdapter) -> Unit))
     : PagingDataAdapter<UserDirBean, BaseDataBindlingViewHolder>(object :
         DiffUtil.ItemCallback<UserDirBean>() {

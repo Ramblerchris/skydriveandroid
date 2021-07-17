@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.item_loadstate.view.*
  * @Author: Wisn
  * @CreateDate: 2020/12/22 上午11:40
  */
+@Deprecated("")
 class LoadStateViewHolder (parent: ViewGroup, var retry: () -> Unit) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_loadstate, parent, false)

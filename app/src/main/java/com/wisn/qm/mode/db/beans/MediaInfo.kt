@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.google.gson.annotations.SerializedName
 import com.wisn.qm.mode.beans.FileType
+import com.wisn.qm.mode.beans.PreviewImage
 import java.io.Serializable
 
 @Entity(tableName = "mediainfo")
@@ -65,7 +66,16 @@ data class MediaInfo(
         var height: Int?
 
 
-) :Serializable, MultiItemEntity {
+) :Serializable, MultiItemEntity , PreviewImage {
+
+    override val isLocal: Boolean
+        get() = true
+    override val isThumbLocal: Boolean
+        get() = true
+    override val resourcePath: String?
+        get() = this.filePath
+    override val resourceThumbNailPath: String?
+        get() = this.thumbNailPath
 
     override var itemType: Int = 0
     get() {

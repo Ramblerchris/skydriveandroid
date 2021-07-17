@@ -1,13 +1,16 @@
-package com.wisn.qm.ui.previewloc
+package com.wisn.qm.ui.preview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
-import com.wisn.qm.mode.db.beans.MediaInfo
+import com.wisn.qm.mode.beans.PreviewImage
+import com.wisn.qm.ui.preview.viewholder.BasePreviewHolder
+import com.wisn.qm.ui.preview.viewholder.PreviewImageViewHolder
+import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
 
-class PreviewAdapter(var data: MutableList<MediaInfo>, var previewCallback: PreviewCallback) : RecyclerView.Adapter<BasePreviewHolder>() {
+class PreviewMediaAdapter(var data: MutableList<out PreviewImage>, var previewCallback: PreviewMediaCallback) : RecyclerView.Adapter<BasePreviewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasePreviewHolder {
         if (viewType == FileType.ImageViewItem) {

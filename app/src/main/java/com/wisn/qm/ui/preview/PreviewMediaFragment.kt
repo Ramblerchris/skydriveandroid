@@ -1,6 +1,5 @@
-package com.wisn.qm.ui.previewloc
+package com.wisn.qm.ui.preview
 
-import android.app.StatusBarManager
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Px
@@ -9,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ScrollState
-import com.blankj.utilcode.util.ToastUtils
 import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
@@ -24,14 +22,16 @@ import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
+import com.wisn.qm.mode.beans.PreviewImage
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeViewModel
-import com.wisn.qm.ui.previewloc.view.ListVideoController
+import com.wisn.qm.ui.preview.view.ListVideoController
+import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
 import kotlinx.android.synthetic.main.fragment_preview.*
 
 
-class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : BaseFragment<NoViewModel>(), PreviewCallback {
+class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var position: Int) : BaseFragment<NoViewModel>(), PreviewMediaCallback {
 
 
     var recyclerView: RecyclerView? = null
@@ -140,8 +140,11 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
         }
         tv_upload?.onClick {
             val get = data.get(vp_content?.currentItem!!)
-            mHomeViewModel.saveMedianInfo(0, get, false)
-            MToastUtils.show("已经添加到上传任务")
+            if (get  is MediaInfo){
+                mHomeViewModel.saveMedianInfo(0, get, false)
+                MToastUtils.show("已经添加到上传任务")
+            }
+
         }
         iv_back?.onClick {
             popBackStack()
@@ -149,7 +152,7 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
 
         recyclerView = vp_content?.getChildAt(0) as RecyclerView?
 
-        vp_content?.adapter = PreviewAdapter(data, this@PreviewFragment)
+        vp_content?.adapter = PreviewMediaAdapter(data, this@PreviewMediaFragment)
 
         vp_content?.setCurrentItem(position, false)
 
@@ -181,7 +184,7 @@ class PreviewFragment(var data: MutableList<MediaInfo>, var position: Int) : Bas
         videoView.release()
         recycleVideoView()
         val get = data.get(position)
-        videoView.setUrl(get.filePath!!)
+        videoView.setUrl(get.resourcePath!!)
         videoView.iViewController?.addIViewItemControllerOne(viewholder.preview, true)
         viewholder.content.addView(videoView, 0)
         videoView.start()
