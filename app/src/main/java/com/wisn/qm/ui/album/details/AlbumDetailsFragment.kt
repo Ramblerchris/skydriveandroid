@@ -17,11 +17,11 @@ import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
-import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.AlbumViewModel
 import com.wisn.qm.ui.album.EditAlbumDetails
+import com.wisn.qm.ui.album.bean.LoadAlbumListResult
 import com.wisn.qm.ui.select.selectmedia.SelectMediaFragment
 import com.wisn.qm.ui.view.LoadMoreAndFooterView
 import kotlinx.android.synthetic.main.fragment_albumdetails.*
@@ -32,8 +32,12 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
     lateinit var title: QMUIQQFaceView
     lateinit var rightButton: Button
     var isShowEdit: Boolean = false
+
+    var gridLayoutManager :GridLayoutManager?=null;
+
     val albumPictureAdapter by lazy {
-        AlbumDetailsAdapter(this, this)
+        gridLayoutManager=GridLayoutManager(context, 3)
+        AlbumDetailsAdapter(gridLayoutManager!!,this, this)
     }
     val get by lazy { arguments?.get(ConstantKey.albuminfo) as UserDirBean }
 
@@ -81,35 +85,48 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             }
         }
         swiperefresh?.setOnRefreshListener(this)
-
-        var gridLayoutManager = GridLayoutManager(context, 3)
-        with(gridLayoutManager) {
-            spanSizeLookup = SpanSizeLookup(albumPictureAdapter)
-        }
-
-        with(recyclerView!!) {
-            adapter = albumPictureAdapter
-            layoutManager = gridLayoutManager
-        }
         albumPictureAdapter.loadMoreModule.setOnLoadMoreListener {
-//            getDataList()
+            viewModel.getloadAlbumListResult(get.id,false)
         }
         albumPictureAdapter.loadMoreModule.loadMoreView = LoadMoreAndFooterView()
         albumPictureAdapter.loadMoreModule.isAutoLoadMore = true
         albumPictureAdapter.loadMoreModule.isEnableLoadMoreIfNotFullPage = false
+        with(recyclerView!!) {
+            adapter = albumPictureAdapter
+            layoutManager = gridLayoutManager
+        }
         title.text = get.filename
-        viewModel.getUserOnlineDirlist(get.id).observe(this, Observer {
+        viewModel.getloadAlbumListResult(get.id,true).observe(this, Observer {
             albumPictureAdapter.loadMoreModule.isEnableLoadMore = true
             swiperefresh?.isRefreshing = false
             albumPictureAdapter.updateSelect(false)
-            if (it.isNullOrEmpty()) {
-                var item_empty: View = View.inflate(context, R.layout.item_empty, null)
-                item_empty.image.setImageResource(R.mipmap.share_ic_blank_album)
-                item_empty. empty_tip.setText("相册为空,快去添吧！")
-                albumPictureAdapter.setEmptyView(item_empty)
-            } else {
-                albumPictureAdapter.setNewInstance(it)
+            if(it.isFirstPage){
+                if(it.loadMoreStatus==LoadAlbumListResult.LoadMore_error){
+                    setEmptyViewOrErrorView(true,"加载出错，点击重试！")
+//                    albumPictureAdapter.setEmptyView(setEmptyViewOrErrorView(true,"加载出错，点击重试！"))
+                }else{
+                    if (it.selectSha1List.isNullOrEmpty()) {
+                        setEmptyViewOrErrorView(true,"相册为空,快去添吧！")
+//                        albumPictureAdapter.setEmptyView(setEmptyViewOrErrorView(true,"相册为空,快去添吧！"))
+                    } else {
+                        setEmptyViewOrErrorView(false,null)
+                        albumPictureAdapter.setNewInstance(it.selectSha1List)
+                    }
+                }
+
+            }else{
+                if(it.loadMoreStatus== LoadAlbumListResult.LoadMore_end){
+                    albumPictureAdapter.loadMoreModule.loadMoreEnd();
+                }else  if(it.loadMoreStatus==LoadAlbumListResult.LoadMore_complete){
+                    albumPictureAdapter.loadMoreModule.loadMoreComplete();
+                }else  if(it.loadMoreStatus==LoadAlbumListResult.LoadMore_error){
+                    albumPictureAdapter.loadMoreModule.loadMoreFail();
+                }
+                it.selectSha1List?.let { data ->
+                    albumPictureAdapter.addData(data)
+                }
             }
+
         })
         viewModel.selectOnlineData().observe(this, Observer {
             LogUtils.d(" mHomeViewModel.selectData")
@@ -127,6 +144,24 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
 
     }
 
+    private fun setEmptyViewOrErrorView(isShowEmpty:Boolean,message:String?) {
+//        var item_empty: View = View.inflate(context, R.layout.item_empty, null)
+        if(isShowEmpty){
+            item_empty.visibility=View.VISIBLE;
+            swiperefresh.visibility=View.GONE;
+            item_empty.image.setImageResource(R.mipmap.share_ic_blank_album)
+            message?.let {
+                item_empty.empty_tip.setText(message)
+            }
+            item_empty.setOnClickListener {
+                viewModel.getloadAlbumListResult(get.id, true)
+            }
+        }else{
+            item_empty.visibility=View.GONE;
+            swiperefresh.visibility=View.VISIBLE;
+        }
+    }
+
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onFragmentResult(requestCode, resultCode, data)
         var list = data?.extras?.getSerializable("data") as ArrayList<MediaInfo>
@@ -135,7 +170,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
     }
 
     override fun onRefresh() {
-        viewModel.getUserOnlineDirlist(get.id)
+        viewModel.getloadAlbumListResult(get.id,true)
     }
 
     override fun isShowEdit(isShow: Boolean) {
@@ -152,21 +187,6 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
     override fun changeSelectData(isinit: Boolean, isAdd: Boolean, userDirBean: UserDirBean?) {
         viewModel.editOnlineUserDirBean(isinit, isAdd, userDirBean)
 
-    }
-
-}
-
-open class SpanSizeLookup(var adapterV2: AlbumDetailsAdapter) : GridLayoutManager.SpanSizeLookup() {
-    override fun getSpanSize(position: Int): Int {
-        if (adapterV2.data.isNotEmpty()) {
-            val get = adapterV2.data[position]
-            return when (get.itemType) {
-                FileType.ImageViewItem -> 1
-                FileType.TimeTitle -> 3
-                else -> 1
-            }
-        }
-        return 3;
     }
 
 }

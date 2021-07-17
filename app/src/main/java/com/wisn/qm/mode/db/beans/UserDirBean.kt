@@ -96,6 +96,7 @@ data class UserDirBean(
         get() = Constant.getImageUrl(sha1)
     override val resourceThumbNailPath: String
         get() = Constant.getImageUrlThumb(sha1)
+
     override var itemType: Int = 0
         get() {
             if (ftype == 1) {

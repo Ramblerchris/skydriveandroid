@@ -26,7 +26,7 @@ import com.qmuiteam.qmui.widget.popup.QMUIPopups
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.db.beans.UserDirBean
-import com.wisn.qm.ui.album.details.AlbumDetailsPageingFragment
+import com.wisn.qm.ui.album.details.AlbumDetailsFragment
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.home.HomeViewModel
@@ -260,7 +260,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
 
     override fun AlbumClick(itemView: View, position: Int, item: UserDirBean) {
         mHomeControlListener.let {
-            val albumDetailsFragment = AlbumDetailsPageingFragment()
+            val albumDetailsFragment = AlbumDetailsFragment()
             albumDetailsFragment.arguments = Bundle()
             albumDetailsFragment.requireArguments().putSerializable(ConstantKey.albuminfo, mAdapter.getItem(position))
             mHomeControlListener.startFragmentByView(albumDetailsFragment)

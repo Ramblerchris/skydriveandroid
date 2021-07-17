@@ -1,25 +1,18 @@
 package com.wisn.qm.ui.album
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.library.base.base.BaseViewModel
-import com.library.base.event.Message
 import com.wisn.qm.mode.DataRepository
-import com.wisn.qm.mode.UserDirListDataSource
 import com.wisn.qm.mode.beans.FileType
-import com.wisn.qm.mode.beans.PageKey
 import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UploadBean
 import com.wisn.qm.mode.net.ApiNetWork
 import com.wisn.qm.task.TaskUitls
+import com.wisn.qm.ui.album.bean.LoadAlbumListResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -29,10 +22,10 @@ import java.io.File
 class AlbumViewModel : BaseViewModel() {
     val userdir = MutableLiveData<UserDirBean>()
     var selectSha1List = ArrayList<String>()
+    var loadAlbumListResult = MutableLiveData<LoadAlbumListResult>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var dirLevel1listLD = MutableLiveData<MutableList<UserDirBean>>()
     var selectData = MutableLiveData<MutableList<UserDirBean>>()
-    var userDirListDataSource: UserDirListDataSource? = null
     var selectLocalMediainfoListData = MutableLiveData<MutableList<MediaInfo>>()
     var titleShow = MutableLiveData<String>()
     var titleStr:String? =""
@@ -76,7 +69,7 @@ class AlbumViewModel : BaseViewModel() {
                 for (mediainfo in selectLocalMediainfoListData.value!!) {
                     //todo 删除
                     try {
-//                        File(mediainfo.filePath).delete()
+                        File(mediainfo.filePath).delete()
                         AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -128,32 +121,6 @@ class AlbumViewModel : BaseViewModel() {
 
     }
 
-    /**
-     * 获取数据
-     * prefetchDistance = 10 预加载10条
-     */
-    fun getDirOnlineListAll(): ArrayList<UserDirBean> {
-
-        if (userDirListDataSource == null) {
-            return ArrayList()
-        }
-        return userDirListDataSource!!.mutableList!!
-    }
-
-    fun getDirOnlineListCount(dirName: String?): String? {
-        return if (userDirListDataSource != null && userDirListDataSource!!.count != null) {
-            "${dirName}(${userDirListDataSource!!.count})"
-        } else {
-            dirName
-        }
-    }
-
-    fun getUserDirListDataSource(pid: Long) = Pager(PagingConfig(pageSize = 1, prefetchDistance = 40), PageKey(pid)) {
-        userDirListDataSource = UserDirListDataSource()
-        return@Pager userDirListDataSource!!
-    }.flow
-            .cachedIn(viewModelScope)
-            .asLiveData(viewModelScope.coroutineContext)
 
     /**
      * 新建文件夹
@@ -174,7 +141,7 @@ class AlbumViewModel : BaseViewModel() {
      */
     fun getUserOnlineDirlist(pid: Long): MutableLiveData<MutableList<UserDirBean>> {
         launchGo({
-            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid, pageSize = -1)
+            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid, 20,-1)
             if (dirlist.isSuccess()) {
                 dirlistLD.value = dirlist.data.list
                 selectOnlineData().value?.clear()
@@ -185,6 +152,43 @@ class AlbumViewModel : BaseViewModel() {
             dirlist
         })
         return dirlistLD
+    }
+    var lastid=-1L;
+    fun getloadAlbumListResult(pid: Long,isRefresh:Boolean): MutableLiveData<LoadAlbumListResult> {
+        launchGo({
+            var loadAlbumListResultBean= LoadAlbumListResult()
+            if(isRefresh){
+                lastid=-1
+            }
+            loadAlbumListResultBean.isFirstPage=isRefresh
+            val dirlist = ApiNetWork.newInstance().getUserFileAlllist(pid, 20,lastid)
+            if (dirlist.isSuccess()) {
+                loadAlbumListResultBean.selectSha1List = dirlist.data.list
+                //判断是否有下一页
+                if(lastid!=dirlist.data.nextpageid&&dirlist.data.list.size>0){
+                    //有下一页
+                    loadAlbumListResultBean.loadMoreStatus= LoadAlbumListResult.LoadMore_complete
+                    lastid=dirlist.data.nextpageid!!
+                }else{
+                    //数据已经加载完成
+                    loadAlbumListResultBean.loadMoreStatus= LoadAlbumListResult.LoadMore_end
+                }
+                selectOnlineData().value?.clear()
+                selectSha1List.clear()
+
+            } else {
+                loadAlbumListResultBean.loadMoreStatus= LoadAlbumListResult.LoadMore_error
+                defUi.toastEvent.value = dirlist.msg()
+            }
+            loadAlbumListResult.value=loadAlbumListResultBean
+            dirlist
+        },error = {
+            var loadAlbumListResultBean= LoadAlbumListResult()
+            loadAlbumListResultBean.isFirstPage=isRefresh
+            loadAlbumListResultBean.loadMoreStatus= LoadAlbumListResult.LoadMore_error
+            loadAlbumListResult.value=loadAlbumListResultBean
+        })
+        return loadAlbumListResult
     }
 
     /**

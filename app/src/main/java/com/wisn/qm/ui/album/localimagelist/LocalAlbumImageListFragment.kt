@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.fragment_newalbum.topbar
 import kotlinx.android.synthetic.main.item_photo_select_bottom.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
 
-@Deprecated("")
 class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(),
     LocalCallBack {
     lateinit var title: QMUIQQFaceView

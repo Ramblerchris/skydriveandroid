@@ -1,15 +1,5 @@
 package com.wisn.qm.mode
 
-import android.util.Log
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
-import com.wisn.qm.mode.beans.PageKey
-import com.wisn.qm.mode.db.beans.UserDirBean
-import com.wisn.qm.mode.net.ApiNetWork
-import com.wisn.qm.ui.album.details.LoadDataError
-import com.wisn.qm.ui.album.details.EmptyDataError
-import com.wisn.qm.ui.album.details.NoMoreDataError
-import java.lang.Exception
 
 /**
  *
@@ -17,7 +7,9 @@ import java.lang.Exception
  * @Author: Wisn
  * @CreateDate: 2020/12/22 上午11:48
  */
+/*
 @Deprecated("")
+
 class UserDirListDataSource : PagingSource<PageKey, UserDirBean>() {
     var  mutableList:ArrayList<UserDirBean> =ArrayList<UserDirBean>()
     var count :Long? = null
@@ -68,4 +60,4 @@ class UserDirListDataSource : PagingSource<PageKey, UserDirBean>() {
     }
 
 
-}
+}*/
