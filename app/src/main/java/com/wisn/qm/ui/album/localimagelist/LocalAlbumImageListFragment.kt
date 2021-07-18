@@ -24,7 +24,6 @@ import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import kotlinx.android.synthetic.main.fragment_localalbum.*
 import kotlinx.android.synthetic.main.fragment_newalbum.recyclerView
 import kotlinx.android.synthetic.main.fragment_newalbum.topbar
-import kotlinx.android.synthetic.main.item_photo_select_bottom.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
 
 class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewModel>(),
