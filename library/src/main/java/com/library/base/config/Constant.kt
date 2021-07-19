@@ -12,7 +12,7 @@ object Constant {
         if (sha1.isNullOrEmpty()) {
             return "";
         }
-        return "${BASE_URL}file/open?filesha1=${sha1}&token=${GlobalUser.token}"
+        return "${BASE_URL}file/openV2?filesha1=${sha1}&token=${GlobalUser.token}"
     }
 
     fun getImageUrlThumb(sha1: String?): String {

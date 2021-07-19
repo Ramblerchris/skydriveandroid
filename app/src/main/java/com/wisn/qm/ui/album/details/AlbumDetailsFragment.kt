@@ -28,18 +28,21 @@ import kotlinx.android.synthetic.main.fragment_albumdetails.*
 import kotlinx.android.synthetic.main.item_empty.view.*
 
 
-class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.OnRefreshListener, EditAlbumDetails {
+class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.OnRefreshListener,
+    EditAlbumDetails {
     lateinit var title: QMUIQQFaceView
     lateinit var rightButton: Button
     var isShowEdit: Boolean = false
+    var titleSub: String = "";
+    var total: Int =0;
 
-    var gridLayoutManager :GridLayoutManager?=null;
+    var gridLayoutManager: GridLayoutManager? = null;
 
     val albumPictureAdapter by lazy {
-        gridLayoutManager=GridLayoutManager(context, 3)
-        AlbumDetailsAdapter(gridLayoutManager!!,this, this)
+        gridLayoutManager = GridLayoutManager(context, 3)
+        AlbumDetailsAdapter(gridLayoutManager!!, this, this)
     }
-    val get by lazy { arguments?.get(ConstantKey.albuminfo) as UserDirBean }
+    val albuminfo by lazy { arguments?.get(ConstantKey.albuminfo) as UserDirBean }
 
     override fun layoutId(): Int {
         return R.layout.fragment_albumdetails
@@ -50,6 +53,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
         title = topbar.setTitle("相册")!!
         title.setTextColor(Color.BLACK)
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
+        titleSub= albuminfo.filename.toString()
         val addLeftBackImageButton = topbar?.addLeftBackImageButton()
         addLeftBackImageButton?.setColorFilter(Color.BLACK)
         addLeftBackImageButton?.setOnClickListener {
@@ -66,27 +70,27 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
         rightButton.setOnClickListener {
             if (isShowEdit) {
                 QMUIDialog.MessageDialogBuilder(context)
-                        .setTitle("确定要删除吗？")
-                        .setSkinManager(QMUISkinManager.defaultInstance(context))
+                    .setTitle("确定要删除吗？")
+                    .setSkinManager(QMUISkinManager.defaultInstance(context))
 //                        .setMessage("确定要删除${item.filename}相册吗?")
-                        .addAction("取消") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .addAction("确定") { dialog, _ ->
-                            dialog.dismiss()
-                            viewModel.deleteOnlinefiles(get.id)
-                        }
-                        .create(R.style.QMUI_Dialog).show()
+                    .addAction("取消") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .addAction("确定") { dialog, _ ->
+                        dialog.dismiss()
+                        viewModel.deleteOnlinefiles(albuminfo.id)
+                    }
+                    .create(R.style.QMUI_Dialog).show()
             } else {
                 val selectPictureFragment = SelectMediaFragment()
                 selectPictureFragment.arguments = Bundle()
-                selectPictureFragment.requireArguments().putSerializable(ConstantKey.albuminfo, get)
+                selectPictureFragment.requireArguments().putSerializable(ConstantKey.albuminfo, albuminfo)
                 startFragmentForResult(selectPictureFragment, 100)
             }
         }
         swiperefresh?.setOnRefreshListener(this)
         albumPictureAdapter.loadMoreModule.setOnLoadMoreListener {
-            viewModel.getloadAlbumListResult(get.id,false)
+            viewModel.getloadAlbumListResult(albuminfo.id, false)
         }
         albumPictureAdapter.loadMoreModule.loadMoreView = LoadMoreAndFooterView()
         albumPictureAdapter.loadMoreModule.isAutoLoadMore = true
@@ -95,37 +99,59 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             adapter = albumPictureAdapter
             layoutManager = gridLayoutManager
         }
-        title.text = get.filename
-        viewModel.getloadAlbumListResult(get.id,true).observe(this, Observer {
+        title.text = titleSub
+        viewModel.getloadAlbumListResult(albuminfo.id, true).observe(this, Observer {
             albumPictureAdapter.loadMoreModule.isEnableLoadMore = true
             swiperefresh?.isRefreshing = false
-            albumPictureAdapter.updateSelect(false)
-            if(it.isFirstPage){
-                if(it.loadMoreStatus==LoadAlbumListResult.LoadMore_error){
-                    setEmptyViewOrErrorView(true,"加载出错，点击重试！")
+            //删除更新
+            if (it.isDeleteUpdate && it.selectSha1List != null && it.selectSha1List!!.size > 0) {
+                it.selectSha1List!!.forEachIndexed { index, userDirBean ->
+                    albumPictureAdapter.data.remove(userDirBean)
+                }
+                it.total = it.total - it.selectSha1List!!.size
+                /* if(it.selectSha1List!!.size==1){
+                     val indexOf = albumPictureAdapter.data.indexOf(it.selectSha1List!!.get(0))
+                     albumPictureAdapter.data.removeAll(it.selectSha1List!!)
+                     if(indexOf>=0){
+                         albumPictureAdapter.notifyItemRemoved(indexOf)
+                     }
+                 }else{
+                     albumPictureAdapter.data.removeAll(it.selectSha1List!!)
+                     albumPictureAdapter.notifyDataSetChanged()
+                 }*/
+
+                return@Observer
+            }
+            if (it.total > 0) {
+                total = it.total
+            }
+            if (it.isFirstPage) {
+                if (it.loadMoreStatus == LoadAlbumListResult.LoadMore_error) {
+                    setEmptyViewOrErrorView(true, "加载出错，点击重试！")
 //                    albumPictureAdapter.setEmptyView(setEmptyViewOrErrorView(true,"加载出错，点击重试！"))
-                }else{
+                } else {
                     if (it.selectSha1List.isNullOrEmpty()) {
-                        setEmptyViewOrErrorView(true,"相册为空,快去添吧！")
+                        setEmptyViewOrErrorView(true, "相册为空,快去添吧！")
 //                        albumPictureAdapter.setEmptyView(setEmptyViewOrErrorView(true,"相册为空,快去添吧！"))
                     } else {
-                        setEmptyViewOrErrorView(false,null)
+                        setEmptyViewOrErrorView(false, null)
                         albumPictureAdapter.setNewInstance(it.selectSha1List)
                     }
                 }
 
-            }else{
-                if(it.loadMoreStatus== LoadAlbumListResult.LoadMore_end){
+            } else {
+                if (it.loadMoreStatus == LoadAlbumListResult.LoadMore_end) {
                     albumPictureAdapter.loadMoreModule.loadMoreEnd();
-                }else  if(it.loadMoreStatus==LoadAlbumListResult.LoadMore_complete){
+                } else if (it.loadMoreStatus == LoadAlbumListResult.LoadMore_complete) {
                     albumPictureAdapter.loadMoreModule.loadMoreComplete();
-                }else  if(it.loadMoreStatus==LoadAlbumListResult.LoadMore_error){
+                } else if (it.loadMoreStatus == LoadAlbumListResult.LoadMore_error) {
                     albumPictureAdapter.loadMoreModule.loadMoreFail();
                 }
                 it.selectSha1List?.let { data ->
                     albumPictureAdapter.addData(data)
                 }
             }
+            title.text = getTitle()
 
         })
         viewModel.selectOnlineData().observe(this, Observer {
@@ -136,29 +162,28 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
 
         })
         LiveEventBus
-                .get(ConstantKey.updatePhotoList, Int::class.java)
-                .observe(this, Observer {
-                    LogUtils.d("updatePhotoList")
-                    viewModel.getUserOnlineDirlist(get.id)
-                })
+            .get(ConstantKey.updatePhotoList, Int::class.java)
+            .observe(this, Observer {
+                LogUtils.d("updatePhotoList")
+                viewModel.getloadAlbumListResult(albuminfo.id, true)
+            })
 
     }
 
-    private fun setEmptyViewOrErrorView(isShowEmpty:Boolean,message:String?) {
-//        var item_empty: View = View.inflate(context, R.layout.item_empty, null)
-        if(isShowEmpty){
-            item_empty.visibility=View.VISIBLE;
-            swiperefresh.visibility=View.GONE;
+    private fun setEmptyViewOrErrorView(isShowEmpty: Boolean, message: String?) {
+        if (isShowEmpty) {
+            item_empty.visibility = View.VISIBLE;
+            swiperefresh.visibility = View.GONE;
             item_empty.image.setImageResource(R.mipmap.share_ic_blank_album)
             message?.let {
                 item_empty.empty_tip.setText(message)
             }
             item_empty.setOnClickListener {
-                viewModel.getloadAlbumListResult(get.id, true)
+                viewModel.getloadAlbumListResult(albuminfo.id, true)
             }
-        }else{
-            item_empty.visibility=View.GONE;
-            swiperefresh.visibility=View.VISIBLE;
+        } else {
+            item_empty.visibility = View.GONE;
+            swiperefresh.visibility = View.VISIBLE;
         }
     }
 
@@ -166,11 +191,11 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
         super.onFragmentResult(requestCode, resultCode, data)
         var list = data?.extras?.getSerializable("data") as ArrayList<MediaInfo>
         LogUtils.d("onFragmentResult", list)
-        viewModel.saveMedianInfo(list, get)
+        viewModel.saveMedianInfo(list, albuminfo)
     }
 
     override fun onRefresh() {
-        viewModel.getloadAlbumListResult(get.id,true)
+        viewModel.getloadAlbumListResult(albuminfo.id, true)
     }
 
     override fun isShowEdit(isShow: Boolean) {
@@ -179,10 +204,17 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             title.text = "已选中${viewModel.selectData.value?.size ?: 0}项"
             rightButton.setText("删除")
         } else {
-            title.text = get.filename
+            title.text = getTitle()
             rightButton.setText("添加")
         }
     }
+    fun getTitle():String{
+        if(total>0){
+           return  "${titleSub}(${total})"
+        }
+        return titleSub;
+    }
+
 
     override fun changeSelectData(isinit: Boolean, isAdd: Boolean, userDirBean: UserDirBean?) {
         viewModel.editOnlineUserDirBean(isinit, isAdd, userDirBean)

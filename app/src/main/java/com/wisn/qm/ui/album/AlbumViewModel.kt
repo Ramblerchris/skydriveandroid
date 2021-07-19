@@ -21,9 +21,7 @@ import java.io.File
 
 class AlbumViewModel : BaseViewModel() {
     val userdir = MutableLiveData<UserDirBean>()
-    var selectSha1List = ArrayList<String>()
     var loadAlbumListResult = MutableLiveData<LoadAlbumListResult>()
-    var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var dirLevel1listLD = MutableLiveData<MutableList<UserDirBean>>()
     var selectData = MutableLiveData<MutableList<UserDirBean>>()
     var selectLocalMediainfoListData = MutableLiveData<MutableList<MediaInfo>>()
@@ -106,15 +104,12 @@ class AlbumViewModel : BaseViewModel() {
     fun editOnlineUserDirBean(isinit: Boolean, isAdd: Boolean, userDirBean: UserDirBean?) {
         if (isinit) {
             selectOnlineData().value?.clear()
-            selectSha1List.clear()
         }
         userDirBean?.let {
             if (isAdd) {
                 selectOnlineData().value?.add(userDirBean)
-                selectSha1List.add(userDirBean.sha1!!)
             } else {
                 selectOnlineData().value?.remove(userDirBean)
-                selectSha1List.remove(userDirBean.sha1!!)
             }
             selectOnlineData().value = selectOnlineData().value
         }
@@ -136,23 +131,7 @@ class AlbumViewModel : BaseViewModel() {
         return userdir
     }
 
-    /**
-     * 获取相册的所有图片视频
-     */
-    fun getUserOnlineDirlist(pid: Long): MutableLiveData<MutableList<UserDirBean>> {
-        launchGo({
-            val dirlist = ApiNetWork.newInstance().getUserDirlist(pid, 20,-1)
-            if (dirlist.isSuccess()) {
-                dirlistLD.value = dirlist.data.list
-                selectOnlineData().value?.clear()
-                selectSha1List.clear()
-            } else {
-                defUi.toastEvent.value = dirlist.msg()
-            }
-            dirlist
-        })
-        return dirlistLD
-    }
+
     var lastid=-1L;
     fun getloadAlbumListResult(pid: Long,isRefresh:Boolean): MutableLiveData<LoadAlbumListResult> {
         launchGo({
@@ -174,8 +153,9 @@ class AlbumViewModel : BaseViewModel() {
                     loadAlbumListResultBean.loadMoreStatus= LoadAlbumListResult.LoadMore_end
                 }
                 selectOnlineData().value?.clear()
-                selectSha1List.clear()
-
+                dirlist.data.total?.let {
+                    loadAlbumListResultBean.total= it.toInt()
+                }
             } else {
                 loadAlbumListResultBean.loadMoreStatus= LoadAlbumListResult.LoadMore_error
                 defUi.toastEvent.value = dirlist.msg()
@@ -196,18 +176,22 @@ class AlbumViewModel : BaseViewModel() {
      */
     fun deleteOnlinefiles(pid: Long) {
         launchGo({
-            var sb = StringBuilder();
-            selectSha1List.forEachIndexed { index, s ->
-                if (index == (selectSha1List.size - 1)) {
-                    sb.append(s)
+            var sb = StringBuilder()
+            selectData.value?.let {
+                it.forEachIndexed { index, s ->
+                if (index == (it.size - 1)) {
+                    sb.append(s.sha1)
                 } else {
-                    sb.append(s + ";")
+                    sb.append(s.sha1 + ";")
                 }
+            }
             }
             val dirlist = ApiNetWork.newInstance().deleteUserfilesByPidAndSha1s(pid, sb.toString())
             if (dirlist.isSuccess()) {
-                getUserOnlineDirlist(pid)
-                defUi.refresh.call()
+                var loadAlbumListResultBean= LoadAlbumListResult()
+                loadAlbumListResultBean.isDeleteUpdate=true
+                loadAlbumListResultBean.selectSha1List=selectData.value
+                loadAlbumListResult.value=loadAlbumListResultBean
             }
             dirlist
         })
