@@ -106,7 +106,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             //删除更新
             if (it.isDeleteUpdate && it.selectSha1List != null && it.selectSha1List!!.size > 0) {
                 it.selectSha1List!!.forEachIndexed { index, userDirBean ->
-                    albumPictureAdapter.data.remove(userDirBean)
+                    albumPictureAdapter.remove(userDirBean)
                 }
                 it.total = it.total - it.selectSha1List!!.size
                 /* if(it.selectSha1List!!.size==1){

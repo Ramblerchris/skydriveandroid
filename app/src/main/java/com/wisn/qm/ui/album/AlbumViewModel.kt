@@ -67,8 +67,10 @@ class AlbumViewModel : BaseViewModel() {
                 for (mediainfo in selectLocalMediainfoListData.value!!) {
                     //todo 删除
                     try {
-                        File(mediainfo.filePath).delete()
                         AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
+                        mediainfo.filePath?.let {
+                            File(it).delete()
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }

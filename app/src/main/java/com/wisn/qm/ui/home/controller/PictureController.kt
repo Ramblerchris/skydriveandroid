@@ -101,7 +101,7 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
             mAdapter.setNewInstance(it)
             mHomeViewModel.count=it.size
         })
-        mHomeViewModel?.defUi?.msgEvent?.observe(mhomeFragment, Observer {
+        mHomeViewModel.defUi.msgEvent.observe(mhomeFragment, Observer {
             if (it.code == 100) {
                 tipDialog = QMUITipDialog.Builder(context)
                         .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)

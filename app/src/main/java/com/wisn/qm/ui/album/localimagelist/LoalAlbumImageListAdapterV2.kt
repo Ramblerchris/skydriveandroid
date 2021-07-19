@@ -36,7 +36,6 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
             remove(median)
         }
         map.clear()
-        notifyDataSetChanged()
     }
 
     fun updateSelect(isSelectModel: Boolean?) {
