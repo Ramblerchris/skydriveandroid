@@ -20,7 +20,7 @@ class NewAlbumAdapter1(var clickItem: ClickItem, var data: MutableList<MediaInfo
 
     override fun onBindViewHolder(holder: SelectFileViewHolder, position: Int) {
         val get = data.get(position)
-        if (i === get.itemType) {
+        if (get.itemType == i) {
             holder.newalbum_video_time.visibility = View.GONE
             holder.newalbum_iv_select.visibility = View.GONE
             holder.newalbum_image.visibility = View.VISIBLE
@@ -42,7 +42,7 @@ class NewAlbumAdapter1(var clickItem: ClickItem, var data: MutableList<MediaInfo
             }
         }
         holder.newalbum_image.setOnClickListener {
-            clickItem?.click(get.itemType == i, position, get)
+            clickItem.click(get.itemType == i, position, get)
         }
     }
 

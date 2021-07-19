@@ -64,6 +64,13 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                             SHAMD5Utils.getSHA1(uploadbean.filePath)
                         }
                     }
+                    if (uploadbean.sha1.isNullOrEmpty()) {
+                       //尝试获取后还是null
+                        // 删除文件
+                        AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadDelete, System.currentTimeMillis())
+                        AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(uploadbean.mediainfoid!!, FileType.MediainfoStatus_Deleted)
+                        continue
+                    }
                     val uploadingCount = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_uploading)
                     val noUploadCount = AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
                     LiveEventBus
@@ -122,7 +129,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
             }
         } else {
             AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadDelete, System.currentTimeMillis())
-            AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusBySha1(uploadbean.sha1!!, FileType.MediainfoStatus_Deleted)
+            AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(uploadbean.mediainfoid!!, FileType.MediainfoStatus_Deleted)
         }
     }
 }

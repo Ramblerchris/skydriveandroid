@@ -41,10 +41,15 @@ class HomeViewModel : BaseViewModel() {
     var folderData = MutableLiveData<ArrayList<Folder>>()
     var dirlistLD = MutableLiveData<MutableList<UserDirBean>>()
     var userdirBean = MutableLiveData<UserDirBean>()
+    //修改用户名
     var usernameData = MutableLiveData<String>()
-    var userBean = MutableLiveData<UserBean>()
+    //用户信息
+    var userinfoBean = MutableLiveData<UserBean>()
+    //删除文件夹
     var deleteDirs = MutableLiveData<Boolean>()
+    //App 更新
     var UpdateData = MutableLiveData<Update>()
+
     var titleShow = MutableLiveData<String>()
 
 
@@ -94,13 +99,11 @@ class HomeViewModel : BaseViewModel() {
     fun checkUpdate(): MutableLiveData<Update> {
         launchGoLo({
             val result = DataRepository.getInstance().apiNetWork.checkUpdate(BuildConfig.VERSION_NAME, "")
-            if (result != null && result.data != null) {
-                if (result.data.buildHaveNewVersion && !result.data.downloadURL.isNullOrEmpty() && !result.data.buildBuildVersion.isNullOrEmpty()) {
-                    val toInt = result.data.buildVersionNo?.toInt()
-                    toInt?.let {
-                        if (toInt > BuildConfig.VERSION_CODE) {
-                            UpdateData.value = result.data
-                        }
+            if (result.data.buildHaveNewVersion && !result.data.downloadURL.isNullOrEmpty() && !result.data.buildBuildVersion.isNullOrEmpty()) {
+                val toInt = result.data.buildVersionNo?.toInt()
+                toInt?.let {
+                    if (toInt > BuildConfig.VERSION_CODE) {
+                        UpdateData.value = result.data
                     }
                 }
             }
@@ -109,16 +112,16 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun getUserInfo(): MutableLiveData<UserBean> {
-        userBean.value = GlobalUser.userinfo
+        userinfoBean.value = GlobalUser.userinfo
         launchGo({
             val userInfo = ApiNetWork.newInstance().getUserInfo()
             if (userInfo.isSuccess()) {
-                userBean.value = userInfo.data
+                userinfoBean.value = userInfo.data
                 GlobalUser.saveUserInfo(userInfo.data)
             }
             userInfo
         })
-        return userBean
+        return userinfoBean
     }
 
     fun updateDirStatus(ids: String,status :Int): MutableLiveData<Boolean> {
@@ -239,30 +242,6 @@ class HomeViewModel : BaseViewModel() {
             }
         }
     }
-    /*fun deleteSelect() {
-       defUi.msgEvent.value = Message(100,"正在删除")
-        launchUI {
-            LogUtils.d("deleteSelect", Thread.currentThread().name)
-            launchFlow {
-                    LogUtils.d("deleteSelect", Thread.currentThread().name)
-                    for (mediainfo in selectLocalMediainfoListData.value!!) {
-                        //todo 删除
-                        try {
-                            File(mediainfo.filePath).delete()
-                            AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                    selectLocalMediainfoListData.value!!.clear()
-                    //更新相册
-                    TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildMediaScanWorkerRequest())
-
-            }.flowOn(Dispatchers.IO).collect {
-
-            }
-        }
-    }*/
 
     fun folderData() {
        defUi.msgEvent.value = Message(100,"刷新中")

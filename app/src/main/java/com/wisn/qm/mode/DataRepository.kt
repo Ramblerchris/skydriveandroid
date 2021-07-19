@@ -36,7 +36,7 @@ class DataRepository private constructor(
         //async是不阻塞线程的
         val mediaImageList = GlobalScope.async { mediaInfohelper.getMediaImageList(maxid) }
         val mediaVideoList = GlobalScope.async { mediaInfohelper.getMediaVideoList(maxid) }
-        val await = mediaImageList.await();
+        val await = mediaImageList.await()
         await.addAll(mediaVideoList.await())
         return await
     }
@@ -50,7 +50,7 @@ class DataRepository private constructor(
         //对比系统media 获取需要更新和删除的记录 并插入到db
         var result: ArrayList<MediaInfo>
         if (mediaInfoListAllNotDeleteFromDB != null && mediaInfoListAllNotDeleteFromDB.size > 0) {
-            result = ArrayList();
+            result = ArrayList()
             //db 中已经存在，找出差异
             val same: HashSet<Long> = HashSet()
             //用来存放DB中的id
@@ -81,7 +81,7 @@ class DataRepository private constructor(
             //todo 检查是否删除
             val iterator = result.iterator();
             while (iterator.hasNext()) {
-                val next = iterator.next();
+                val next = iterator.next()
                 if(!next.filePath.isNullOrEmpty()){
                     if (!File(next.filePath).exists()) {
                         iterator.remove()

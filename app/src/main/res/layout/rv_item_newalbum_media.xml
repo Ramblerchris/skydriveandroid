@@ -43,7 +43,7 @@
         android:id="@+id/newalbum_iv_select"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="8dp"
+        android:padding="12dp"
         tools:background="@color/red"
         android:elevation="1dp"
         android:visibility="visible"

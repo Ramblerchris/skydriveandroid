@@ -2,10 +2,8 @@ package com.wisn.qm.ui.select.selectmedia
 
 import android.view.View
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
+import com.library.base.utils.GlideUtils
 import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
@@ -15,7 +13,6 @@ import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.home.BaseDataBindlingViewHolder
 import com.wisn.qm.ui.select.SelectFileViewModel
-import java.io.File
 
 /**
  * Created by Wisn on 2020/6/6 下午6:14.
@@ -49,7 +46,7 @@ class SelectMediaAdapter(var selectPictureCallBack: SelectFileViewModel, var max
 
 
     override fun convert(holder: BaseDataBindlingViewHolder, item: MediaInfo) {
-        val adapterPosition = holder.adapterPosition;
+        val adapterPosition = holder.adapterPosition
         if (item.itemType == FileType.TimeTitle) {
 //         val  binding  =holder.dataBinding as? RvItemPictureImageBinding
             val dataBinding = holder.getDataBinding<RvItemPictureTitleBinding>()
@@ -59,9 +56,10 @@ class SelectMediaAdapter(var selectPictureCallBack: SelectFileViewModel, var max
             val dataBinding = holder.getDataBinding<RvItemPictureImageBinding>()
             LogUtils.d(item.filePath)
             dataBinding?.image?.let {
-                Glide.with(context).load(File(item.filePath!!))
-                        .apply(RequestOptions())
-                        .into(it)
+//                Glide.with(context).load(File(item.filePath!!))
+//                        .apply(RequestOptions())
+//                        .into(it)
+                GlideUtils.loadFile(item.filePath!!, it)
                 dataBinding.image.onClick {
                     //如果是要选中
                     if (maxSelect > 0 && !item.isSelect && selectPictureCallBack.selectMediaData().value?.size!! >= maxSelect) {
