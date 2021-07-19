@@ -106,6 +106,13 @@ abstract class BaseFragment<VM : BaseViewModel> : QMUIFragment() {
         })
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (tipDialog?.isShowing == true) {
+            tipDialog?.dismiss()
+        }
+    }
+
 
     open fun isShareVM(): Boolean = false
 

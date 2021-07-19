@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragment
 import com.library.base.utils.MToastUtils
@@ -58,23 +57,23 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
                 text.run {
 //                    hideSoftInput(et_albumName?.windowToken,false)
                     KeyboardUtils.hideSoftInput(et_albumName)
-                    viewModel.addUserDir(text.toString()).observe(this@NewAlbumFragment, Observer {
-//                    MToastUtils.show(it.toString())
-                        var ait=it
-                        val selectDate = newAlbumAdapter.getSelectDate()
-                        selectDate?.let {
-                            viewModel.saveMedianInfo( it as ArrayList<MediaInfo>,ait)
-//                            viewModel.saveMedianInfo( it as ArrayList<MediaInfo>,)
-
-                        }
-                        LiveEventBus
-                                .get(ConstantKey.updateAlbum)
-                                .post(1);
-                        popBackStack()
-                    })
+                    viewModel.addUserDir(text.toString())
                 }
             }
         }
+        viewModel.userdir.observe(this@NewAlbumFragment, Observer {
+//                    MToastUtils.show(it.toString())
+                var ait=it
+                val selectDate = newAlbumAdapter.getSelectDate()
+                selectDate?.let {
+                    viewModel.saveMedianInfo( it as ArrayList<MediaInfo>,ait)
+//                            viewModel.saveMedianInfo( it as ArrayList<MediaInfo>,)
+                }
+                LiveEventBus
+                    .get(ConstantKey.updateAlbum)
+                    .post(1)
+                popBackStack()
+            })
         var gridLayoutManager = GridLayoutManager(context, 3)
         with(recyclerView!!) {
             adapter = newAlbumAdapter

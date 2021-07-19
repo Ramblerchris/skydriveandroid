@@ -72,13 +72,16 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
 
         mHomeViewModel.getUserDirlist().observe(mhomeFragment!!, Observer {
             swiperefresh?.isRefreshing = false
-            LogUtils.d("updateAlbum!!!!!!!!!!!!!!!!!!!!!!!!!!1")
-
             if (it.isNullOrEmpty()) {
-                item_emptya.visibility=View.VISIBLE
+                item_emptya.visibility = View.VISIBLE
             } else {
-                item_emptya.visibility=View.GONE
+                item_emptya.visibility = View.GONE
                 mAdapter.setNewData(it)
+            }
+        })
+        mHomeViewModel.deleteDirs.observe(mHomeFragment, Observer {
+            if (it) {
+                mHomeViewModel.getUserDirlist()
             }
         })
 
@@ -98,7 +101,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
 //        })
         LiveEventBus
                 .get(ConstantKey.updateAlbum, Int::class.java)
-                .observe(mhomeFragment!!, Observer {
+                .observe(mhomeFragment, Observer {
                     LogUtils.d("updateAlbum")
                     mHomeViewModel.getUserDirlist()
                 })
@@ -178,11 +181,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                             }
                             .addAction("确定") { dialog, _ ->
                                 dialog.dismiss()
-                                mHomeViewModel.updateDirStatus(it?.id.toString(),-1).observe(mHomeFragment, Observer {
-                                    if (it) {
-                                        mHomeViewModel.getUserDirlist()
-                                    }
-                                })
+                                mHomeViewModel.updateDirStatus(it?.id.toString(),-1)
                             }
                             .create(R.style.QMUI_Dialog).show()
                 }
@@ -200,11 +199,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                             }
                             .addAction("公开共享") { dialog, _ ->
                                 dialog.dismiss()
-                                mHomeViewModel.updateDirStatus(it?.id.toString(),2).observe(mHomeFragment, Observer {
-                                    if (it) {
-                                        mHomeViewModel.getUserDirlist()
-                                    }
-                                })
+                                mHomeViewModel.updateDirStatus(it?.id.toString(),2)
                             }
                             .create(R.style.QMUI_Dialog).show()
                 }
@@ -222,11 +217,7 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                             }
                             .addAction("取消公开共享") { dialog, _ ->
                                 dialog.dismiss()
-                                mHomeViewModel.updateDirStatus(it?.id.toString(),1).observe(mHomeFragment, Observer {
-                                    if (it) {
-                                        mHomeViewModel.getUserDirlist()
-                                    }
-                                })
+                                mHomeViewModel.updateDirStatus(it?.id.toString(),1)
                             }
                             .create(R.style.QMUI_Dialog).show()
                 }

@@ -21,7 +21,7 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
     protected var pictureController: LocalCallBack
     open var isSelectModel: Boolean = false
     open var isSelectAll: Boolean = false
-    protected var map: HashMap<Long, MediaInfo> = HashMap()
+    var map: HashMap<Long, MediaInfo> = HashMap()
 
     init {
         addItemType(FileType.TimeTitle, R.layout.rv_item_picture_title)

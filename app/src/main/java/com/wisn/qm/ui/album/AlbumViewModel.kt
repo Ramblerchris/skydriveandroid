@@ -60,30 +60,23 @@ class AlbumViewModel : BaseViewModel() {
     fun deleteSelect() {
 //        defUi.msgEvent.value = Message(100,"正在删除")
         count -= selectLocalMediainfoListData.value!!.size
-        launchUI {
-            LogUtils.d("deleteSelect1", Thread.currentThread().name)
-            launchFlow {
-                LogUtils.d("deleteSelect2", Thread.currentThread().name)
-                for (mediainfo in selectLocalMediainfoListData.value!!) {
-                    //todo 删除
-                    try {
-                        AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(mediainfo.id!!, FileType.MediainfoStatus_Deleted)
-                        mediainfo.filePath?.let {
-                            File(it).delete()
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+        GlobalScope.launch {
+            val iterator = selectLocalMediainfoListData.value!!.iterator()
+            while (iterator.hasNext()) {
+                val mediainfo = iterator.next();
+                try {
+                    AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(
+                        mediainfo.id!!,
+                        FileType.MediainfoStatus_Deleted
+                    )
+                    mediainfo.filePath?.let {
+                        File(it).delete()
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                selectLocalMediainfoListData.value!!.clear()
-//                titleShow.postValue("已选中${selectLocalMediainfoListData.value?.size ?: 0}项")
-                //更新相册
-                //TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildMediaScanWorkerRequest())
-
-            }.flowOn(Dispatchers.IO).collect {
-                LogUtils.d("deleteSelect3", Thread.currentThread().name)
-
             }
+            selectLocalMediainfoListData.value!!.clear()
         }
     }
 
