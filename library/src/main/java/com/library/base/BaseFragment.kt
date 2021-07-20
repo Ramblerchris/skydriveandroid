@@ -73,20 +73,21 @@ abstract class BaseFragment<VM : BaseViewModel> : QMUIFragment() {
 //        return super.backViewInitOffset(context, dragDirection, moveEdge)
         return QMUIDisplayHelper.dp2px(context, 100)
     }
+
     var  tipDialog:QMUITipDialog?=null
-    var  runnable:Runnable?=null
+    var  runnable:Runnable = Runnable {
+        if (tipDialog == null) {
+            tipDialog = QMUITipDialog.Builder(context)
+                .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                .setTipWord("加载中")
+                .create()
+        }
+        tipDialog?.show()
+    }
+
     private fun registerDefUIChange() {
         viewModel.defUi.showDialog.observe(viewLifecycleOwner, Observer {
 //            MToastUtils.show("show")
-             runnable = Runnable {
-                 if (tipDialog == null) {
-                     tipDialog = QMUITipDialog.Builder(context)
-                         .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
-                         .setTipWord("加载中")
-                         .create()
-                 }
-                tipDialog?.show()
-            }
             views.postDelayed(runnable,100);
 
         })
