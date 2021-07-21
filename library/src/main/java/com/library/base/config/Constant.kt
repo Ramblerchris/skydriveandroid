@@ -22,6 +22,7 @@ object Constant {
         return "${BASE_URL}file/openV2?filesha1=${sha1}&token=${GlobalUser.token}&q=5&widthf=0.5&width=0"
     }
 
+
     fun getImageDownloadUrl(sha1: String): String {
         return "${BASE_URL}file/getdownload?filesha1=${sha1}&token=${GlobalUser.token}"
     }

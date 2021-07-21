@@ -36,19 +36,6 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
     var decodeView: ViewGroup? = null
     var activity: Activity? = null
 
-    constructor(context: Context) : this(context, null)
-    constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
-    constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
-        //读取xml中的配置，并综合全局配置
-        val a: TypedArray = context.obtainStyledAttributes(attributeSet, R.styleable.VideoView)
-        mEnableAudioFocus = a.getBoolean(R.styleable.VideoView_enableAudioFocus, mEnableAudioFocus)
-        isLoop = a.getBoolean(R.styleable.VideoView_looping, false)
-        mCurrentScreenScaleType = a.getInt(R.styleable.VideoView_screenScaleType, ScreenConfig.SCREEN_SCALE_DEFAULT)
-        mPlayerBackgroundColor = a.getColor(R.styleable.VideoView_playerBackgroundColor, Color.BLACK)
-        a.recycle()
-
-    }
-
     protected var mVideoSize = intArrayOf(0, 0)
 
     var currentState: Int? = PlayStatus.STATE_IDLE
@@ -61,8 +48,8 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
             field = value
             mPlayerContainer?.removeView(value)
             mPlayerContainer?.addView(field, LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT))
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT))
             iViewController?.mediaPlayerController = this
         }
 
@@ -83,12 +70,26 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
     val mPlayerContainer: FrameLayout? by lazy {
         var mPlayerContainer = FrameLayout(getContext())
         VideoView@ this.addView(mPlayerContainer, LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT))
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT))
         if (mPlayerBackgroundColor != -1) {
             mPlayerContainer.setBackgroundColor(mPlayerBackgroundColor)
         }
         mPlayerContainer
+    }
+
+
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
+    constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
+        //读取xml中的配置，并综合全局配置
+        val a: TypedArray = context.obtainStyledAttributes(attributeSet, R.styleable.VideoView)
+        mEnableAudioFocus = a.getBoolean(R.styleable.VideoView_enableAudioFocus, mEnableAudioFocus)
+        isLoop = a.getBoolean(R.styleable.VideoView_looping, false)
+        mCurrentScreenScaleType = a.getInt(R.styleable.VideoView_screenScaleType, ScreenConfig.SCREEN_SCALE_DEFAULT)
+        mPlayerBackgroundColor = a.getColor(R.styleable.VideoView_playerBackgroundColor, Color.BLACK)
+        a.recycle()
+
     }
 
 
@@ -124,7 +125,7 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
     override fun start() {
         if (PlayStatus.isPlayingStatus(currentState)) {
             mAPlayer?.start()
-//            setPlayStatus(PlayStatus.STATE_PLAYING)
+            setPlayStatus(PlayStatus.STATE_PLAYING)
         } else {
             //todo 检查网络，是否提示
             mAPlayer = mediaPlayer?.createPlayer(BaseApp.app)
@@ -144,7 +145,7 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
     override fun stop() {
         mAPlayer?.let {
             if (PlayStatus.isPlayingStatus(currentState) && it.isPlaying()) {
-                it?.stop()
+                it.stop()
                 setPlayStatus(PlayStatus.STATE_IDLE)
             }
         }
@@ -154,7 +155,7 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
     override fun resume() {
         mAPlayer?.let {
             if (PlayStatus.isPlayingStatus(currentState) && !it.isPlaying()) {
-                it?.start()
+                it.start()
                 setPlayStatus(PlayStatus.STATE_PLAYING)
             }
         }

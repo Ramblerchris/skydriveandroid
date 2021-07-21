@@ -21,5 +21,9 @@ interface IViewItemController {
 
     fun setProgress(duration: Long?, position: Long?)
 
+    fun shouldCallProgress():Boolean{
+        return false
+    }
+
     fun onLockStateChanged(isLocked: Boolean)
 }

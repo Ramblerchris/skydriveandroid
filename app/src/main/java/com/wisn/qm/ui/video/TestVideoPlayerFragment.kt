@@ -23,7 +23,7 @@ import com.wisn.qm.ui.testUrl
  */
 class TestVideoPlayerFragment : QMUIFragment(), View.OnClickListener {
     val TAG: String = "TestVideoPlayerFragment"
-    val videoList = testUrl.getVideoList();
+    val videoList = testUrl.getVideoListMY();
     var videoview: VideoView? = null
     var speedsBt: Button? = null
     override fun onCreateView(): View {
@@ -33,7 +33,7 @@ class TestVideoPlayerFragment : QMUIFragment(), View.OnClickListener {
     override fun onViewCreated(rootView: View) {
         super.onViewCreated(rootView)
         videoview = rootView.findViewById<VideoView>(R.id.videoview)
-        videoview?.setUrl("https://static1.laiyifen.com/files/sns/image/137ee373bcf94ea6b67b9733ce23728a.mp4")
+        videoview?.setUrl(videoList.get(0).videoUrl)
         videoview?.renderViewFactory = TextureRenderViewFactory()
 //        videoview?.mIRenderView = SurfaceRenderView(requireContext())
         videoview?.mediaPlayer = ExoPlayerFactory()

@@ -109,6 +109,9 @@ class PlayNetControlView : FrameLayout, IViewItemController, View.OnClickListene
         }
     }
 
+    override fun shouldCallProgress(): Boolean {
+        return true
+    }
 
     override fun setProgress(duration: Long?, position: Long?) {
         LogUtils.d(TAG, "setProgress ${duration}  ${position}")

@@ -244,7 +244,7 @@ class HomeViewModel : BaseViewModel() {
     }
 
     fun folderData() {
-       defUi.msgEvent.value = Message(100,"刷新中")
+//       defUi.msgEvent.value = Message(100,"刷新中")
         launchUI {
             LogUtils.d("folderData launchUI", Thread.currentThread().name)
             launchFlow {

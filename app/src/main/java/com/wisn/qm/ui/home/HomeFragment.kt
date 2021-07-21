@@ -17,11 +17,13 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet.BottomListSheetBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
+import com.wisn.qm.BuildConfig
 import com.wisn.qm.R
 import com.wisn.qm.task.TaskUitls
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.adapter.HomePagerAdapter
 import com.wisn.qm.ui.home.controller.*
+import com.wisn.qm.ui.video.TestVideoPlayerFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
@@ -36,6 +38,9 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
 
     override fun initView(views: View) {
         super.initView(views)
+        if(BuildConfig.DEBUG){
+            startFragment(TestVideoPlayerFragment())
+        }
         LogUtils.d(TAG, " HomeFragment.initView")
         item_photo_select_bottom.tv_delete.onClick {
             VibrateUtils.vibrate(30)

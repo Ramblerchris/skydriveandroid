@@ -20,6 +20,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
 import com.we.player.player.exo.AndroidMediaPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
+import com.we.playerexo.ExoPlayerFactory
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.beans.PreviewImage
@@ -41,8 +42,8 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
     val videoView by lazy {
         var videoview = VideoView(BaseApp.app)
         videoview.renderViewFactory = TextureRenderViewFactory()
-//        videoview.mediaPlayer = ExoPlayerFactory()
-        videoview.mediaPlayer = AndroidMediaPlayerFactory()
+        videoview.mediaPlayer = ExoPlayerFactory()
+//        videoview.mediaPlayer = AndroidMediaPlayerFactory()
         videoview.iViewController = ListVideoController(BaseApp.app)
         videoview.setLooping(true)
         videoview

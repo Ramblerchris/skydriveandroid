@@ -39,10 +39,10 @@ abstract class BaseViewController : FrameLayout, IViewController, OrientationEve
     }
     var runProgress: Runnable = object : Runnable {
         override fun run() {
-            LogUtils.d(TAG, "runProgress!!! ${iviewItemControllers.size} ")
+            // Log.d(TAG, "runProgress!!! ${iviewItemControllers.size} ")
             iviewItemControllers.forEach {
-                if (mediaPlayerController != null) {
-                    //                    LogUtils.d(TAG, "runProgress ${mediaPlayerController!!.getDuration()}, ${mediaPlayerController!!.getCurrentPosition()}")
+                if (mediaPlayerController != null && it.shouldCallProgress()) {
+                    // Log.d(TAG, "runProgress ${mediaPlayerController!!.getDuration()}, ${mediaPlayerController!!.getCurrentPosition()}")
                     it.setProgress(mediaPlayerController!!.getDuration(), mediaPlayerController!!.getCurrentPosition())
                 }
             }

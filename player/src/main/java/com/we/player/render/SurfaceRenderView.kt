@@ -74,7 +74,7 @@ class SurfaceRenderView(context: Context) : SurfaceView(context), IRenderView, S
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, format: Int, width: Int, height: Int) {
-        player?.setDisplay(p0)
+        player.setDisplay(p0)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {

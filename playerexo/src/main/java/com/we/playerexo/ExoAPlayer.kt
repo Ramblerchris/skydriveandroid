@@ -2,6 +2,7 @@ package com.we.playerexo
 
 import android.app.Application
 import android.os.Handler
+import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
 import com.blankj.utilcode.util.LogUtils
@@ -154,8 +155,9 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
 
     override fun getCurrentPosition(): Long {
         if(simpleExoPlayer==null){
-            return 0;
+            return 0
         }
+        Log.d(TAG,"getCurrentPosition "+simpleExoPlayer?.currentPosition)
         return simpleExoPlayer?.currentPosition!!
     }
 
