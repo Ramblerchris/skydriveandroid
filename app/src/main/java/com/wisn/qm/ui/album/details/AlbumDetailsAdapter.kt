@@ -45,15 +45,7 @@ class AlbumDetailsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumDetailsViewHolder {
         val from = LayoutInflater.from(parent.context)
-        if (viewType == FileType.ImageViewItem) {
-            return AlbumDetailsViewHolder(
-                from.inflate(
-                    R.layout.rv_item_album_detail_media,
-                    parent,
-                    false
-                )
-            )
-        } else if (viewType == FileType.VideoViewItem) {
+        if (viewType == FileType.ImageViewItem||viewType == FileType.VideoViewItem) {
             return AlbumDetailsViewHolder(
                 from.inflate(
                     R.layout.rv_item_album_detail_media,

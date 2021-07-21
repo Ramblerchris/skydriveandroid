@@ -1,6 +1,8 @@
 package com.wisn.qm.ui
 
 import com.library.base.config.Constant
+import com.wisn.qm.mode.beans.FileType
+import com.wisn.qm.mode.beans.PreviewImage
 import java.util.*
 
 /**
@@ -203,6 +205,22 @@ object testUrl {
     }
 }
 
-class VideoBean(var title: String, var thumb: String, var videoUrl: String) {
+
+
+class VideoBean(var title: String, var thumb: String, var videoUrl: String,var isLocalpath:Boolean=false) : PreviewImage {
+
+    override val isLocal: Boolean
+        get() = isLocalpath
+    override val isThumbLocal: Boolean
+        get() = !isLocalpath
+    override val resourcePath: String
+        get() = this.videoUrl
+    override val resourceThumbNailPath: String
+        get() = this.thumb
+
+    override var itemType: Int = 0
+        get() {
+            return FileType.VideoViewItem
+        }
 
 }

@@ -23,6 +23,7 @@ class SplashActivity : BaseActivity<NoViewModel>() {
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
+//        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         startmain?.onClick {
             startActivity(Intent(this, MainActivity::class.java))
@@ -31,12 +32,24 @@ class SplashActivity : BaseActivity<NoViewModel>() {
             val connectCheckInit = NetCheckUtils.isConnectCheckInit();
             if (connectCheckInit) {
                 if (GlobalUser.token.isNullOrEmpty()) {
-                    startActivity(QMUIFragmentActivity.intentOf(this@SplashActivity, MainActivity::class.java, LoginFragment::class.java))
+                    startActivity(
+                        QMUIFragmentActivity.intentOf(
+                            this@SplashActivity,
+                            MainActivity::class.java,
+                            LoginFragment::class.java
+                        )
+                    )
                 } else {
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 }
             } else {
-                startActivity(QMUIFragmentActivity.intentOf(this@SplashActivity, MainActivity::class.java, NetCheckFragment::class.java))
+                startActivity(
+                    QMUIFragmentActivity.intentOf(
+                        this@SplashActivity,
+                        MainActivity::class.java,
+                        NetCheckFragment::class.java
+                    )
+                )
             }
             this@SplashActivity.finish()
         }
