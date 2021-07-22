@@ -14,7 +14,7 @@ open class BasePreviewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     }
 
-    open fun releaseVideo(position:Int) {
+    open fun releaseVideo(position:Int ,mediainfo: PreviewImage) {
 
     }
 

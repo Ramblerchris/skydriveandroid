@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import com.blankj.utilcode.util.LogUtils
+import com.danikula.videocache.HttpProxyCacheServer
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.we.player.controller.component.TitleControlView
 import com.we.player.controller.controller.StandardController
@@ -13,6 +14,7 @@ import com.we.playerexo.ExoPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.wisn.qm.R
+import com.wisn.qm.mode.cache.ProxyVideoCacheManager
 import com.wisn.qm.ui.testUrl
 
 /**
@@ -125,8 +127,10 @@ class TestVideoPlayerFragment : QMUIFragment(), View.OnClickListener {
                 index++
                 val get = videoList.get(index)
 //                videoview?.stop()
+                val cacheServer: HttpProxyCacheServer = ProxyVideoCacheManager.getProxy(requireContext())
+                val proxyUrl = cacheServer.getProxyUrl(get.videoUrl)
                 videoview?.release()
-                videoview?.setUrl(get.videoUrl)
+                videoview?.setUrl(proxyUrl)
                 videoview?.start()
             }
 

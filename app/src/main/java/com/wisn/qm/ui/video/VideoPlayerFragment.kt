@@ -2,6 +2,7 @@ package com.wisn.qm.ui.video
 
 import android.view.LayoutInflater
 import android.view.View
+import com.danikula.videocache.HttpProxyCacheServer
 import com.library.base.utils.GlideUtils
 import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
@@ -11,6 +12,7 @@ import com.we.playerexo.ExoPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.wisn.qm.R
+import com.wisn.qm.mode.cache.ProxyVideoCacheManager
 
 /**
  *
@@ -29,7 +31,14 @@ class VideoPlayerFragment(var videourl: String, var thumbUrl: String,var title: 
         super.onViewCreated(rootView)
         QMUIStatusBarHelper.setStatusBarDarkMode(requireActivity())
         videoview = rootView.findViewById(R.id.videoview)
-        videoview?.setUrl(videourl)
+        if (videourl.startsWith("http")) {
+            val cacheServer: HttpProxyCacheServer =
+                ProxyVideoCacheManager.getProxy(requireContext())
+            val proxyUrl = cacheServer.getProxyUrl(videourl)
+            videoview?.setUrl(proxyUrl)
+        } else {
+            videoview?.setUrl(videourl)
+        }
         videoview?.renderViewFactory = TextureRenderViewFactory()
 //        videoview?.mIRenderView = SurfaceRenderView(requireContext())
         videoview?.mediaPlayer = ExoPlayerFactory()

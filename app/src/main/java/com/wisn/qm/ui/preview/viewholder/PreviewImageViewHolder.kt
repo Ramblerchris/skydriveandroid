@@ -86,8 +86,4 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
         }
     }
 
-    override fun loadVideo(position: Int, mediainfo: PreviewImage) {
-
-    }
-
 }

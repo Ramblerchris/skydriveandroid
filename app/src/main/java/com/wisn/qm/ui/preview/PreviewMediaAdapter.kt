@@ -16,10 +16,9 @@ class PreviewMediaAdapter(var data: MutableList<out PreviewImage>, var previewCa
         if (viewType == FileType.ImageViewItem) {
             return PreviewImageViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_localimage, parent, false), previewCallback)
         } else if (viewType == FileType.VideoViewItem) {
-            return PreviewVideoViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_localvideo, parent, false), previewCallback)
-        } else {
-            return PreviewImageViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_localvideo, parent, false), previewCallback)
+            return PreviewVideoViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_netvideo, parent, false), previewCallback)
         }
+        return super.createViewHolder(parent,viewType)
     }
 
     override fun onBindViewHolder(holder: BasePreviewHolder, position: Int) {
@@ -33,7 +32,8 @@ class PreviewMediaAdapter(var data: MutableList<out PreviewImage>, var previewCa
     override fun onViewDetachedFromWindow(holder: BasePreviewHolder) {
         super.onViewDetachedFromWindow(holder)
         if (holder is PreviewVideoViewHolder) {
-            holder.releaseVideo(holder.adapterPosition)
+            var position = holder.adapterPosition;
+            holder.releaseVideo(position, data.get(position));
         }
 
     }

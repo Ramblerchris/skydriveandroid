@@ -141,14 +141,14 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
 
     override fun getBufferedPercentage(): Int {
         if(simpleExoPlayer==null){
-            return 0;
+            return 0
         }
         return simpleExoPlayer?.bufferedPercentage!!
     }
 
     override fun getDuration(): Long {
         if(simpleExoPlayer==null){
-            return 0;
+            return 0
         }
         return simpleExoPlayer?.duration!!
     }

@@ -29,8 +29,6 @@ class PreviewNetControlView : FrameLayout, IViewItemController, View.OnClickList
     var thumb: ImageView? = null
     var start_play: ImageView? = null
 
-
-
     var playClick: PlayClick? = null
 
     constructor(context: Context) : this(context, null)

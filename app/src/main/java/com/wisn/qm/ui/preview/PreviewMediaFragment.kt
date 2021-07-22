@@ -24,27 +24,27 @@ import com.we.playerexo.ExoPlayerFactory
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.beans.PreviewImage
+import com.wisn.qm.mode.cache.PreloadManager
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeViewModel
-import com.wisn.qm.ui.preview.view.ListVideoController
+import com.wisn.qm.ui.preview.view.NetListVideoController
 import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
 import kotlinx.android.synthetic.main.fragment_preview.*
 
 
 class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var position: Int) : BaseFragment<NoViewModel>(), PreviewMediaCallback {
-
-
     var recyclerView: RecyclerView? = null
     var playPosition: Int? = null
     var SelectPosition: Int? = null
+    var mPreloadManager: PreloadManager? = null
 
     val videoView by lazy {
         var videoview = VideoView(BaseApp.app)
         videoview.renderViewFactory = TextureRenderViewFactory()
         videoview.mediaPlayer = ExoPlayerFactory()
 //        videoview.mediaPlayer = AndroidMediaPlayerFactory()
-        videoview.iViewController = ListVideoController(BaseApp.app)
+        videoview.iViewController = NetListVideoController(requireContext())
         videoview.setLooping(true)
         videoview
     }
@@ -55,6 +55,7 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
 
     override fun initView(views: View) {
         super.initView(views)
+        mPreloadManager = PreloadManager.getInstance(requireContext())
         QMUIStatusBarHelper.setStatusBarDarkMode(activity)
         var mHomeViewModel = ViewModelProvider(requireActivity(), ViewModelFactory()).get(HomeViewModel::class.java)
 
@@ -98,7 +99,6 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
                     ViewPager2.SCROLL_STATE_DRAGGING -> {
                         //滑动状态
 //                        videoView.pause()
-
                     }
                     ViewPager2.SCROLL_STATE_SETTLING -> {
                         //滑动后自然沉降的状态
@@ -185,7 +185,13 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
         videoView.release()
         recycleVideoView()
         val get = data.get(position)
-        videoView.setUrl(get.resourcePath!!)
+//        videoView.setUrl(get.resourcePath!!)
+        if (get.isLocal) {
+            videoView.setUrl(get.resourcePath!!)
+        } else {
+            val playUrl = mPreloadManager!!.getPlayUrl(get.resourcePath)
+            videoView.setUrl(playUrl)
+        }
         videoView.iViewController?.addIViewItemControllerOne(viewholder.preview, true)
         viewholder.content.addView(videoView, 0)
         videoView.start()
