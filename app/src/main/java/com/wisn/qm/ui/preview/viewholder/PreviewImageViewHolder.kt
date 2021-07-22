@@ -2,8 +2,10 @@ package com.wisn.qm.ui.preview.viewholder
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
@@ -16,18 +18,20 @@ import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.PreviewImage
 import com.wisn.qm.ui.preview.PreviewMediaCallback
+import com.wisn.qm.ui.preview.listener.SimpleOnImageEventListener
 import java.io.File
 
 class PreviewImageViewHolder(var context: Context, view: View, var previewCallback: PreviewMediaCallback) : BasePreviewHolder(view) {
     var iv_image: SubsamplingScaleImageView = view.findViewById(R.id.iv_image)
     var gif_view: PhotoView = view.findViewById(R.id.gif_view)
+    var progress_view: ProgressBar = view.findViewById(R.id.progress_view)
 
     init {
         iv_image.onClick {
-            previewCallback.onContentClick(it)
+            previewCallback.callBackLocal(it)
         }
         gif_view.onClick {
-            previewCallback.onContentClick(it)
+            previewCallback.callBackLocal(it)
         }
         iv_image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE)
         iv_image.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
@@ -43,8 +47,9 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
     }
 
     override fun loadImage(position: Int, mediainfo: PreviewImage) {
-//        if (ImageUtils.isGifImageWithMime(mediainfo.filePath!!, mediainfo.filePath!!)) {
         if(mediainfo.isLocal){
+            progress_view.visibility=View.GONE
+            //本地图片直接展示
             val gifImageWithMime =
                 ImageUtils.isGifImageWithMime(mediainfo.resourcePath!!, mediainfo.resourcePath!!)
             if ( gifImageWithMime) {
@@ -59,7 +64,9 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
         }else{
             iv_image.visibility = View.GONE
             gif_view.visibility = View.VISIBLE
-            GlideUtils.loadUrlNoOP(mediainfo.resourcePath!!, gif_view)
+            progress_view.visibility=View.VISIBLE
+            GlideUtils.loadUrlNoOP(mediainfo.resourceThumbNailPath!!, gif_view)
+//            previewCallback.callBackOnLine(position, get)
             Glide.with(context).downloadOnly().load(mediainfo.resourcePath!!)
                 .into(object : FileTarget() {
                     override fun onLoadStarted(placeholder: Drawable?) {
@@ -68,6 +75,7 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
 
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         super.onLoadFailed(errorDrawable)
+                        progress_view.visibility=View.GONE
                     }
 
                     override fun onResourceReady(
@@ -78,9 +86,23 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
                         val gifImageWithMime = ImageUtils.isGifImageWithMime(resource.absolutePath)
                         if(!gifImageWithMime){
                             iv_image.visibility = View.VISIBLE
-                            gif_view.visibility = View.GONE
+                            Log.d("setOnImageEventListener","setOnImageEventListenerAAAAAA"+gifImageWithMime)
+
+                            iv_image.setOnImageEventListener(object : SimpleOnImageEventListener() {
+                                override fun onReady() {
+                                    super.onReady()
+                                    Log.d("setOnImageEventListener","setOnImageEventListener"+gifImageWithMime)
+                                    progress_view.visibility=View.GONE
+                                    gif_view.visibility = View.GONE
+                                }
+                            })
                             iv_image.setImage(ImageSource.uri(resource.absolutePath))
+                        }else{
+                            iv_image.visibility = View.GONE
+                            gif_view.visibility = View.VISIBLE
+                            GlideUtils.loadUrlNoOP(mediainfo.resourcePath!!, gif_view)
                         }
+
                     }
                 })
         }

@@ -10,22 +10,36 @@ import com.wisn.qm.ui.preview.viewholder.BasePreviewHolder
 import com.wisn.qm.ui.preview.viewholder.PreviewImageViewHolder
 import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
 
-class PreviewMediaAdapter(var data: MutableList<out PreviewImage>, var previewCallback: PreviewMediaCallback) : RecyclerView.Adapter<BasePreviewHolder>() {
+class PreviewMediaAdapter(
+    var data: MutableList<out PreviewImage>,
+    var previewCallback: PreviewMediaCallback
+) : RecyclerView.Adapter<BasePreviewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasePreviewHolder {
         if (viewType == FileType.ImageViewItem) {
-            return PreviewImageViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_localimage, parent, false), previewCallback)
+            return PreviewImageViewHolder(
+                parent.context,
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.rv_item_preview_localimage, parent, false),
+                previewCallback
+            )
         } else if (viewType == FileType.VideoViewItem) {
-            return PreviewVideoViewHolder(parent.context, LayoutInflater.from(parent.context).inflate(R.layout.rv_item_preview_netvideo, parent, false), previewCallback)
+            return PreviewVideoViewHolder(
+                parent.context,
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.rv_item_preview_netvideo, parent, false),
+                previewCallback
+            )
         }
-        return super.createViewHolder(parent,viewType)
+        return super.createViewHolder(parent, viewType)
     }
 
     override fun onBindViewHolder(holder: BasePreviewHolder, position: Int) {
+        val get = data.get(position);
         if (getItemViewType(position) == FileType.ImageViewItem) {
-            holder.loadImage(position,data.get(position))
+            holder.loadImage(position, get)
         } else {
-            holder.loadVideo(position,data.get(position))
+            holder.loadVideo(position, get)
         }
     }
 

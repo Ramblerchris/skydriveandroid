@@ -2,6 +2,7 @@ package com.wisn.qm.ui.preview
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import androidx.annotation.Px
 import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +18,6 @@ import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet
-import com.we.player.player.exo.AndroidMediaPlayerFactory
 import com.we.player.render.impl.TextureRenderViewFactory
 import com.we.player.view.VideoView
 import com.we.playerexo.ExoPlayerFactory
@@ -33,7 +33,8 @@ import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
 import kotlinx.android.synthetic.main.fragment_preview.*
 
 
-class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var position: Int) : BaseFragment<NoViewModel>(), PreviewMediaCallback {
+class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position: Int) :
+    BaseFragment<NoViewModel>(), PreviewMediaCallback {
     var recyclerView: RecyclerView? = null
     var playPosition: Int? = null
     var SelectPosition: Int? = null
@@ -53,19 +54,38 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
         return R.layout.fragment_preview
     }
 
+    var fl_online: FrameLayout? = null;
+    var fl_local: LinearLayout? = null;
+    var top_bg: LinearLayout? = null;
+    var vp_content: ViewPager2? = null;
+    var img_download: ImageView? = null;
+    var btn_show_origin: Button? = null;
+    var tv_addto: TextView? = null;
+    var tv_upload: TextView? = null;
+
     override fun initView(views: View) {
         super.initView(views)
+        fl_online = views.findViewById<FrameLayout>(R.id.fl_online)
+        fl_local = views.findViewById<LinearLayout>(R.id.fl_local)
+        top_bg = views.findViewById<LinearLayout>(R.id.top_bg)
+        vp_content = views.findViewById<ViewPager2>(R.id.vp_content)
+        img_download = views.findViewById<ImageView>(R.id.img_download)
+        btn_show_origin = views.findViewById<Button>(R.id.btn_show_origin)
+        tv_addto = views.findViewById<Button>(R.id.tv_addto)
+        tv_upload = views.findViewById<Button>(R.id.tv_upload)
         mPreloadManager = PreloadManager.getInstance(requireContext())
         QMUIStatusBarHelper.setStatusBarDarkMode(activity)
-        var mHomeViewModel = ViewModelProvider(requireActivity(), ViewModelFactory()).get(HomeViewModel::class.java)
+        var mHomeViewModel =
+            ViewModelProvider(requireActivity(), ViewModelFactory()).get(HomeViewModel::class.java)
 
-        group_content?.visibility = View.GONE
 
         vp_content?.overScrollMode = View.OVER_SCROLL_NEVER
         vp_content?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
-            override fun onPageScrolled(position: Int, positionOffset: Float,
-                                        @Px positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int, positionOffset: Float,
+                @Px positionOffsetPixels: Int
+            ) {
             }
 
 
@@ -91,7 +111,7 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
                     ViewPager2.SCROLL_STATE_IDLE -> {
                         //空闲状态
                         if (SelectPosition == playPosition) {
-                            if(!videoView.isPlaying()){
+                            if (!videoView.isPlaying()) {
                                 videoView.resume()
                             }
                         }
@@ -116,16 +136,16 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
             values?.let {
                 val builder = QMUIBottomSheet.BottomListSheetBuilder(activity)
                 builder.setGravityCenter(true)
-                        .setSkinManager(QMUISkinManager.defaultInstance(context))
-                        .setTitle("添加到")
-                        .setAddCancelBtn(true)
-                        .setAllowDrag(true)
-                        .setNeedRightMark(true)
-                        .setOnSheetItemClickListener { dialog, itemView, position, tag ->
-                            dialog.dismiss()
-                            mHomeViewModel.saveMedianInfo(position, false)
-                            MToastUtils.show("已经添加到上传任务")
-                        }
+                    .setSkinManager(QMUISkinManager.defaultInstance(context))
+                    .setTitle("添加到")
+                    .setAddCancelBtn(true)
+                    .setAllowDrag(true)
+                    .setNeedRightMark(true)
+                    .setOnSheetItemClickListener { dialog, itemView, position, tag ->
+                        dialog.dismiss()
+                        mHomeViewModel.saveMedianInfo(position, false)
+                        MToastUtils.show("已经添加到上传任务")
+                    }
                 for (dirlist in values) {
                     builder.addItem(dirlist.filename)
                 }
@@ -141,7 +161,7 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
         }
         tv_upload?.onClick {
             val get = data.get(vp_content?.currentItem!!)
-            if (get  is MediaInfo){
+            if (get is MediaInfo) {
                 mHomeViewModel.saveMedianInfo(0, get, false)
                 MToastUtils.show("已经添加到上传任务")
             }
@@ -206,11 +226,21 @@ class PreviewMediaFragment(var data: MutableList< out PreviewImage>, var positio
         }
     }
 
-    override fun onContentClick(view: View) {
-        if (group_content?.visibility == View.GONE) {
-            group_content?.visibility = View.VISIBLE
+    override fun callBackLocal(view: View) {
+        if (top_bg?.visibility == View.GONE) {
+            top_bg?.visibility = View.VISIBLE
         } else {
-            group_content?.visibility = View.GONE
+            top_bg?.visibility = View.GONE
+        }
+    }
+
+    override fun callBackOnLine(position: Int, mediainfo: PreviewImage,isShowLoadOrigin :Boolean) {
+        fl_online?.visibility=View.VISIBLE
+        fl_local?.visibility=View.GONE
+        if(isShowLoadOrigin){
+            btn_show_origin?.visibility=View.VISIBLE
+        }else{
+            btn_show_origin?.visibility=View.GONE
         }
     }
 
