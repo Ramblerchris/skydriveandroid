@@ -18,14 +18,16 @@ class PreviewVideoViewHolder(var context: Context, var view: View, var previewCa
     var pos: Int = -1
 
     override fun loadVideo(position: Int, mediainfo: PreviewImage) {
-        preview.let {
-            GlideUtils.loadUrlNoOP(mediainfo.resourcePath!!, preview.thumb!!)
-        }
+
         this.pos = position
         view.tag = this
         if (!mediainfo.isLocal) {
             //开始预加载
             PreloadManager.getInstance(context).addPreloadTask(mediainfo.resourcePath, position)
+            preview.visibility=View.VISIBLE
+            GlideUtils.loadUrlNoOP(mediainfo.resourcePath!!, preview.thumb!!)
+        }else{
+            preview.visibility=View.GONE
         }
 
 

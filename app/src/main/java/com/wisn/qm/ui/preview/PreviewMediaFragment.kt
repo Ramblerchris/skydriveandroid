@@ -15,14 +15,12 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ScrollState
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
-import com.davemorrissey.labs.subscaleview.ImageSource
 import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.base.ViewModelFactory
+import com.library.base.utils.DownloadFileUtils
 import com.library.base.utils.FileTarget
-import com.library.base.utils.GlideUtils
-import com.library.base.utils.ImageUtils
 import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
@@ -74,6 +72,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
     var top_bg: ConstraintLayout? = null;
     var vp_content: ViewPager2? = null;
     var img_download: ImageView? = null;
+    var iv_back: ImageView? = null;
     var btn_show_origin: Button? = null;
     var tv_addto: TextView? = null;
     var tv_upload: TextView? = null;
@@ -81,6 +80,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
 
     override fun initView(views: View) {
         super.initView(views)
+        iv_back = views.findViewById<ImageView>(R.id.iv_back)
         fl_online = views.findViewById<FrameLayout>(R.id.fl_online)
         fl_local = views.findViewById<LinearLayout>(R.id.fl_local)
         top_bg = views.findViewById<ConstraintLayout>(R.id.top_bg)
@@ -194,8 +194,16 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
             }
 
         }
+        img_download?.onClick {
+            try {
+                val get = data.get(vp_content?.currentItem!!)
+                DownloadFileUtils.downloadPicture(requireContext(),get.resourcePath,true)
+            } catch (e: Exception) {
+            }
+
+        }
         iv_back?.onClick {
-            popBackStack()
+           popBackStack()
         }
 
         recyclerView = vp_content?.getChildAt(0) as RecyclerView?
@@ -255,15 +263,29 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
     override fun callBackLocal(view: View) {
         if (top_bg?.visibility == View.GONE) {
             top_bg?.visibility = View.VISIBLE
+            val get = data.get(SelectPosition)
+            if(get.itemType == FileType.ImageViewItem){
+                if (get.isLocal) {
+                    fl_online?.visibility = View.GONE
+                    fl_local?.visibility = View.VISIBLE
+                }else{
+                    val originUrl = CacheUrl.getOriginUrl(get.resourcePath!!)
+                    if (originUrl.isNullOrEmpty()) {
+                        fl_online?.visibility = View.VISIBLE
+                        fl_local?.visibility = View.GONE
+                    }
+                }
+            }
         } else {
             top_bg?.visibility = View.GONE
+            fl_online?.visibility = View.GONE
+            fl_local?.visibility = View.GONE
         }
     }
 
     override fun callBackOnLine(position: Int, mediainfo: PreviewImage,isShowLoadOrigin :Boolean,
                                 loadOriginCallBack: LoadOriginCallBack?) {
         Log.d("callBackOnLine","${position} ${mediainfo.resourcePath}")
-//        dealBottom(mediainfo, isShowLoadOrigin, loadOriginCallBack)
     }
 
     private fun dealBottom(position: Int,mediainfo: PreviewImage) {
@@ -285,11 +307,6 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     btn_show_origin?.setOnClickListener {
                         downloadOrigin(position,mediainfo);
                     }
-                    /*if (loadOriginCallBack != null) {
-                        btn_show_origin?.setOnClickListener {
-                            loadOriginCallBack.loadOrigin()
-                        }
-                    }*/
                 } else {
                     btn_show_origin?.visibility = View.GONE
                 }
@@ -318,6 +335,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     CacheUrl.addOriginUrl(mediainfo.resourcePath!!,resource.absolutePath)
                     previewMediaAdapter.notifyItemChanged(position)
                     btn_show_origin?.visibility=View.GONE
+                    fl_online?.visibility = View.GONE
                 }
             })
 
@@ -330,8 +348,6 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
         super.onDestroy()
         videoView.release()
         QMUIStatusBarHelper.setStatusBarLightMode(activity)
-//        UploadTaskUitls.exeRequest(Utils.getApp(), UploadTaskUitls.buildUploadRequest())
-
     }
 
 

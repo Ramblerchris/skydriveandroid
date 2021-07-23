@@ -1,35 +1,21 @@
 package com.library.base.utils;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.transition.Transition;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -117,72 +103,6 @@ public class DownloadFileUtils {
 
 
     /**
-     * 如果是缓存中的文件 会删除
-     *
-     * @param context
-     * @param filepath
-     */
-    public static void deleteCacheFile(Application context, String filepath) {
-        try {
-            if (TextUtils.isEmpty(filepath) || !filepath.startsWith(getImageSaveRootPath(context))) {
-                return;
-            }
-            File file = new File(filepath);
-            if (file.exists()) {
-                file.delete();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 获取指定的缓存根目录
-     *
-     * @param context
-     * @return
-     */
-    public static String getImageSaveRootPath(Context context) {
-        try {
-//            String path = context.getExternalCacheDir().getAbsolutePath() + File.separator + "upload" + File.separator;
-            String path = context.getExternalFilesDir(null).getAbsolutePath() + File.separator + "upload" + File.separator;
-            File file = new File(path);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            return path;
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-//                return context.getExternalCacheDir().getAbsolutePath();
-                return context.getFilesDir().getAbsolutePath();
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                return Environment.getExternalStorageDirectory() +File.separator+ "hxjf"+ File.separator;
-            }
-        }
-    }
-
-    /**
-     * 获取公共目录
-     *
-     * @return
-     */
-    public static String getPublicDirPath() {
-        try {
-            String path =   Environment.getExternalStorageDirectory() +File.separator+ "hxjf"+ File.separator;
-            File file = new File(path);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            return path;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Environment.getExternalStorageDirectory().getAbsolutePath();
-        }
-    }
-
-    /**
      * 获取文件格式
      *
      * @param path
@@ -242,78 +162,6 @@ public class DownloadFileUtils {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    /**
-     * 保存bitmap 到文件
-     *
-     * @param path
-     * @param bitmap
-     */
-    public static void savePictureByBitmap(String path, Bitmap bitmap) {
-        savePictureByBitmap(path, bitmap, 100);
-    }
-
-    /**
-     * 保存bitmap 到文件
-     *
-     * @param path
-     * @param bitmap
-     * @param quality
-     */
-    public static void savePictureByBitmap(String path, Bitmap bitmap, int quality) {
-        File imgFile = new File(path);
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-        try {
-            fos = new FileOutputStream(imgFile);
-            bos = new BufferedOutputStream(fos);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, fos);
-        } catch (Exception error) {
-            error.printStackTrace();
-        } finally {
-            try {
-                if (bos != null) {
-                    bos.flush();
-                    bos.close();
-                }
-
-                if (fos != null) {
-                    fos.flush();
-                    fos.close();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * 获取文件名称
-     *
-     * @return
-     */
-    public static String getFileName() {
-        return System.currentTimeMillis() + ".jpg";
-    }
-
-    /**
-     * 获取压缩文件名称
-     *
-     * @param oldFileName
-     * @return
-     */
-    public static String getFileNameCompress(String oldFileName) {
-        if (TextUtils.isEmpty(oldFileName)) {
-            return getFileName();
-        }
-        int i = oldFileName.lastIndexOf(".");
-        if (i != -1) {
-            return oldFileName.substring(0, i) + "_compress.jpg";
-        } else {
-            return oldFileName + "_compress.jpg";
         }
     }
 

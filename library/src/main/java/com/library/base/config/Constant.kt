@@ -19,7 +19,7 @@ object Constant {
         if (sha1.isNullOrEmpty()) {
             return "";
         }
-        return "${BASE_URL}file/openV2?filesha1=${sha1}&token=${GlobalUser.token}&q=2&widthf=0.25&width=0"
+        return "${BASE_URL}file/openV2?filesha1=${sha1}&token=${GlobalUser.token}&q=3&widthf=0.3&width=0"
     }
 
 
