@@ -269,11 +269,13 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     fl_online?.visibility = View.GONE
                     fl_local?.visibility = View.VISIBLE
                 }else{
-                    val originUrl = CacheUrl.getOriginUrl(get.resourcePath!!)
+                   /* val originUrl = CacheUrl.getOriginUrl(get.resourcePath!!)
                     if (originUrl.isNullOrEmpty()) {
                         fl_online?.visibility = View.VISIBLE
                         fl_local?.visibility = View.GONE
-                    }
+                    }*/
+                    fl_online?.visibility = View.VISIBLE
+                    fl_local?.visibility = View.GONE
                 }
             }
         } else {
@@ -335,7 +337,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     CacheUrl.addOriginUrl(mediainfo.resourcePath!!,resource.absolutePath)
                     previewMediaAdapter.notifyItemChanged(position)
                     btn_show_origin?.visibility=View.GONE
-                    fl_online?.visibility = View.GONE
+//                    fl_online?.visibility = View.GONE
                 }
             })
 
