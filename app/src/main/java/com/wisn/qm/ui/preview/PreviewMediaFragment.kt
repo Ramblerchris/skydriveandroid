@@ -1,18 +1,28 @@
 package com.wisn.qm.ui.preview
 
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.Px
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.ScrollState
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.transition.Transition
+import com.davemorrissey.labs.subscaleview.ImageSource
 import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.base.ViewModelFactory
+import com.library.base.utils.FileTarget
+import com.library.base.utils.GlideUtils
+import com.library.base.utils.ImageUtils
 import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
@@ -28,18 +38,23 @@ import com.wisn.qm.mode.cache.PreloadManager
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.HomeViewModel
+import com.wisn.qm.ui.preview.listener.LoadOriginCallBack
 import com.wisn.qm.ui.preview.view.NetListVideoController
 import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
 import kotlinx.android.synthetic.main.fragment_preview.*
+import java.io.File
 
 
 class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position: Int) :
     BaseFragment<NoViewModel>(), PreviewMediaCallback {
     var recyclerView: RecyclerView? = null
     var playPosition: Int? = null
-    var SelectPosition: Int? = null
+    var SelectPosition: Int = 0
+    var size: Int = data.size
     var mPreloadManager: PreloadManager? = null
-
+    val previewMediaAdapter by lazy {
+        PreviewMediaAdapter(data, this@PreviewMediaFragment)
+    }
     val videoView by lazy {
         var videoview = VideoView(BaseApp.app)
         videoview.renderViewFactory = TextureRenderViewFactory()
@@ -56,29 +71,31 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
 
     var fl_online: FrameLayout? = null;
     var fl_local: LinearLayout? = null;
-    var top_bg: LinearLayout? = null;
+    var top_bg: ConstraintLayout? = null;
     var vp_content: ViewPager2? = null;
     var img_download: ImageView? = null;
     var btn_show_origin: Button? = null;
     var tv_addto: TextView? = null;
     var tv_upload: TextView? = null;
+    var indicator_tv: TextView? = null;
 
     override fun initView(views: View) {
         super.initView(views)
         fl_online = views.findViewById<FrameLayout>(R.id.fl_online)
         fl_local = views.findViewById<LinearLayout>(R.id.fl_local)
-        top_bg = views.findViewById<LinearLayout>(R.id.top_bg)
+        top_bg = views.findViewById<ConstraintLayout>(R.id.top_bg)
         vp_content = views.findViewById<ViewPager2>(R.id.vp_content)
         img_download = views.findViewById<ImageView>(R.id.img_download)
         btn_show_origin = views.findViewById<Button>(R.id.btn_show_origin)
         tv_addto = views.findViewById<Button>(R.id.tv_addto)
         tv_upload = views.findViewById<Button>(R.id.tv_upload)
+        indicator_tv = views.findViewById<Button>(R.id.indicator_tv)
         mPreloadManager = PreloadManager.getInstance(requireContext())
         QMUIStatusBarHelper.setStatusBarDarkMode(activity)
         var mHomeViewModel =
             ViewModelProvider(requireActivity(), ViewModelFactory()).get(HomeViewModel::class.java)
-
-
+        indicator_tv?.text="1/${size}"
+        indicator_tv?.setTypeface(Typeface.MONOSPACE)
         vp_content?.overScrollMode = View.OVER_SCROLL_NEVER
         vp_content?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
@@ -90,12 +107,15 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
 
 
             override fun onPageSelected(position: Int) {
+                indicator_tv?.text="${position+1}/${size}"
                 SelectPosition = position
+                val get = data.get(position)
+                dealBottom(position,get)
                 if (playPosition == position) {
                     //如果是当前的 返回
                     return
                 }
-                val get = data.get(position)
+
                 if (get.itemType != FileType.VideoViewItem) {
                     videoView.pause()
 //                    recycleVideoView()
@@ -110,6 +130,8 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                 when (state) {
                     ViewPager2.SCROLL_STATE_IDLE -> {
                         //空闲状态
+                       /* val get = data.get(SelectPosition)
+                        dealBottom(SelectPosition,get)*/
                         if (SelectPosition == playPosition) {
                             if (!videoView.isPlaying()) {
                                 videoView.resume()
@@ -119,6 +141,8 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     ViewPager2.SCROLL_STATE_DRAGGING -> {
                         //滑动状态
 //                        videoView.pause()
+                        /*fl_online?.visibility = View.GONE
+                        fl_local?.visibility = View.GONE*/
                     }
                     ViewPager2.SCROLL_STATE_SETTLING -> {
                         //滑动后自然沉降的状态
@@ -151,7 +175,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                 }
 
                 builder.addContentFooterView(addItem)
-                val build = builder.build();
+                val build = builder.build()
                 build.show()
                 addItem.onClick {
                     build.dismiss()
@@ -173,12 +197,11 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
 
         recyclerView = vp_content?.getChildAt(0) as RecyclerView?
 
-        vp_content?.adapter = PreviewMediaAdapter(data, this@PreviewMediaFragment)
+        vp_content?.adapter = previewMediaAdapter
 
         vp_content?.setCurrentItem(position, false)
 
         vp_content?.post(Runnable {
-
             startPlay(position)
         })
     }
@@ -234,16 +257,68 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
         }
     }
 
-    override fun callBackOnLine(position: Int, mediainfo: PreviewImage,isShowLoadOrigin :Boolean) {
-        fl_online?.visibility=View.VISIBLE
-        fl_local?.visibility=View.GONE
-        if(isShowLoadOrigin){
-            btn_show_origin?.visibility=View.VISIBLE
-        }else{
-            btn_show_origin?.visibility=View.GONE
+    override fun callBackOnLine(position: Int, mediainfo: PreviewImage,isShowLoadOrigin :Boolean,
+                                loadOriginCallBack: LoadOriginCallBack?) {
+        Log.d("callBackOnLine","${position} ${mediainfo.resourcePath}")
+//        dealBottom(mediainfo, isShowLoadOrigin, loadOriginCallBack)
+    }
+
+    private fun dealBottom(position: Int,mediainfo: PreviewImage) {
+        if (mediainfo.itemType == FileType.VideoViewItem) {
+            fl_online?.visibility = View.GONE
+            fl_local?.visibility = View.GONE
+        } else {
+            if (mediainfo.isLocal) {
+                fl_online?.visibility = View.GONE
+                fl_local?.visibility = View.VISIBLE
+            } else {
+                fl_online?.visibility = View.VISIBLE
+                fl_local?.visibility = View.GONE
+                //dodo 是否显示加载原图
+                val originUrl = CacheUrl.getOriginUrl(mediainfo.resourcePath!!)
+                if (originUrl.isNullOrEmpty()) {
+                    btn_show_origin?.visibility = View.VISIBLE
+                    btn_show_origin?.text="加载原图"
+                    btn_show_origin?.setOnClickListener {
+                        downloadOrigin(position,mediainfo);
+                    }
+                    /*if (loadOriginCallBack != null) {
+                        btn_show_origin?.setOnClickListener {
+                            loadOriginCallBack.loadOrigin()
+                        }
+                    }*/
+                } else {
+                    btn_show_origin?.visibility = View.GONE
+                }
+            }
         }
     }
 
+    fun downloadOrigin(position: Int,mediainfo: PreviewImage){
+        btn_show_origin?.text="加载中"
+        Log.d("callBackOnLine","${position} loadOrigin"+mediainfo.resourcePath!!)
+        Glide.with(requireContext()).downloadOnly().load(mediainfo.resourcePath!!)
+            .into(object : FileTarget() {
+                override fun onLoadStarted(placeholder: Drawable?) {
+                    super.onLoadStarted(placeholder)
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                }
+
+                override fun onResourceReady(
+                    resource: File,
+                    transition: Transition<in File?>?
+                ) {
+                    super.onResourceReady(resource, transition)
+                    CacheUrl.addOriginUrl(mediainfo.resourcePath!!,resource.absolutePath)
+                    previewMediaAdapter.notifyItemChanged(position)
+                    btn_show_origin?.visibility=View.GONE
+                }
+            })
+
+    }
     override fun playViewPosition(previewVideoViewHolder: PreviewVideoViewHolder, position: Int) {
         playItemView(position, previewVideoViewHolder);
     }

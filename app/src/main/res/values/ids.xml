@@ -19,5 +19,6 @@
 
     <item name="topbar_right_add_button" type="id"/>
     <item name="topbar_left_add_button" type="id"/>
+    <item name="glide_loadurl" type="id"/>
 
 </resources>

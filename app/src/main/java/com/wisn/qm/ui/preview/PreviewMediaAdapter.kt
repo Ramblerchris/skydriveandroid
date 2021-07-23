@@ -35,7 +35,7 @@ class PreviewMediaAdapter(
     }
 
     override fun onBindViewHolder(holder: BasePreviewHolder, position: Int) {
-        val get = data.get(position);
+        val get = data.get(position)
         if (getItemViewType(position) == FileType.ImageViewItem) {
             holder.loadImage(position, get)
         } else {

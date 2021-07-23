@@ -17,15 +17,17 @@ import com.library.base.utils.ImageUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.PreviewImage
+import com.wisn.qm.ui.preview.CacheUrl
 import com.wisn.qm.ui.preview.PreviewMediaCallback
 import com.wisn.qm.ui.preview.listener.SimpleOnImageEventListener
 import java.io.File
 
-class PreviewImageViewHolder(var context: Context, view: View, var previewCallback: PreviewMediaCallback) : BasePreviewHolder(view) {
+class PreviewImageViewHolder(var context: Context, view: View, var previewCallback: PreviewMediaCallback) : BasePreviewHolder(view){
     var iv_image: SubsamplingScaleImageView = view.findViewById(R.id.iv_image)
     var gif_view: PhotoView = view.findViewById(R.id.gif_view)
     var progress_view: ProgressBar = view.findViewById(R.id.progress_view)
-
+    var position: Int?=0;
+    var mediainfo: PreviewImage?=null;
     init {
         iv_image.onClick {
             previewCallback.callBackLocal(it)
@@ -47,6 +49,10 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
     }
 
     override fun loadImage(position: Int, mediainfo: PreviewImage) {
+        this.position=position
+        this.mediainfo=mediainfo
+        progress_view.visibility=View.GONE
+
         if(mediainfo.isLocal){
             progress_view.visibility=View.GONE
             //本地图片直接展示
@@ -62,32 +68,53 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
                 iv_image.setImage(ImageSource.uri(mediainfo.resourcePath!!))
             }
         }else{
-            iv_image.visibility = View.GONE
             gif_view.visibility = View.VISIBLE
-            progress_view.visibility=View.VISIBLE
             GlideUtils.loadUrlNoOP(mediainfo.resourceThumbNailPath!!, gif_view)
-//            previewCallback.callBackOnLine(position, get)
-            Glide.with(context).downloadOnly().load(mediainfo.resourcePath!!)
-                .into(object : FileTarget() {
-                    override fun onLoadStarted(placeholder: Drawable?) {
-                        super.onLoadStarted(placeholder)
+            val originUrl = CacheUrl.getOriginUrl(mediainfo.resourcePath!!)
+            if(originUrl.isNullOrEmpty()){
+                iv_image.visibility = View.GONE
+            }else{
+                iv_image.visibility = View.VISIBLE
+                Log.d("setOnImageEventListener","setOnImageEventListenerAAAAAA")
+                iv_image.setOnImageEventListener(object : SimpleOnImageEventListener() {
+                    override fun onReady() {
+                        super.onReady()
+                        Log.d("setOnImageEventListener","setOnImageEventListener")
+                        gif_view.visibility = View.GONE
                     }
+                })
+                iv_image.setImage(ImageSource.uri(originUrl))
+            }
 
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        progress_view.visibility=View.GONE
-                    }
+        }
+    }
 
-                    override fun onResourceReady(
-                        resource: File,
-                        transition: Transition<in File?>?
-                    ) {
-                        super.onResourceReady(resource, transition)
+    fun loadOrigin() {
+        Log.d("callBackOnLine","${position} loadOrigin"+mediainfo?.resourcePath!!)
+        progress_view.visibility=View.VISIBLE
+        iv_image.setTag(R.id.glide_loadurl,mediainfo?.resourcePath!!)
+        Glide.with(context).downloadOnly().load(mediainfo?.resourcePath!!)
+            .into(object : FileTarget() {
+                override fun onLoadStarted(placeholder: Drawable?) {
+                    super.onLoadStarted(placeholder)
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                    progress_view.visibility=View.GONE
+                }
+
+                override fun onResourceReady(
+                    resource: File,
+                    transition: Transition<in File?>?
+                ) {
+                    super.onResourceReady(resource, transition)
+                    Log.d("callBackOnLine","onResourceReady"+mediainfo?.resourcePath!!)
+                    if(iv_image.getTag(R.id.glide_loadurl).equals(mediainfo?.resourcePath!!)){
                         val gifImageWithMime = ImageUtils.isGifImageWithMime(resource.absolutePath)
                         if(!gifImageWithMime){
                             iv_image.visibility = View.VISIBLE
                             Log.d("setOnImageEventListener","setOnImageEventListenerAAAAAA"+gifImageWithMime)
-
                             iv_image.setOnImageEventListener(object : SimpleOnImageEventListener() {
                                 override fun onReady() {
                                     super.onReady()
@@ -100,12 +127,11 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
                         }else{
                             iv_image.visibility = View.GONE
                             gif_view.visibility = View.VISIBLE
-                            GlideUtils.loadUrlNoOP(mediainfo.resourcePath!!, gif_view)
+                            GlideUtils.loadUrlNoOP(mediainfo?.resourcePath!!, gif_view)
                         }
-
                     }
-                })
-        }
+                }
+            })
     }
 
 }

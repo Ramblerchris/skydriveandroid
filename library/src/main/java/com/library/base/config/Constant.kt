@@ -10,7 +10,7 @@ object Constant {
 
     fun getImageUrl(sha1: String?): String {
         if (sha1.isNullOrEmpty()) {
-            return "";
+            return ""
         }
         return "${BASE_URL}file/openV2?filesha1=${sha1}&token=${GlobalUser.token}"
     }
@@ -19,7 +19,7 @@ object Constant {
         if (sha1.isNullOrEmpty()) {
             return "";
         }
-        return "${BASE_URL}file/openV2?filesha1=${sha1}&token=${GlobalUser.token}&q=5&widthf=0.5&width=0"
+        return "${BASE_URL}file/openV2?filesha1=${sha1}&token=${GlobalUser.token}&q=2&widthf=0.25&width=0"
     }
 
 

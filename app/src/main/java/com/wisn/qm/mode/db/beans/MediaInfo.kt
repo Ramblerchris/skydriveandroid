@@ -74,6 +74,11 @@ data class MediaInfo(
         get() = true
     override val resourcePath: String?
         get() = this.filePath
+
+    override fun getResourcePathOrigin(): String? {
+        return ""
+    }
+
     override val resourceThumbNailPath: String?
         get() = this.thumbNailPath
 
