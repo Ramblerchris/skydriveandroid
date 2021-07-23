@@ -38,11 +38,11 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
     var lastIsMulte: Boolean = false
 
 
-    private val mMediaSourceEventListener: MediaSourceEventListener = object : MediaSourceEventListener {
+  /*  private val mMediaSourceEventListener: MediaSourceEventListener = object : MediaSourceEventListener {
         fun onReadingStarted(windowIndex: Int, mediaPeriodId: MediaPeriodId?) {
             mPlayerEventListener?.onPlayerEventPrepared()
         }
-    }
+    }*/
 
     override fun initPlayer() {
         simpleExoPlayer = SimpleExoPlayer.Builder(
@@ -61,7 +61,7 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
 
     override fun setDataSource(path: String?, headers: Map<String, String>?) {
         mMediaSource = newInstance.getMediaSource(path!!, headers)
-        mMediaSource!!.addEventListener(Handler(), mMediaSourceEventListener)
+//        mMediaSource!!.addEventListener(Handler(), mMediaSourceEventListener)
 
     }
 
@@ -106,12 +106,10 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
     }
 
     override fun release() {
-        mMediaSource?.removeEventListener(mMediaSourceEventListener)
+//        mMediaSource?.removeEventListener(mMediaSourceEventListener)
         simpleExoPlayer?.removeListener(this)
         simpleExoPlayer?.let {
-            GlobalScope.launch {
-                simpleExoPlayer?.release()
-            }
+            simpleExoPlayer?.release()
         }
         mMediaSource=null
         simpleExoPlayer=null

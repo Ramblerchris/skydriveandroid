@@ -9,7 +9,6 @@ import com.blankj.utilcode.util.Utils
 import com.library.base.base.BaseViewModel
 import com.library.base.config.GlobalUser
 import com.library.base.config.UserBean
-import com.library.base.event.Message
 import com.wisn.qm.BuildConfig
 import com.wisn.qm.mode.DataRepository
 import com.wisn.qm.mode.beans.FileType
@@ -192,15 +191,15 @@ class HomeViewModel : BaseViewModel() {
     }
 
 
-    fun saveMedianInfo(position: Int) {
-        saveMedianInfo(position, true)
+    fun saveMedianInfo(albumListPosition: Int) {
+        saveMedianInfo(albumListPosition, true)
     }
 
-    fun saveMedianInfo(position: Int, isauto: Boolean) {
+    fun saveMedianInfo(albumListPosition: Int, isauto: Boolean) {
         launchUI {
             LogUtils.d("saveMedianInfo", Thread.currentThread().name)
             launchFlow {
-                var dirinfo = getDirInfo(position)
+                var dirinfo = getDirInfo(albumListPosition)
                 dirinfo?.let {
                     LogUtils.d("saveMedianInfo", Thread.currentThread().name)
                     //子线程
@@ -224,10 +223,10 @@ class HomeViewModel : BaseViewModel() {
     }
 
 
-    fun saveMedianInfo(position: Int, mediainfo: MediaInfo, isauto: Boolean) {
+    fun saveMedianInfo(albumListPosition: Int, mediainfo: MediaInfo, isauto: Boolean) {
         LogUtils.d("saveMedianInfo", Thread.currentThread().name)
         GlobalScope.launch {
-            var dirinfo = getDirInfo(position)
+            var dirinfo = getDirInfo(albumListPosition)
             dirinfo?.let {
                 LogUtils.d("saveMedianInfo", Thread.currentThread().name)
                 //子线程

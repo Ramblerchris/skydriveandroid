@@ -167,7 +167,10 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     .setNeedRightMark(true)
                     .setOnSheetItemClickListener { dialog, itemView, position, tag ->
                         dialog.dismiss()
-                        mHomeViewModel.saveMedianInfo(position, false)
+                        val get = data.get(SelectPosition)
+                        if (get is MediaInfo) {
+                            mHomeViewModel.saveMedianInfo(position, get, false)
+                        }
                         MToastUtils.show("已经添加到上传任务")
                     }
                 for (dirlist in values) {

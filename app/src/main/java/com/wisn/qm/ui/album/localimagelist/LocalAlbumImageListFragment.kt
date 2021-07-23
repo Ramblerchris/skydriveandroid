@@ -108,6 +108,7 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
         }
         item_photo_select_bottom.tv_upload.onClick {
             viewModel.saveMedianInfo(0)
+            newAlbumAdapter.resetSelect()
             MToastUtils.show("已经添加到上传任务")
             Exit()
         }
@@ -125,9 +126,10 @@ class LocalAlbumImageListFragment(var folder: Folder) : BaseFragment<AlbumViewMo
                     .setOnSheetItemClickListener { dialog, itemView, position, tag ->
                         dialog.dismiss()
                         viewModel.saveMedianInfo(position)
+                        newAlbumAdapter.resetSelect()
+
                         MToastUtils.show("已经添加到上传任务")
                         Exit()
-                        //                        pictureController?.onBackPressedExit();
                     }
                 for (dirlist in value) {
                     //                    builder.addItem(ContextCompat.getDrawable(context!!, R.mipmap.icon_tabbar_lab), "Item $i")

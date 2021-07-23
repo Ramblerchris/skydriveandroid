@@ -28,6 +28,12 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            android:directBootAware="false"
+            android:exported="false"
+            android:multiprocess="true"/>
         <meta-data
             android:name="android.notch_support"
             android:value="true" />

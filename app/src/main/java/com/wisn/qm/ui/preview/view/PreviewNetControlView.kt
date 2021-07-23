@@ -28,6 +28,7 @@ class PreviewNetControlView : FrameLayout, IViewItemController, View.OnClickList
     var iViewController: IViewController? = null
     var thumb: ImageView? = null
     var start_play: ImageView? = null
+    var loading: ProgressBar? = null
 
     var playClick: PlayClick? = null
 
@@ -37,6 +38,8 @@ class PreviewNetControlView : FrameLayout, IViewItemController, View.OnClickList
         LayoutInflater.from(getContext()).inflate(R.layout.item_controller_localpreview, this, true)
         thumb = findViewById(R.id.thumb)
         start_play = findViewById(R.id.start_play)
+        loading = findViewById(com.we.player.R.id.loading)
+
         start_play?.setOnClickListener(this)
     }
 
@@ -62,27 +65,36 @@ class PreviewNetControlView : FrameLayout, IViewItemController, View.OnClickList
             PlayStatus.STATE_START_ABORT -> {
                 start_play?.visibility = View.GONE
                 thumb?.visibility = View.GONE
+                loading?.visibility = View.GONE
 
             }
             PlayStatus.STATE_BUFFERED -> {
                 start_play?.visibility = View.GONE
                 thumb?.visibility = View.GONE
+                loading?.visibility = View.GONE
+
             }
             PlayStatus.STATE_PREPARING -> {
                 start_play?.visibility = View.GONE
                 thumb?.visibility = View.VISIBLE
+                loading?.visibility = View.VISIBLE
+
             }
 
             PlayStatus.STATE_PAUSED -> {
                 start_play?.isSelected = false
                 start_play?.visibility = View.VISIBLE
                 thumb?.visibility = View.GONE
+                loading?.visibility = View.GONE
+
 
             }
             PlayStatus.STATE_PLAYING -> {
                 start_play?.isSelected = true
                 start_play?.visibility = View.GONE
                 thumb?.visibility = View.GONE
+                loading?.visibility = View.GONE
+
             }
 
             PlayStatus.STATE_ERROR,
@@ -91,12 +103,14 @@ class PreviewNetControlView : FrameLayout, IViewItemController, View.OnClickList
             PlayStatus.STATE_BUFFERING -> {
                 start_play?.visibility = View.GONE
                 thumb?.visibility = View.GONE
+                loading?.visibility = View.GONE
+
             }
             PlayStatus.STATE_IDLE -> {
                 start_play?.visibility = View.VISIBLE
                 thumb?.visibility = View.VISIBLE
+                loading?.visibility = View.GONE
                 start_play?.isSelected = false
-
             }
         }
     }

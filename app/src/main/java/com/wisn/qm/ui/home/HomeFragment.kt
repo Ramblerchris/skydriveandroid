@@ -42,62 +42,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
             startFragment(TestVideoPlayerFragment())
         }
         LogUtils.d(TAG, " HomeFragment.initView")
-        item_photo_select_bottom.tv_delete.onClick {
-            VibrateUtils.vibrate(30)
-            QMUIDialog.MessageDialogBuilder(context)
-                    .setTitle("删除本地文件")
-                    .setSkinManager(QMUISkinManager.defaultInstance(context))
-                    .setMessage("确定要删除这些本地文件吗?")
-                    .addAction("取消") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .addAction("确定") { dialog, _ ->
-                        dialog.dismiss()
-                        pictureController?.onBackPressedExit()
-//                        viewModel.deleteSelect()
-                        //todo 添加loading dialog
-                    }
-                    .create(R.style.QMUI_Dialog).show()
-//            viewModel.saveMedianInfo(0)
-//            pictureController?.onBackPressedExit()
-//            MToastUtils.show("已经添加到上传任务")
-        }
-        item_photo_select_bottom.tv_upload.onClick {
-            viewModel.saveMedianInfo(0)
-            pictureController?.onBackPressedExit()
-            MToastUtils.show("已经添加到上传任务")
-        }
-        item_photo_select_bottom.tv_addto.onClick {
-            val values = viewModel.getUserDirlist().value;
-            values?.let {
-                val builder = BottomListSheetBuilder(activity)
-                var addItem = View.inflate(context, R.layout.item_album_new_album, null)
-                builder.setGravityCenter(true)
-                        .setSkinManager(QMUISkinManager.defaultInstance(context))
-                        .setTitle("添加到")
-                        .setAddCancelBtn(true)
-                        .setAllowDrag(true)
-                        .setNeedRightMark(true)
-                        .setOnSheetItemClickListener { dialog, itemView, position, tag ->
-                            dialog.dismiss()
-                            viewModel.saveMedianInfo(position)
-                            MToastUtils.show("已经添加到上传任务")
-                            pictureController?.onBackPressedExit();
-                        }
-                for (dirlist in values) {
-//                    builder.addItem(ContextCompat.getDrawable(context!!, R.mipmap.icon_tabbar_lab), "Item $i")
-                    builder.addItem(dirlist.filename)
-                }
-                builder.addContentFooterView(addItem)
-                val build = builder.build();
-                build.show()
-                addItem.onClick {
-                    build.dismiss()
-                    startFragment(NewAlbumFragment())
-                }
-            }
-
-        }
         showPictureControl(false)
         initTabs()
         initPager()

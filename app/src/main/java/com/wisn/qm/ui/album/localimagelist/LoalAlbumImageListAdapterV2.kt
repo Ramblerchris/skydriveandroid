@@ -16,15 +16,10 @@ import java.util.ArrayList
  * Created by Wisn on 2020/6/6 下午6:14.
  */
 
-class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMultiItemQuickAdapter<MediaInfo, LocalAlbumViewHolder>() {
-    var pictureController: LocalCallBack
+class LoalAlbumImageListAdapterV2(var pictureController: LocalCallBack) : BaseMultiItemQuickAdapter<MediaInfo, LocalAlbumViewHolder>() {
     open var isSelectModel: Boolean = false
     open var isSelectAll: Boolean = false
     var map: HashMap<Long, MediaInfo> = HashMap()
-
-    init {
-        this.pictureController = pictureController!!
-    }
 
     fun deleteSelect(){
         val values = map.values;
@@ -32,6 +27,13 @@ class LoalAlbumImageListAdapterV2(pictureController: LocalCallBack?) : BaseMulti
             remove(median)
         }
         map.clear()
+        isSelectAll=false
+    }
+
+    fun resetSelect(){
+        map.clear()
+        isSelectAll=false
+        notifyDataSetChanged()
     }
 
     fun updateSelect(isSelectModel: Boolean?) {

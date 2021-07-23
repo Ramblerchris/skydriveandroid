@@ -26,7 +26,7 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
     var iv_image: SubsamplingScaleImageView = view.findViewById(R.id.iv_image)
     var gif_view: PhotoView = view.findViewById(R.id.gif_view)
     var progress_view: ProgressBar = view.findViewById(R.id.progress_view)
-    var position: Int?=0;
+    var position: Int?=0
     var mediainfo: PreviewImage?=null;
     init {
         iv_image.onClick {

@@ -78,6 +78,6 @@
         android:max="1000"
         android:progressDrawable="@drawable/we_layer_progress_bar"
         android:visibility="gone"
-        tools:visibility="gone"/>
+        tools:visibility="visible"/>
 
 </FrameLayout>
