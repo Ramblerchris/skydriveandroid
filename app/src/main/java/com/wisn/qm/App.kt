@@ -8,9 +8,13 @@ import com.blankj.utilcode.util.Utils
 import com.library.base.BaseApp
 import com.library.base.config.GlobalUser
 import com.tencent.bugly.crashreport.CrashReport
+import com.wisn.qm.mode.beans.FileType
+import com.wisn.qm.mode.db.AppDataBase
 import com.wisn.qm.task.TaskUitls
 import com.wisn.qm.ui.SplashActivity
 import io.github.skyhacker2.sqliteonweb.SQLiteOnWeb
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 open class App : BaseApp() {
 
@@ -40,9 +44,25 @@ open class App : BaseApp() {
             startActivity(intentOf)
         }*/
     }
+    var isResetSuccess = false;
+    override fun initTodoBeforNetAvailable() {
+        super.initTodoBeforNetAvailable()
+        GlobalScope.launch {
+            try {
+                AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatusByStatus(
+                    FileType.UPloadStatus_uploading,
+                    FileType.UPloadStatus_Noupload
+                )
+                isResetSuccess = true
+            } catch (e: Exception) {
+            }
+        }
+    }
 
     override fun netAvailabble() {
         super.netAvailabble()
-        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+        if (isResetSuccess) {
+            TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+        }
     }
 }

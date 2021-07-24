@@ -31,8 +31,11 @@ open class BaseApp : MultiDexApplication() {
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             refwatcher= LeakCanary.install(this)
         }
+        initTodoBeforNetAvailable()
         netWorkChangeListener()
     }
+
+
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         app = this
@@ -87,6 +90,8 @@ open class BaseApp : MultiDexApplication() {
             filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
             registerReceiver(netWorkStateReceiver, filter)
         }
+    }
+    open fun initTodoBeforNetAvailable(){
     }
     open fun netAvailabble(){
     }

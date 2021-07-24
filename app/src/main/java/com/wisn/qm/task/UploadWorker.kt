@@ -101,10 +101,8 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
                         .get(ConstantKey.uploadingInfo)
                         .post("上传完成")
             }
-    //                    LogUtils.d("0000doWork  LiveEventBus")
             if (position > 0) {
                 UploadTip.tipRing()
-
                 LiveEventBus
                         .get(ConstantKey.updatePhotoList)
                         .postDelay(1, 1000)
@@ -118,14 +116,18 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) : Worker(co
     private suspend fun uploadFile(uploadbean: UploadBean) {
         val file = File(uploadbean.filePath!!);
         if (file.exists()) {
-            var mimetype = uploadbean.mimeType ?: "multipart/form-data"
-            var requestFile = RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
-            val body = MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
-            val uploadFile = ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
-            if (uploadFile.isUploadSuccess()) {
-                AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
-                AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(uploadbean.mediainfoid!!, FileType.MediainfoStatus_uploadSuccess)
-                LogUtils.d("0000doWork   " + uploadFile.data())
+            try {
+                var mimetype = uploadbean.mimeType ?: "multipart/form-data"
+                var requestFile = RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
+                val body = MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
+                val uploadFile = ApiNetWork.newInstance().uploadFile(uploadbean.sha1!!, uploadbean.pid, uploadbean.isVideo!!, uploadbean.mimeType!!, uploadbean.duration!!, body)
+                if (uploadFile.isUploadSuccess()) {
+                    AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadSuccess, System.currentTimeMillis())
+                    AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoStatusById(uploadbean.mediainfoid!!, FileType.MediainfoStatus_uploadSuccess)
+                    LogUtils.d("0000doWork   " + uploadFile.data())
+                }
+            } catch (e: Exception) {
+                AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_Noupload, System.currentTimeMillis())
             }
         } else {
             AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatus(uploadbean.id, FileType.UPloadStatus_uploadDelete, System.currentTimeMillis())
