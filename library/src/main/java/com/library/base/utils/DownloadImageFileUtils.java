@@ -28,11 +28,10 @@ import java.text.DecimalFormat;
  * Created by wisn on 2017/9/8.
  */
 
-public class DownloadFileUtils {
+public class DownloadImageFileUtils {
     public static final String IMAGEPATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator;
 
     public static final String TAG = "CameraFileUtils";
-
     public static void downloadPicture(final Context context, final String url, boolean isShowTip) {
         Glide.with(context).downloadOnly().load(url).into(new FileTarget() {
             @Override
@@ -76,6 +75,19 @@ public class DownloadFileUtils {
     public static void saveFileAndUpdateAlbum(String oldFilePath, String targetPathDir, Context context) {
         try {
             File oldFile = new File(oldFilePath);
+            if (!oldFile.exists()) {
+                return;
+            }
+            saveFileAndUpdateAlbum(oldFile,targetPathDir,context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void saveFileAndUpdateAlbum(File oldFile, Context context) {
+        saveFileAndUpdateAlbum(oldFile,IMAGEPATH,context);
+    }
+    public static void saveFileAndUpdateAlbum(File oldFile, String targetPathDir, Context context) {
+        try {
             if (!oldFile.exists()) {
                 return;
             }

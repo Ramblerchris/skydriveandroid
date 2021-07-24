@@ -19,9 +19,7 @@ import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.base.ViewModelFactory
-import com.library.base.utils.DownloadFileUtils
-import com.library.base.utils.FileTarget
-import com.library.base.utils.MToastUtils
+import com.library.base.utils.*
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
@@ -39,15 +37,17 @@ import com.wisn.qm.ui.home.HomeViewModel
 import com.wisn.qm.ui.preview.listener.LoadOriginCallBack
 import com.wisn.qm.ui.preview.view.NetListVideoController
 import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
-import kotlinx.android.synthetic.main.fragment_preview.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
-class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position: Int) :
+class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSelectPosition: Int) :
     BaseFragment<NoViewModel>(), PreviewMediaCallback {
     var recyclerView: RecyclerView? = null
     var playPosition: Int? = null
-    var SelectPosition: Int = 0
+    var selectPosition: Int = 0
     var size: Int = data.size
     var mPreloadManager: PreloadManager? = null
     val previewMediaAdapter by lazy {
@@ -108,7 +108,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
 
             override fun onPageSelected(position: Int) {
                 indicator_tv?.text="${position+1}/${size}"
-                SelectPosition = position
+                selectPosition = position
                 val get = data.get(position)
                 dealBottom(position,get)
                 if (playPosition == position) {
@@ -132,7 +132,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                         //空闲状态
                        /* val get = data.get(SelectPosition)
                         dealBottom(SelectPosition,get)*/
-                        if (SelectPosition == playPosition) {
+                        if (selectPosition == playPosition) {
                             if (!videoView.isPlaying()) {
                                 videoView.resume()
                             }
@@ -167,7 +167,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     .setNeedRightMark(true)
                     .setOnSheetItemClickListener { dialog, itemView, position, tag ->
                         dialog.dismiss()
-                        val get = data.get(SelectPosition)
+                        val get = data.get(selectPosition)
                         if (get is MediaInfo) {
                             mHomeViewModel.saveMedianInfo(position, get, false)
                         }
@@ -195,25 +195,32 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
 
         }
         img_download?.onClick {
-            try {
+            /*try {
                 val get = data.get(vp_content?.currentItem!!)
                 DownloadFileUtils.downloadPicture(requireContext(),get.resourcePath,true)
             } catch (e: Exception) {
-            }
+            }*/
+            val get = data.get(vp_content?.currentItem!!)
+            downloadOrigin(selectPosition,get,true)
 
         }
         iv_back?.onClick {
            popBackStack()
         }
+        indicator_tv?.onClick {
+            val get = data.get(vp_content?.currentItem!!)
+            ClipboardUtils.copy(requireContext(),get.resourceThumbNailPath);
+        }
+
 
         recyclerView = vp_content?.getChildAt(0) as RecyclerView?
 
         vp_content?.adapter = previewMediaAdapter
 
-        vp_content?.setCurrentItem(position, false)
+        vp_content?.setCurrentItem(initSelectPosition, false)
 
         vp_content?.post(Runnable {
-            startPlay(position)
+            startPlay(initSelectPosition)
         })
     }
 
@@ -263,7 +270,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
     override fun callBackLocal(view: View) {
         if (top_bg?.visibility == View.GONE) {
             top_bg?.visibility = View.VISIBLE
-            val get = data.get(SelectPosition)
+            val get = data.get(selectPosition)
             if(get.itemType == FileType.ImageViewItem){
                 if (get.isLocal) {
                     fl_online?.visibility = View.GONE
@@ -307,7 +314,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     btn_show_origin?.visibility = View.VISIBLE
                     btn_show_origin?.text="加载原图"
                     btn_show_origin?.setOnClickListener {
-                        downloadOrigin(position,mediainfo);
+                        downloadOrigin(position,mediainfo,false);
                     }
                 } else {
                     btn_show_origin?.visibility = View.GONE
@@ -316,7 +323,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
         }
     }
 
-    fun downloadOrigin(position: Int,mediainfo: PreviewImage){
+    fun downloadOrigin(position: Int,mediainfo: PreviewImage,isSave:Boolean){
         btn_show_origin?.text="加载中"
         Log.d("callBackOnLine","${position} loadOrigin"+mediainfo.resourcePath!!)
         Glide.with(requireContext()).downloadOnly().load(mediainfo.resourcePath!!)
@@ -337,6 +344,13 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var position
                     CacheUrl.addOriginUrl(mediainfo.resourcePath!!,resource.absolutePath)
                     previewMediaAdapter.notifyItemChanged(position)
                     btn_show_origin?.visibility=View.GONE
+                    if(isSave){
+                        MToastUtils.show("图片已下载到手机")
+                        GlobalScope.launch {
+                            DownloadImageFileUtils.saveFileAndUpdateAlbum(resource,requireContext())
+                            CacheUrl.addDownloadUrl(mediainfo.resourcePath!!,resource.absolutePath)
+                        }
+                    }
 //                    fl_online?.visibility = View.GONE
                 }
             })

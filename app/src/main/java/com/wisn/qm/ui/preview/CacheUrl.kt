@@ -8,12 +8,23 @@ package com.wisn.qm.ui.preview
  * @CreateDate: 2020/11/26 下午3:41
  */
 object CacheUrl {
-    var map=HashMap<String,String>();
-    fun getOriginUrl(originUrl:String):String?{
-        return  map.get(originUrl);
+    var loadOriginMap = HashMap<String, String>();
+    var downloadMap = HashMap<String, String>();
+    fun getOriginUrl(originUrl: String): String? {
+        return loadOriginMap.get(originUrl);
     }
-    fun addOriginUrl(originUrl:String,resultUrl:String):String?{
-        return  map.put(originUrl,resultUrl);
+
+    fun getDownloadUrl(originUrl: String): String? {
+        return downloadMap.get(originUrl);
     }
+
+    fun addOriginUrl(originUrl: String, resultUrl: String) {
+        loadOriginMap.put(originUrl, resultUrl);
+    }
+
+    fun addDownloadUrl(originUrl: String, resultUrl: String) {
+        downloadMap.put(originUrl, resultUrl);
+    }
+
 
 }
