@@ -37,6 +37,7 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
         }
         iv_image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_INSIDE)
         iv_image.setDoubleTapZoomStyle(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER)
+        iv_image.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF)
         iv_image.setDoubleTapZoomDuration(200)
         iv_image.setMinScale(1f)
         iv_image.setMaxScale(5f)

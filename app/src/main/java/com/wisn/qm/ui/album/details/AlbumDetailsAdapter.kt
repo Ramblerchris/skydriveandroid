@@ -107,7 +107,7 @@ class AlbumDetailsAdapter(
             }
             if (item.ftype == 1) {
                 viewhoder.video_time?.visibility = View.VISIBLE
-                viewhoder.video_time?.setText(item.video_duration)
+                viewhoder.video_time?.setText(item.getVideoDurationFor())
             } else {
                 viewhoder.video_time?.visibility = View.GONE
             }

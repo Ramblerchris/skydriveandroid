@@ -2,6 +2,7 @@ package com.wisn.qm.mode.db.beans
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.google.gson.annotations.SerializedName
@@ -107,6 +108,22 @@ data class UserDirBean(
                 return FileType.ImageViewItem
             }
         }
+    @Ignore
+    var __video_durationStr=""
+    fun getVideoDurationFor():String{
+        if(__video_durationStr.isNullOrEmpty()){
+            try {
+                if(video_duration?.startsWith("00:") == true) {
+                    __video_durationStr= video_duration?.substring(3).toString()
+                }else{
+                    __video_durationStr= video_duration.toString()
+                }
+            } catch (e: Exception) {
+                __video_durationStr= video_duration.toString()
+            }
+        }
+        return __video_durationStr
+    }
 
     override fun toString(): String {
         return "UserDirBean(createattimelong=$createattimelong, createattimestr='$createattimestr', filename='$filename', id=$id, path='$path', pid=$pid, sha1='$sha1', sha1_pre='$sha1_pre', size=$size, type=$type, ftype=$ftype, updatattimelong=$updatattimelong, minitype='$minitype', video_duration='$video_duration', updatattimestr='$updatattimestr', itemType=$itemType)"
