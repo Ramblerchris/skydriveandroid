@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import com.library.base.config.Constant
 import com.library.base.config.GlobalUser
@@ -50,7 +49,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
     val collection = groupListView?.createItemView(null, "收藏夹", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
     val uploadlist = groupListView?.createItemView(null, "上传列表", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
     val delete = groupListView?.createItemView(null, "回收站", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
-    val pan = groupListView?.createItemView(null, "网盘模式", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
+    val pan = groupListView?.createItemView(null, "我的网盘", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
     val localvideo = groupListView?.createItemView(null, "离线电影", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
 
     override val layoutId: Int
