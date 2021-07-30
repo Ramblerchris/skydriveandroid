@@ -1,10 +1,20 @@
 package com.library.base.utils
 
+import android.content.Context
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.disklrucache.DiskLruCache
+import com.bumptech.glide.load.engine.cache.DiskCache
+import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.EmptySignature
 import com.library.R
 import com.library.base.BaseApp
+import com.library.base.glide.cache.DataCacheKey
+import com.library.base.glide.cache.SafeKeyGenerator
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 /**
@@ -45,6 +55,39 @@ object GlideUtils {
         Glide.with(BaseApp.app)
                 .load(url)
                 .into(imageView)
+    }
+
+
+    /**
+     * 获取是否有某张原图的缓存
+     * 缓存模式必须是：DiskCacheStrategy.SOURCE 才能获取到缓存文件
+     */
+    fun getGlideCacheFile(context: Context, url: String?): File? {
+        try {
+            val dataCacheKey = DataCacheKey(GlideUrl(url), EmptySignature.obtain())
+            val safeKeyGenerator = SafeKeyGenerator()
+            val safeKey = safeKeyGenerator.getSafeKey(dataCacheKey)
+            val file = File(context.cacheDir, DiskCache.Factory.DEFAULT_DISK_CACHE_DIR)
+            val diskLruCache =
+                DiskLruCache.open(file, 1, 1, DiskCache.Factory.DEFAULT_DISK_CACHE_SIZE.toLong())
+            val value = diskLruCache[safeKey]
+            if (value != null) {
+                return value.getFile(0)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
+    }
+
+    fun clearMemory(activity: AppCompatActivity) {
+        Glide.get(activity.applicationContext).clearMemory()
+    }
+
+    fun cleanDiskCache(context: Context) {
+        GlobalScope.launch {
+            Glide.get(context.applicationContext).clearDiskCache()
+        }
     }
 
 

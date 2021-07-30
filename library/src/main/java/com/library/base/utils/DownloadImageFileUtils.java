@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.transition.Transition;
+import com.library.base.glide.FileTarget;
 
 import java.io.File;
 import java.io.FileInputStream;

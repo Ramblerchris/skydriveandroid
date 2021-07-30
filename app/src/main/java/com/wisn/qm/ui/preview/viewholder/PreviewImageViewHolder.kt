@@ -11,7 +11,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.github.chrisbanes.photoview.PhotoView
-import com.library.base.utils.FileTarget
+import com.library.base.glide.FileTarget
 import com.library.base.utils.GlideUtils
 import com.library.base.utils.ImageUtils
 import com.qmuiteam.qmui.kotlin.onClick

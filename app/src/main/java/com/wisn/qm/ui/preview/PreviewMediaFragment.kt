@@ -19,6 +19,9 @@ import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.base.ViewModelFactory
+import com.library.base.glide.FileTarget
+import com.library.base.glide.progress.OnProgressListener
+import com.library.base.glide.progress.ProgressManager
 import com.library.base.utils.*
 import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
@@ -355,6 +358,19 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSele
                 }
             })
 
+        ProgressManager.addListener(mediainfo.resourcePath!!
+        ) { url, isComplete, percentage, bytesRead, totalBytes ->
+            Log.d("addListener",
+                "isComplete:${isComplete} percentage:${percentage} ")
+            activity?.runOnUiThread {
+
+                if(isComplete){
+
+                }else{
+                    btn_show_origin?.text="${percentage}%"
+                }
+            }
+        }
     }
     override fun playViewPosition(previewVideoViewHolder: PreviewVideoViewHolder, position: Int) {
         playItemView(position, previewVideoViewHolder);

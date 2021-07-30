@@ -109,17 +109,6 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
                     albumPictureAdapter.remove(userDirBean)
                 }
                 it.total = it.total - it.selectSha1List!!.size
-                /* if(it.selectSha1List!!.size==1){
-                     val indexOf = albumPictureAdapter.data.indexOf(it.selectSha1List!!.get(0))
-                     albumPictureAdapter.data.removeAll(it.selectSha1List!!)
-                     if(indexOf>=0){
-                         albumPictureAdapter.notifyItemRemoved(indexOf)
-                     }
-                 }else{
-                     albumPictureAdapter.data.removeAll(it.selectSha1List!!)
-                     albumPictureAdapter.notifyDataSetChanged()
-                 }*/
-
                 return@Observer
             }
             if (it.total > 0) {
@@ -184,6 +173,14 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
         } else {
             item_empty.visibility = View.GONE;
             swiperefresh.visibility = View.VISIBLE;
+        }
+    }
+
+    override fun onBackPressed() {
+        if (isShowEdit) {
+            albumPictureAdapter.updateSelect(false)
+        } else {
+            super.onBackPressed()
         }
     }
 
