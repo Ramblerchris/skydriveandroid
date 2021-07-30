@@ -1,6 +1,7 @@
 package com.library.base.glide.progress;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.library.base.glide.SSLSocketClient;
 

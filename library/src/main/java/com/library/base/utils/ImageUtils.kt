@@ -11,11 +11,6 @@ import java.io.IOException
 
 object ImageUtils {
     const val TAG="ImageUtils"
-    @JvmStatic
-    fun getImageInfo() {
-
-    }
-
     fun getBitmapDegree(path: String): Int {
         var degree = 0
         try {
