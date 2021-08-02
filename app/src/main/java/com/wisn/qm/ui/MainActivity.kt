@@ -13,7 +13,6 @@ import com.blankj.utilcode.util.Utils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.BaseFragmentActivity
 import com.library.base.utils.UploadTip
-import com.qmuiteam.qmui.arch.QMUIFragment
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.arch.annotation.FirstFragments
 import com.qmuiteam.qmui.arch.annotation.LatestVisitRecord
@@ -56,7 +55,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
     }
 
     override fun onBackPressed() {
-        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+        TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         LogUtils.d(" mBackStack(backStackEntryCount):"+supportFragmentManager.backStackEntryCount)
         LogUtils.d(" mBackStack(fragments size):"+supportFragmentManager.fragments.size)
         val get = supportFragmentManager.fragments.get(0);

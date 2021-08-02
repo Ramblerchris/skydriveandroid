@@ -1,7 +1,6 @@
 package com.we.playerexo
 
 import android.app.Application
-import android.os.Handler
 import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
@@ -10,16 +9,12 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.analytics.AnalyticsCollector
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.MediaSource.MediaPeriodId
-import com.google.android.exoplayer2.source.MediaSourceEventListener
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.util.Clock
 import com.google.android.exoplayer2.video.VideoListener
 import com.we.player.player.APlayer
 import com.we.player.player.PlayStatus
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  *
@@ -118,7 +113,7 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
 
     override fun setSpeed(speed: Float) {
         this.parameters = PlaybackParameters(speed)
-        simpleExoPlayer?.setPlaybackParameters(parameters)
+        simpleExoPlayer?.setPlaybackParameters(this.parameters!!)
     }
 
     override fun setVolume(v1: Float, v2: Float) {

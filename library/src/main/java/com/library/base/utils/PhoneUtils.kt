@@ -1,22 +1,22 @@
 package com.library.base.utils
 
 import android.content.Context
-import android.util.DisplayMetrics
-import android.view.WindowManager
 
 object PhoneUtils{
     fun getPhoneWid(context: Context): Int {
-        val windowManager = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+       /* val windowManager = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val metric = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metric)
-        return metric.widthPixels
+        return metric.widthPixels*/
+        return  context.applicationContext.resources.displayMetrics.widthPixels
     }
 
     fun getPhoneHei(context: Context): Int {
-        val windowManager = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+      /*  val windowManager = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val metric = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(metric)
-        return metric.heightPixels
+        return metric.heightPixels*/
+        return context.applicationContext.resources.displayMetrics.heightPixels
     }
 
     fun getPhoneRatio(context: Context): Float {

@@ -213,7 +213,7 @@ class AlbumViewModel : BaseViewModel() {
                     LogUtils.d("uploadlist size", uploadlist.size)
                     AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
                     if (isauto) {
-                        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+                        TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
                     }
                 }
 
@@ -266,7 +266,7 @@ class AlbumViewModel : BaseViewModel() {
             }
             LogUtils.d("uploadlist size", uploadlist.size)
             AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
-            TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+            TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         }
     }
 

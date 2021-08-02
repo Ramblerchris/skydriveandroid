@@ -212,7 +212,7 @@ class HomeViewModel : BaseViewModel() {
                     LogUtils.d("uploadlist size", uploadlist.size)
                     AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
                     if (isauto) {
-                        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+                        TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
                     }
                 }
 
@@ -236,7 +236,7 @@ class HomeViewModel : BaseViewModel() {
                 LogUtils.d("upload mediainfo", mediainfo)
                 AppDataBase.getInstanse().uploadBeanDao?.insertUploadBean(buidUploadBean)
                 if (isauto) {
-                    TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+                    TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
                 }
             }
         }

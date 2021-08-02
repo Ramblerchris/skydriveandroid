@@ -2,7 +2,6 @@ package com.library.base.glide.progress;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 

@@ -49,6 +49,7 @@ open class App : BaseApp() {
         super.initTodoBeforNetAvailable()
         GlobalScope.launch {
             try {
+                //重置上次上传一半的任务，再次重试上传
                 AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanStatusByStatus(
                     FileType.UPloadStatus_uploading,
                     FileType.UPloadStatus_Noupload
@@ -62,7 +63,7 @@ open class App : BaseApp() {
     override fun netAvailabble() {
         super.netAvailabble()
         if (isResetSuccess) {
-            TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+            TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         }
     }
 }

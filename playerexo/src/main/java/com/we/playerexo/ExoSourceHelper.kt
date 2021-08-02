@@ -56,8 +56,7 @@ class ExoSourceHelper {
                     .createMediaSource(contentUri)
         }
         val contentType = inferContentType(uri)
-        val factory: DataSource.Factory
-        factory = if (isCache) {
+        val factory: DataSource.Factory = if (isCache) {
             getCacheDataSourceFactory()
         } else {
             getDataSourceFactory()
@@ -75,8 +74,8 @@ class ExoSourceHelper {
     }
 
     private fun inferContentType(fileName: String): Int {
-        var fileName = fileName
-        fileName = Util.toLowerInvariant(fileName)
+        var fileName = fileName.toLowerCase()
+//        fileName = Util.toLowerInvariant(fileName)
         return if (fileName.contains(".mpd")) {
             C.TYPE_DASH
         } else if (fileName.contains(".m3u8")) {

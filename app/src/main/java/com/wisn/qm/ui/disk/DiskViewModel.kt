@@ -177,7 +177,7 @@ class DiskViewModel : BaseViewModel() {
             }
             LogUtils.d("uploadlist size", uploadlist.size)
             AppDataBase.getInstanse().diskUploadBeanDao?.insertDiskUploadBeanList(uploadlist)
-            TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildDiskUploadWorkerRequest())
+            TaskUitls.exeUploadDiskRequest(Utils.getApp(), TaskUitls.buildDiskUploadWorkerRequest())
         }
     }
 

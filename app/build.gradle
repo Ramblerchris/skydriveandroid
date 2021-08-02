@@ -89,6 +89,6 @@ dependencies {
     implementation project(":playerexo")
     implementation project(":dkvideocache")
     kapt "androidx.room:room-compiler:2.2.6" // For Kotlin use kapt instead of annotationProcessor
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
 }

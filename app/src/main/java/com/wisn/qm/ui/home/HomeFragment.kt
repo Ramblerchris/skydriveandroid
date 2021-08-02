@@ -11,22 +11,18 @@ import com.library.base.BaseFragment
 import com.library.base.utils.DownloadUtils
 import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.arch.QMUIFragment
-import com.qmuiteam.qmui.kotlin.onClick
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet.BottomListSheetBuilder
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.wisn.qm.BuildConfig
 import com.wisn.qm.R
 import com.wisn.qm.task.TaskUitls
-import com.wisn.qm.ui.album.newalbum.NewAlbumFragment
 import com.wisn.qm.ui.home.adapter.HomePagerAdapter
 import com.wisn.qm.ui.home.controller.*
 import com.wisn.qm.ui.video.TestVideoPlayerFragment
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.item_photo_select_bottom.*
-import kotlinx.android.synthetic.main.item_photo_select_bottom.view.*
 import java.util.*
 
 /**
@@ -45,7 +41,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
         showPictureControl(false)
         initTabs()
         initPager()
-        TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+        TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         viewModel.checkUpdate().observe(this, Observer {
             QMUIDialog.MessageDialogBuilder(context)
                     .setTitle("更新提醒")
@@ -100,7 +96,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
 
                 override fun onPageSelected(position: Int) {
                     QMUIStatusBarHelper.setStatusBarLightMode(activity)
-                    TaskUitls.exeRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
+                    TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
 
                     /* if (position == 1 || position == 2 || position == 3) {
                          QMUIStatusBarHelper.setStatusBarLightMode(activity)
