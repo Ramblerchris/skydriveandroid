@@ -7,15 +7,17 @@ object GlobalConfig {
     var tipVibrate = true
     var tipRing = true
     var lowBatteryUpload = true
+    var previewImageOrigin = false
     var ChargingUpload = false
 
 
     fun initConfig() {
-        tipVibrate =  KV.getBoolean(SpConstant.tipVibrate, true)
+        tipVibrate = KV.getBoolean(SpConstant.tipVibrate, true)
 //        tipRing = SPUtils.getInstance().getBoolean(SpConstant.tipRing, true)
         tipRing = KV.getBoolean(SpConstant.tipRing, true)
 //        lowBatteryUpload = SPUtils.getInstance().getBoolean(SpConstant.lowBatteryUpload, true)
         lowBatteryUpload = KV.getBoolean(SpConstant.lowBatteryUpload, true)
+        previewImageOrigin = KV.getBoolean(SpConstant.previewImageOrigin, false)
     }
 
     fun saveTipVibrate(status: Boolean) {
@@ -34,6 +36,12 @@ object GlobalConfig {
 //        SPUtils.getInstance().put(SpConstant.lowBatteryUpload, status)
         KV.saveBoolean(SpConstant.lowBatteryUpload, status)
         lowBatteryUpload = status
+    }
+
+    fun previewImageOrigin(status: Boolean) {
+//        SPUtils.getInstance().put(SpConstant.lowBatteryUpload, status)
+        KV.saveBoolean(SpConstant.previewImageOrigin, status)
+        previewImageOrigin = status
     }
 
 

@@ -24,8 +24,9 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
     lateinit var title: QMUIQQFaceView
     val tipRing by lazy { groupListView?.createItemView(null, "上传提示音", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
     val tipVibrate by lazy { groupListView?.createItemView(null, "上传提示震动", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
-    val autoUpload by lazy { groupListView?.createItemView(null, "是否自动同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
-    val lowBatteryUpload by lazy { groupListView?.createItemView(null, "低电量是否同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val autoUpload by lazy { groupListView?.createItemView(null, "自动同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val lowBatteryUpload by lazy { groupListView?.createItemView(null, "低电量同步", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
+    val previewImageOrigin by lazy { groupListView?.createItemView(null, "大图自动加载原图", null, QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_SWITCH) }
     val serverManager by lazy { groupListView?.createItemView(null, "服务器管理", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON) }
     val versionItem by lazy { groupListView?.createItemView(null, "版本号", AppUtils.getAppVersionName(), QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_NONE) }
     val about by lazy { groupListView?.createItemView(null, "关于APP", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON) }
@@ -73,6 +74,14 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
             }
             GlobalConfig.saveLowBatteryUpload(b)
         }
+        previewImageOrigin?.switch?.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
+            if (b) {
+                previewImageOrigin?.setDetailText("是")
+            } else {
+                previewImageOrigin?.setDetailText("否")
+            }
+            GlobalConfig.previewImageOrigin(b)
+        }
 
         QMUIGroupListView.newSection(context)
                 .setTitle("")
@@ -82,6 +91,7 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
                 .addItemView(tipVibrate, this)
 //                .addItemView(autoUpload, this)
                 .addItemView(lowBatteryUpload, this)
+                .addItemView(previewImageOrigin, this)
                 .addItemView(serverManager, this)
                 .addItemView(versionItem, this)
                 .addItemView(about, this)

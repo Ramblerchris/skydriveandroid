@@ -6,6 +6,7 @@ object SpConstant {
     const val tipVibrate = "tipVibrate"
     const val tipRing = "tipRing"
     const val lowBatteryUpload = "lowBatteryUpload"
+    const val previewImageOrigin = "previewImageOrigin"
     const val TokenKey = "Token"
     const val UserInfo = "user"
 

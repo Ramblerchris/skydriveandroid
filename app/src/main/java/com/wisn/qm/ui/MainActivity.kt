@@ -42,6 +42,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                 .get(ConstantKey.uploadingInfo, String::class.java)
                 .observe(this, Observer {
                     customRootView.globalBtn.visibility = View.VISIBLE
+                    customRootView.globalBtn.resources.configuration.fontScale=1f
                     customRootView.globalBtn.text = it
                 })
         LiveEventBus
@@ -51,7 +52,9 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                     UploadTip.tipVibrate(60)
                     customRootView.globalBtn.visibility = View.GONE
                 })
-        customRootView.globalBtn.visibility= View.GONE
+        customRootView.globalBtn.visibility= View.VISIBLE
+        customRootView.globalBtn.resources.configuration.fontScale=1f
+        customRootView.globalBtn.text = "测试"
     }
 
     override fun onBackPressed() {
