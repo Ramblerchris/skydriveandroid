@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.library.base.net.upload.ProgressRequestBody
 import com.library.base.utils.SHAMD5Utils
 import com.library.base.utils.UploadTip
 import com.wisn.qm.mode.ConstantKey
@@ -147,11 +148,9 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
         val file = File(uploadbean.filePath!!);
         if (file.exists()) {
             try {
-                var mimetype = uploadbean.mimeType ?: "multipart/form-data"
-                var requestFile =
-                    RequestBody.create(MediaType.parse(mimetype), File(uploadbean.filePath!!))
+                var progressRequestBody=ProgressRequestBody("",null, File(uploadbean.filePath!!),uploadbean.mimeType)
                 val body =
-                    MultipartBody.Part.createFormData("file", uploadbean.fileName, requestFile)
+                    MultipartBody.Part.createFormData("file", uploadbean.fileName, progressRequestBody)
                 val uploadFile = ApiNetWork.newInstance().uploadFile(
                     uploadbean.sha1!!,
                     uploadbean.pid,

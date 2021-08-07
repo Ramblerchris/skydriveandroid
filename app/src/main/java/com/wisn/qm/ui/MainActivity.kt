@@ -52,9 +52,6 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                     UploadTip.tipVibrate(60)
                     customRootView.globalBtn.visibility = View.GONE
                 })
-        customRootView.globalBtn.visibility= View.VISIBLE
-        customRootView.globalBtn.resources.configuration.fontScale=1f
-        customRootView.globalBtn.text = "测试"
     }
 
     override fun onBackPressed() {
@@ -244,6 +241,9 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
             builder.tintColor(R.attr.app_skin_common_img_tint_color)
             QMUISkinHelper.setSkinValue(globalBtn, builder)
             builder.release()
+//           globalBtn.visibility= View.VISIBLE
+//           globalBtn.resources.configuration.fontScale=1f
+//           globalBtn.text = "测试"
             addView(globalBtn, globalBtnLp)
             globalBtnOffsetHelper = QMUIViewOffsetHelper(globalBtn)
             touchSlop = ViewConfiguration.get(context).scaledTouchSlop
