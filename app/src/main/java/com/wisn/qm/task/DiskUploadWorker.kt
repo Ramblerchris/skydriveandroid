@@ -40,9 +40,14 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Corou
                         }
                     }
                     position++
+                    var uploadCountProgress:UploadCountProgress=
+                        UploadCountProgress(UploadCountProgress.UploadCountProgress_Disk,size)
+                    uploadCountProgress.leftsize= size-position
+                    uploadCountProgress.uploadcount= 1
                     LiveEventBus
                         .get(ConstantKey.uploadingInfo)
-                        .post("上传中(${position}/${size})")
+//                        .post("上传中${uploadingCount}\n剩余${noUploadCount}")
+                        .post(uploadCountProgress)
                     //先尝试秒传
                     val uploadFileHitpass = diskUploadbean.sha1?.let {
                         ApiNetWork.newInstance().uploadDiskFileHitpass(diskUploadbean.pid, diskUploadbean.sha1!!)
@@ -57,7 +62,7 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) : Corou
                     if (position == size) {
                         LiveEventBus
                             .get(ConstantKey.uploadingInfo)
-                            .post("上传完成")
+                            .post(UploadCountProgress(UploadCountProgress.UploadCountProgress_Disk,true))
                     }
                 }
                 if (position > 0) {

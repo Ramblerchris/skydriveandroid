@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text=""
-        app:layout_constraintBottom_toTopOf="@+id/des"
+        app:layout_constraintBottom_toTopOf="@+id/size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_header"
         app:layout_constraintTop_toTopOf="@+id/iv_header"
@@ -44,17 +44,40 @@
         tools:text="namenamenamenamenamenamenamenamenamenamenamenamenamenamename" />
 
     <TextView
-        android:id="@+id/des"
+        android:id="@+id/size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text=""
-        android:textColor="@color/green"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_header"
         app:layout_constraintStart_toStartOf="@+id/name"
         app:layout_constraintTop_toBottomOf="@+id/name"
         app:layout_constraintVertical_chainStyle="packed"
+        tools:text="上传成功" />
+
+    <TextView
+        android:id="@+id/uploaddir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:text=""
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/size"
+        app:layout_constraintStart_toEndOf="@+id/size"
+        app:layout_constraintTop_toTopOf="@+id/size"
+        tools:text="上传成功" />
+    <TextView
+        android:id="@+id/des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:text=""
+        android:textColor="@color/green"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/size"
+        app:layout_constraintStart_toEndOf="@+id/uploaddir"
+        app:layout_constraintTop_toTopOf="@+id/size"
         tools:text="上传成功" />
 
 </com.qmuiteam.qmui.layout.QMUIConstraintLayout>

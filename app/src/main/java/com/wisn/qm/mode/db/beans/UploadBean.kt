@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
 import com.library.base.utils.FormatStrUtils
 import com.wisn.qm.mode.beans.FileType
 
-@Entity(tableName = "uploadbean")
+@Entity(tableName = "uploadalbum")
 data class UploadBean(
         @ColumnInfo(name = "mediainfoid")
         @SerializedName("mediainfoid")
@@ -54,6 +54,13 @@ data class UploadBean(
         @SerializedName("duration")
         var duration: Long?
 ) : MultiItemEntity {
+    @ColumnInfo(name = "filesizeStr")
+    @SerializedName("filesizeStr")
+    var filesizeStr: String="";
+
+    @ColumnInfo(name = "upDirName")
+    @SerializedName("upDirName")
+    var upDirName: String?=""
 
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")

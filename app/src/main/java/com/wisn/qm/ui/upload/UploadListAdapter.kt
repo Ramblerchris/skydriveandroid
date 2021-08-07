@@ -36,16 +36,4 @@ class UploadListAdapter : BaseMultiItemQuickAdapter<UploadBean, BaseViewHolder>(
         }
 
     }
-   /* (R.layout.rv_item_uploadlist) {
-
-        override fun convert(holder: BaseDataBindingHolder<RvItemUploadlistBinding>, item: UploadBean) {
-            holder.dataBinding?.itemData = item
-            holder.dataBinding?.executePendingBindings()
-            GlideUtils.loadFile(item.filePath!!,holder.dataBinding!!.ivHeader)
-//        Glide.with(context).load(File(item.filePath!!))
-//                .apply(RequestOptions())
-//                .into()
-        }
-
-    }*/
 }

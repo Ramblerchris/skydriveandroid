@@ -3,8 +3,11 @@ package com.wisn.qm.task
 import android.content.Context
 import androidx.work.*
 import com.library.base.config.GlobalConfig
+import com.library.base.utils.FormatStrUtils
+import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.MediaInfo
 import com.wisn.qm.mode.db.beans.UploadBean
+import com.wisn.qm.mode.db.beans.UserDirBean
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -105,8 +108,10 @@ object TaskUitls {
     }
 
 
-    fun buidUploadBean(mediainfo: MediaInfo): UploadBean {
-        return UploadBean(
+    fun buidUploadBean(mediainfo: MediaInfo,userDirBean: UserDirBean): UploadBean {
+        mediainfo.pid = userDirBean.id
+        mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
+        var uploadBean= UploadBean(
             mediainfo.id,
             mediainfo.fileName,
             mediainfo.filePath,
@@ -119,6 +124,13 @@ object TaskUitls {
             mediainfo.isVideo,
             mediainfo.duration
         )
+        mediainfo.fileSize?.let {
+            uploadBean.filesizeStr=  FormatStrUtils.getFormatDiskSizeStr(it)
+        }
+        userDirBean.filename?.let {
+            uploadBean.upDirName=userDirBean.filename
+        }
+        return uploadBean
     }
 
 

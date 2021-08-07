@@ -12,6 +12,7 @@ import com.library.base.BaseFragment
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
+import com.wisn.qm.task.UploadCountProgress
 import kotlinx.android.synthetic.main.fragment_uploadlist.*
 import kotlinx.android.synthetic.main.item_empty.view.*
 
@@ -54,6 +55,15 @@ open class UploadListFragment : BaseFragment<UploadListViewModel>(), SwipeRefres
                     LogUtils.d("updatePhotoList")
                     viewModel.getUploadList()
                 })
+        LiveEventBus
+            .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
+            .observe(this, Observer {
+                if(it.isFinish){
+                    title.text="上传列表"
+                }else{
+                    title.text="上传列表(${it.leftsize}/${it.sum})"
+                }
+            })
 
     }
 

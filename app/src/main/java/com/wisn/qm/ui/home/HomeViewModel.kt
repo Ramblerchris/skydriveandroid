@@ -205,9 +205,7 @@ class HomeViewModel : BaseViewModel() {
                     //子线程
                     var uploadlist = ArrayList<UploadBean>()
                     for (mediainfo in selectLocalMediainfoListData.value!!) {
-                        mediainfo.pid = dirinfo.id
-                        mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                        uploadlist.add(TaskUitls.buidUploadBean(mediainfo))
+                        uploadlist.add(TaskUitls.buidUploadBean(mediainfo,dirinfo))
                     }
                     LogUtils.d("uploadlist size", uploadlist.size)
                     AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
@@ -229,10 +227,7 @@ class HomeViewModel : BaseViewModel() {
             var dirinfo = getDirInfo(albumListPosition)
             dirinfo?.let {
                 LogUtils.d("saveMedianInfo", Thread.currentThread().name)
-                //子线程
-                mediainfo.pid = dirinfo.id
-                mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                val buidUploadBean = TaskUitls.buidUploadBean(mediainfo)
+                val buidUploadBean = TaskUitls.buidUploadBean(mediainfo,dirinfo)
                 LogUtils.d("upload mediainfo", mediainfo)
                 AppDataBase.getInstanse().uploadBeanDao?.insertUploadBean(buidUploadBean)
                 if (isauto) {

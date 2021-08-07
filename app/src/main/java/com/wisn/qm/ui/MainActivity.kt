@@ -26,6 +26,7 @@ import com.qmuiteam.qmui.util.QMUIViewOffsetHelper
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.task.TaskUitls
+import com.wisn.qm.task.UploadCountProgress
 import com.wisn.qm.ui.home.HomeFragment
 
 @FirstFragments(value = [HomeFragment::class])
@@ -39,11 +40,15 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
         ActivityCompat.requestPermissions(this, storagePermissions, 1)
         QMUIStatusBarHelper.setStatusBarLightMode(this)
         LiveEventBus
-                .get(ConstantKey.uploadingInfo, String::class.java)
+                .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
                 .observe(this, Observer {
-                    customRootView.globalBtn.visibility = View.VISIBLE
-                    customRootView.globalBtn.resources.configuration.fontScale=1f
-                    customRootView.globalBtn.text = it
+                    if(it.isFinish){
+                        customRootView.globalBtn.visibility = View.VISIBLE
+                        customRootView.globalBtn.text = "上传完成"
+                    }else{
+                        customRootView.globalBtn.visibility = View.VISIBLE
+                        customRootView.globalBtn.text ="${it.leftsize}"
+                    }
                 })
         LiveEventBus
                 .get(ConstantKey.updatePhotoList, Int::class.java)

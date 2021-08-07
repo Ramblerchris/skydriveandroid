@@ -11,7 +11,7 @@ import com.wisn.qm.mode.db.beans.*
 import com.wisn.qm.mode.db.dao.*
 
 
-@Database(entities = [User::class, UploadBean::class, MediaInfo::class, UserDirBean::class, DiskUploadBean::class], exportSchema = false,version = 2)
+@Database(entities = [User::class, UploadBean::class, MediaInfo::class, UserDirBean::class, DiskUploadBean::class], exportSchema = false,version =3)
 abstract class AppDataBase : RoomDatabase() {
     abstract val userDao: UserDao?
     abstract val mediaInfoDao: MediaInfoDao?
@@ -41,7 +41,7 @@ abstract class AppDataBase : RoomDatabase() {
                     database.execSQL("ALTER TABLE userdirlist "+"   ADD COLUMN ShareFrom    TEXT  ")
                 }
             }
-            Room.databaseBuilder(BaseApp.app, AppDataBase::class.java, "skydriver")
+            Room.databaseBuilder(BaseApp.app, AppDataBase::class.java, "s")
 //            .allowMainThreadQueries()
                     .addMigrations(MIGRATION_app1_2)
                     .build()

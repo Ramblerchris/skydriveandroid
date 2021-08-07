@@ -67,7 +67,6 @@ data class MediaInfo(
 
 
 ) :Serializable, MultiItemEntity , PreviewImage {
-
     override val isLocal: Boolean
         get() = true
     override val isThumbLocal: Boolean
@@ -82,6 +81,7 @@ data class MediaInfo(
     override val resourceThumbNailPath: String?
         get() = this.thumbNailPath
 
+    @Ignore
     override var itemType: Int = 0
     get() {
         if (isVideo!!) {

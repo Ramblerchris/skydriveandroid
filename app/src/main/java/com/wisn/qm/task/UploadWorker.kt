@@ -26,8 +26,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
     val TAG: String = "UploadWorker"
     override suspend fun doWork(): Result {
         Log.d(TAG, "0000doWork, + ${Thread.currentThread().name}")
-        try {// launch a new coroutine and keep a reference to its Job
-//                val newInstance = AppDataBaseHelper.newInstance(Utils.getApp())
+        try {
             val Noupload =
                 AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
             Noupload?.let {
@@ -35,7 +34,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
                 if (it > 0) {
                     val uploadDataList =
                         AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanListPreUpload(FileType.UPloadStatus_Noupload)
-                    dealUpload(uploadDataList)
+                    dealUpload(Noupload,uploadDataList)
                 }
             }
             Log.d(TAG, "1111doWork, + ${Thread.currentThread().name}")
@@ -47,11 +46,13 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
 
     }
 
-    private suspend fun dealUpload(uploadDataList: List<UploadBean>?) {
+    private suspend fun dealUpload(sum :Int,uploadDataList: List<UploadBean>?) {
         if (uploadDataList != null) {
             var position = 0
             for (uploadbean in uploadDataList) {
                 try {
+                    var uploadCountProgress:UploadCountProgress=
+                        UploadCountProgress(UploadCountProgress.UploadCountProgress_Album,sum)
                     //查看当前执行的是否已经在其他队列中执行
                     val uploadBeanById =
                         AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanById(uploadbean.id)
@@ -91,9 +92,16 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
                         AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_uploading)
                     val noUploadCount =
                         AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
+                    if (noUploadCount != null) {
+                        uploadCountProgress.leftsize= noUploadCount
+                    }
+                    if (uploadingCount != null) {
+                        uploadCountProgress.uploadcount= uploadingCount
+                    }
                     LiveEventBus
                         .get(ConstantKey.uploadingInfo)
-                        .post("上传中${uploadingCount}\n剩余${noUploadCount}")
+//                        .post("上传中${uploadingCount}\n剩余${noUploadCount}")
+                        .post(uploadCountProgress)
                     //先尝试秒传
                     val uploadFileHitpass = uploadbean.sha1?.let {
                         ApiNetWork.newInstance()
@@ -130,7 +138,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
             if (Noupload == 0) {
                 LiveEventBus
                     .get(ConstantKey.uploadingInfo)
-                    .post("上传完成")
+                    .post(UploadCountProgress(UploadCountProgress.UploadCountProgress_Album,true))
             }
             if (position > 0) {
                 UploadTip.tipRing()

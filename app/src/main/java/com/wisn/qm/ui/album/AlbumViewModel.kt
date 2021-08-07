@@ -206,9 +206,7 @@ class AlbumViewModel : BaseViewModel() {
                     //子线程
                     var uploadlist = ArrayList<UploadBean>()
                     for (mediainfo in selectLocalMediainfoListData.value!!) {
-                        mediainfo.pid = dirinfo.id
-                        mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                        uploadlist.add(TaskUitls.buidUploadBean(mediainfo))
+                        uploadlist.add(TaskUitls.buidUploadBean(mediainfo,dirinfo))
                     }
                     LogUtils.d("uploadlist size", uploadlist.size)
                     AppDataBase.getInstanse().uploadBeanDao?.insertUploadBeanList(uploadlist)
@@ -259,9 +257,7 @@ class AlbumViewModel : BaseViewModel() {
             var uploadlist = ArrayList<UploadBean>()
             for (mediainfo in selectData) {
                 mediainfo.filePath?.let {
-                    mediainfo.pid = get.id
-                    mediainfo.uploadStatus = FileType.UPloadStatus_Noupload
-                    uploadlist.add(TaskUitls.buidUploadBean(mediainfo))
+                    uploadlist.add(TaskUitls.buidUploadBean(mediainfo,get))
                 }
             }
             LogUtils.d("uploadlist size", uploadlist.size)

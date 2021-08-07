@@ -15,25 +15,25 @@ interface UploadBeanDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUploadBean(uploadBean: UploadBean)
 
-    @Query("select * from uploadbean where  pid= :pid")
+    @Query("select * from uploadalbum where  pid= :pid")
     suspend fun getUploadBeanList(pid: Long): List<UploadBean>
 
-    @Query("select * from uploadbean where uploadStatus =:uploadStatus")
+    @Query("select * from uploadalbum where uploadStatus =:uploadStatus")
     suspend fun getUploadBeanListPreUpload(uploadStatus: Int): List<UploadBean>
 
-    @Query("select count(*) from uploadbean where uploadStatus =:uploadStatus")
+    @Query("select count(*) from uploadalbum where uploadStatus =:uploadStatus")
     suspend fun getCountByStatus(uploadStatus: Int): Int
 
-    @Query("update uploadbean set uploadStatus =:uploadStatus,uploadSuccessTime=:uploadSuccessTime where id=:id ")
+    @Query("update uploadalbum set uploadStatus =:uploadStatus,uploadSuccessTime=:uploadSuccessTime where id=:id ")
     suspend fun updateUploadBeanStatus(id: Long, uploadStatus: Int,uploadSuccessTime: Long)
 
-    @Query("update uploadbean set uploadStatus =:newuploadStatus where uploadStatus=:oldUploadStatus ")
+    @Query("update uploadalbum set uploadStatus =:newuploadStatus where uploadStatus=:oldUploadStatus ")
     suspend fun updateUploadBeanStatusByStatus( oldUploadStatus: Int,newuploadStatus: Int)
 
-    @Query("select * from uploadbean order by id desc")
+    @Query("select * from uploadalbum order by id desc")
     suspend fun getUploadBeanListAll(): MutableList<UploadBean>
 
-    @Query("select * from uploadbean  where id=:id ")
+    @Query("select * from uploadalbum  where id=:id ")
     suspend fun getUploadBeanById(id: Long): UploadBean
 
 
