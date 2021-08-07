@@ -148,7 +148,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
         val file = File(uploadbean.filePath!!);
         if (file.exists()) {
             try {
-                var progressRequestBody=ProgressRequestBody("",null, File(uploadbean.filePath!!),uploadbean.mimeType)
+                var progressRequestBody=ProgressRequestBody("${uploadbean.mediainfoid}",UploadFileProgressManager.getInstance(), File(uploadbean.filePath!!),uploadbean.mimeType)
                 val body =
                     MultipartBody.Part.createFormData("file", uploadbean.fileName, progressRequestBody)
                 val uploadFile = ApiNetWork.newInstance().uploadFile(
