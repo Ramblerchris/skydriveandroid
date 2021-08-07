@@ -53,7 +53,7 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
+        dataBinding = false
     }
     compileOptions {
         sourceCompatibility 1.8

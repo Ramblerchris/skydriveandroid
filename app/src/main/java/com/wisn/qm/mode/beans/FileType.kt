@@ -5,8 +5,10 @@ object FileType {
     const val ImageViewItem = 0
     const val TimeTitle = 1
     const val VideoViewItem = 2
-    const val UploadProgressItem = 3
-    const val TitleInfo = 4
+
+    const val UploadCountSumItem = 3
+    const val UploadInfoProgressItem = 4
+
     const val Album = 5
 
     const val UPloadStatus_Noupload = 0;

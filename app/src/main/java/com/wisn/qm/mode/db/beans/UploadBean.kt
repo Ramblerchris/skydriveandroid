@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.chad.library.adapter.base.entity.MultiItemEntity
 import com.google.gson.annotations.SerializedName
 import com.library.base.utils.FormatStrUtils
 import com.wisn.qm.mode.beans.FileType
@@ -52,7 +53,7 @@ data class UploadBean(
         @ColumnInfo(name = "duration")
         @SerializedName("duration")
         var duration: Long?
-) {
+) : MultiItemEntity {
 
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
@@ -65,6 +66,14 @@ data class UploadBean(
     @Ignore
     var uploadSuccessTimeStr: String? = null
 
+    @Ignore
+    override var itemType: Int = 0
+        get() {
+            if(mediainfoid!=null&& mediainfoid!! >=0){
+                return FileType.UploadInfoProgressItem
+            }
+            return field
+        }
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

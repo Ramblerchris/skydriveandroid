@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.library.base.utils.ImageAdapter
+import com.library.base.config.Constant
+import com.library.base.utils.GlideUtils
 import com.wisn.qm.R
 import com.wisn.qm.mode.db.beans.UserDirBean
 import com.wisn.qm.ui.home.adapter.OnLineAlbumAdapter.RvItemAlbumViewHolder
@@ -22,7 +23,7 @@ class OnLineAlbumAdapter(var callback :CallBack, var data: MutableList<UserDirBe
 
     override fun onBindViewHolder(holder: RvItemAlbumViewHolder, position: Int) {
         val get = data.get(position)
-        ImageAdapter.setImageSha1(holder.iv_header, get.sha1_pre)
+        GlideUtils.loadUrl(Constant.getImageUrlThumb(get.sha1_pre),holder.iv_header, R.mipmap.cloud_album_icon_album_default)
         holder.name.setText(get.filename)
         holder.des.setText(get.createattimestr)
         if (get.isShare == 1) {

@@ -1,7 +1,6 @@
 package com.wisn.qm.ui.home.controller
 
 import android.content.Context
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
