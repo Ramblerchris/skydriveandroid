@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toTopOf="@+id/rectProgressBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:qmui_corner_radius="2dp" />
+        app:qmui_corner_radius="4dp" />
     <TextView
         android:id="@+id/ishitPass"
         android:layout_width="wrap_content"

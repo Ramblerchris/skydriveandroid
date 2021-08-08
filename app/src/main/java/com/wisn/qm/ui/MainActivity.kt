@@ -3,8 +3,9 @@ package com.wisn.qm.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.TypedValue
+import android.util.Log
 import android.view.*
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.Observer
@@ -16,13 +17,14 @@ import com.library.base.utils.UploadTip
 import com.qmuiteam.qmui.arch.annotation.DefaultFirstFragment
 import com.qmuiteam.qmui.arch.annotation.FirstFragments
 import com.qmuiteam.qmui.arch.annotation.LatestVisitRecord
-import com.qmuiteam.qmui.layout.QMUIButton
+import com.qmuiteam.qmui.layout.QMUIFrameLayout
 import com.qmuiteam.qmui.skin.QMUISkinHelper
 import com.qmuiteam.qmui.skin.QMUISkinValueBuilder
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
 import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.util.QMUIViewOffsetHelper
+import com.qmuiteam.qmui.widget.QMUIProgressBar
 import com.wisn.qm.R
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.task.TaskUitls
@@ -42,12 +44,19 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
         LiveEventBus
                 .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
                 .observe(this, Observer {
+                    var progress:Int = ((it.sum-it.leftsize).toDouble()/it.sum.toDouble()*100).toInt()
+
+                    Log.d("AAABBBCCC"," ${progress} ${it.toString()}")
                     if(it.isFinish){
                         customRootView.globalBtn.visibility = View.VISIBLE
-                        customRootView.globalBtn.text = "上传完成"
+                        customRootView.progressInfo.text = "上传完成"
                     }else{
-                        customRootView.globalBtn.visibility = View.VISIBLE
-                        customRootView.globalBtn.text ="${it.leftsize}"
+                        if(customRootView.globalBtn.visibility==View.GONE){
+                            customRootView.circleProgressBar.setProgress(progress,false)
+                            customRootView.globalBtn.visibility = View.VISIBLE
+                        }
+                        customRootView.circleProgressBar.setProgress(progress,true)
+                        customRootView.progressInfo.text ="${progress}%"
                     }
                 })
         LiveEventBus
@@ -56,6 +65,8 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                     LogUtils.d("updatePhotoList")
                     UploadTip.tipVibrate(60)
                     customRootView.globalBtn.visibility = View.GONE
+                    customRootView.circleProgressBar.setProgress(0,false)
+
                 })
     }
 
@@ -87,7 +98,9 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
 
     internal inner class CustomRootView(context: Context?, fragmentContainerId: Int) : RootView(context, fragmentContainerId) {
         private val fragmentContainer: FragmentContainerView
-        val globalBtn: QMUIButton
+        val globalBtn: QMUIFrameLayout
+        val progressInfo: TextView
+        val circleProgressBar: QMUIProgressBar
         private val globalBtnOffsetHelper: QMUIViewOffsetHelper
         private val btnSize: Int
         private val touchSlop: Int
@@ -220,26 +233,30 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
             }
             addView(fragmentContainer, LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
-            globalBtn = QMUIButton(context)
-            globalBtn.setTextColor(resources.getColor(R.color.app_color_theme_1))
-            globalBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+            globalBtn =
+                LayoutInflater.from(context).inflate(R.layout.item_main_progress_tip, null) as QMUIFrameLayout
+            progressInfo=globalBtn.findViewById<TextView>(R.id.name)
+            circleProgressBar=globalBtn.findViewById<QMUIProgressBar>(R.id.circleProgressBar)
+            circleProgressBar?.setMaxValue(100)
 //            globalBtn.setBackgroundResource(R.mipmap.ic_launcher)
 //            globalBtn.scaleType = ImageView.ScaleType.CENTER_INSIDE
 //            globalBtn.setRadiusAndShadow(btnSize / 2,
 //                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
 //            globalBtn.borderWidth = 1
 //            globalBtn.borderColor = QMUIResHelper.getAttrColor(context, R.attr.qmui_skin_support_color_separator)
-            globalBtn.setRadiusAndShadow(btnSize / 2,
-                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
-            globalBtn.setBackgroundColor(QMUIResHelper.getAttrColor(context, R.attr.app_skin_common_background))
-//            globalBtn.setOnClickListener {
-//                //                    showGlobalActionPopup(v);
-//            }
-            globalBtn.visibility= View.GONE
+//            globalBtn.setRadiusAndShadow(btnSize / 2,
+//                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
+//            globalBtn.setBackgroundColor(QMUIResHelper.getAttrColor(context, R.attr.app_skin_common_background))
+////            globalBtn.setOnClickListener {
+////                //                    showGlobalActionPopup(v);
+////            }
+//            globalBtn.visibility= View.GONE
             val globalBtnLp = LayoutParams(btnSize, btnSize)
             globalBtnLp.gravity = Gravity.BOTTOM or Gravity.RIGHT
             globalBtnLp.bottomMargin = QMUIDisplayHelper.dp2px(context, 60)
             globalBtnLp.rightMargin = QMUIDisplayHelper.dp2px(context, 24)
+            globalBtn.setRadiusAndShadow(btnSize / 2,
+                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
             val builder = QMUISkinValueBuilder.acquire()
             builder.background(R.attr.app_skin_common_background)
             builder.border(R.attr.qmui_skin_support_color_separator)
@@ -250,6 +267,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
 //           globalBtn.resources.configuration.fontScale=1f
 //           globalBtn.text = "测试"
             addView(globalBtn, globalBtnLp)
+            globalBtn.visibility=View.GONE
             globalBtnOffsetHelper = QMUIViewOffsetHelper(globalBtn)
             touchSlop = ViewConfiguration.get(context).scaledTouchSlop
         }

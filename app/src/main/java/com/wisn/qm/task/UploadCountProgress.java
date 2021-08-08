@@ -21,4 +21,14 @@ public class UploadCountProgress {
         this.type = type;
         this.isFinish = isFinish;
     }
+
+    @Override
+    public String toString() {
+        return "UploadCountProgress{" +
+                "sum=" + sum +
+                ", leftsize=" + leftsize +
+                ", uploadcount=" + uploadcount +
+                ", isFinish=" + isFinish +
+                '}';
+    }
 }

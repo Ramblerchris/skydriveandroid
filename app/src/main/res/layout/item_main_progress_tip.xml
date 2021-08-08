@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.layout.QMUIFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:background="@color/exo_white"
+    app:qmui_backgroundColor="@color/qmui_config_color_white"
+    app:qmui_radius="4dp"
+    app:qmui_shadowElevation="6dp"
+    >
+    <com.qmuiteam.qmui.widget.QMUIProgressBar
+        android:id="@+id/circleProgressBar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:textColor="?attr/qmui_config_color_gray_4"
+        android:textSize="22sp"
+        app:qmui_background_color="?attr/qmui_config_color_gray_8"
+        app:qmui_progress_color="@color/app_color_blue_2"
+        app:qmui_stroke_width="2dp"
+        app:qmui_type="type_fill_circle"
+        app:qmui_skin_background="?attr/app_skin_progress_bar_bg_color"
+        app:qmui_skin_progress_color="?attr/app_skin_progress_bar_progress_color"
+        app:qmui_skin_text_color="?attr/app_skin_progress_bar_text_color"/>
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="12%"
+        android:textSize="10sp"/>
+</com.qmuiteam.qmui.layout.QMUIFrameLayout>
