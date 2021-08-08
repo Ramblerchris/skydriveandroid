@@ -33,7 +33,7 @@ open class UploadListFragment : BaseFragment<UploadListViewModel>(), SwipeRefres
         addLeftBackImageButton?.setOnClickListener {
             popBackStack()
         }
-        with(  recyclerView) {
+        with(recyclerView) {
             this?.layoutManager = LinearLayoutManager(context)
             this?.adapter = mAdapter
         }

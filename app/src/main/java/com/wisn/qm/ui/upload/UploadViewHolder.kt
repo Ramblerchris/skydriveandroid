@@ -2,33 +2,40 @@ package com.wisn.qm.ui.upload
 
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.library.base.glide.progress.OnProgressListener
 import com.library.base.utils.GlideUtils
+import com.qmuiteam.qmui.widget.QMUIProgressBar
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView2
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.beans.UploadBean
+import com.wisn.qm.task.UploadFileProgressManager
 
 /**
  * Created by Wisn on 2020/6/6 下午6:18.
  */
-open class UploadViewHolder(view: View) : BaseViewHolder(view) {
+open class UploadViewHolder(view: View) : BaseViewHolder(view), OnProgressListener {
     var iv_header: QMUIRadiusImageView2? = null
     var des: TextView? = null
     var name: TextView? = null
     var size: TextView? = null
     var uploaddir: TextView? = null
-
+    var rectProgressBar: QMUIProgressBar? = null
+    var uploadBean:UploadBean?=null;
     init {
         iv_header = view.findViewById(R.id.iv_header)
         des = view.findViewById(R.id.des)
         name = view.findViewById(R.id.name)
         size = view.findViewById(R.id.size)
         uploaddir = view.findViewById(R.id.uploaddir)
+        rectProgressBar = view.findViewById(R.id.rectProgressBar)
     }
     fun loadInfo(context: Context, uploadBean:UploadBean){
+        this.uploadBean=uploadBean
         name?.text=uploadBean.fileName
         size?.text=uploadBean.filesizeStr
         des?.text=uploadBean.getStatusStr()
@@ -46,6 +53,40 @@ open class UploadViewHolder(view: View) : BaseViewHolder(view) {
         }
         des?.setTextColor(context.resources.getColor(colorid))
         GlideUtils.loadFile(uploadBean.filePath!!,iv_header!!)
+      /*  if(uploadBean.uploadStatus==FileType.UPloadStatus_uploading||uploadBean.uploadStatus==FileType.UPloadStatus_Noupload){
+            UploadFileProgressManager.getInstance().addListener("${uploadBean.mediainfoid}",this)
+            rectProgressBar?.visibility=View.VISIBLE
+            rectProgressBar?.setProgress(0,false)
+        }else{
+            rectProgressBar?.visibility=View.GONE
+        }*/
+    }
+
+    override fun onProgress(
+        tag: String?,
+        isComplete: Boolean,
+        percentage: Int,
+        bytesWriting: Long,
+        totalBytes: Long
+    ) {
+        uploadBean?.let {
+            Log.d(
+                "UploadFile",
+                "$tag $bytesWriting $totalBytes percentage:$percentage  isComplete:$isComplete"
+            )
+
+            if (tag.equals(it.mediainfoid.toString())) {
+                if (isComplete) {
+                    rectProgressBar?.visibility = View.GONE
+                } else {
+                    rectProgressBar?.visibility = View.VISIBLE
+                    rectProgressBar?.setProgress(percentage,true)
+                }
+            }
+        }
+
+
+
     }
 
 }

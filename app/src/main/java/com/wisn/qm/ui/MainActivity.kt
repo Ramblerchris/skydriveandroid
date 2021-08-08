@@ -63,7 +63,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
         TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
         LogUtils.d(" mBackStack(backStackEntryCount):"+supportFragmentManager.backStackEntryCount)
         LogUtils.d(" mBackStack(fragments size):"+supportFragmentManager.fragments.size)
-        val get = supportFragmentManager.fragments.get(0);
+        val get = supportFragmentManager.fragments.get(0)
         if (get is HomeFragment && !get.Exit()) {
             return
         }
@@ -235,7 +235,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
 //            globalBtn.setOnClickListener {
 //                //                    showGlobalActionPopup(v);
 //            }
-//            globalBtn.visibility= View.GONE
+            globalBtn.visibility= View.GONE
             val globalBtnLp = LayoutParams(btnSize, btnSize)
             globalBtnLp.gravity = Gravity.BOTTOM or Gravity.RIGHT
             globalBtnLp.bottomMargin = QMUIDisplayHelper.dp2px(context, 60)
