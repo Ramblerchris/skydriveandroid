@@ -1,5 +1,7 @@
 package com.wisn.qm.task;
 
+import com.wisn.qm.mode.db.beans.UploadBean;
+
 public class UploadCountProgress {
     public static final int UploadCountProgress_Album=1;
     public static final int UploadCountProgress_Disk=2;
@@ -8,6 +10,7 @@ public class UploadCountProgress {
     public int sum ;
     public int leftsize=0 ;
     public int uploadcount ;
+    public UploadBean currentUploadBean ;
     public boolean isFinish ;
 
     public UploadCountProgress(int type,int sum ) {

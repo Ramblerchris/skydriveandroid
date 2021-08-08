@@ -62,6 +62,11 @@ data class UploadBean(
     @SerializedName("upDirName")
     var upDirName: String?=""
 
+    //是否是秒传
+    @ColumnInfo(name = "isHitPass")
+    @SerializedName("isHitPass")
+    var isHitPass: Boolean?=false
+
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     var id: Long = 0;

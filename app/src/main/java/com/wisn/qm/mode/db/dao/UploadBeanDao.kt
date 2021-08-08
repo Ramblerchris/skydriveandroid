@@ -24,8 +24,8 @@ interface UploadBeanDao {
     @Query("select count(*) from uploadalbum where uploadStatus =:uploadStatus")
     suspend fun getCountByStatus(uploadStatus: Int): Int
 
-    @Query("update uploadalbum set uploadStatus =:uploadStatus,uploadSuccessTime=:uploadSuccessTime where id=:id ")
-    suspend fun updateUploadBeanStatus(id: Long, uploadStatus: Int,uploadSuccessTime: Long)
+    @Query("update uploadalbum set uploadStatus =:uploadStatus,uploadSuccessTime=:uploadSuccessTime,isHitPass=:isHitPass where id=:id ")
+    suspend fun updateUploadBeanStatus(id: Long, uploadStatus: Int,uploadSuccessTime: Long,isHitPass: Boolean=false)
 
     @Query("update uploadalbum set uploadStatus =:newuploadStatus where uploadStatus=:oldUploadStatus ")
     suspend fun updateUploadBeanStatusByStatus( oldUploadStatus: Int,newuploadStatus: Int)

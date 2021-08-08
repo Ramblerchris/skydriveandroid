@@ -77,6 +77,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="分享" />
-    <!--            android:visibility="@{itemData.status == fileType.UPloadStatus_uploadSuccess ? @color/green : @color/red}"
-    -->
 </com.qmuiteam.qmui.layout.QMUIConstraintLayout>

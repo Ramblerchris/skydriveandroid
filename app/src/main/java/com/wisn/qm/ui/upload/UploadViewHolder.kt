@@ -23,6 +23,7 @@ open class UploadViewHolder(view: View) : BaseViewHolder(view), OnProgressListen
     var des: TextView? = null
     var name: TextView? = null
     var size: TextView? = null
+    var ishitPass: TextView? = null
     var uploaddir: TextView? = null
     var rectProgressBar: QMUIProgressBar? = null
     var uploadBean:UploadBean?=null;
@@ -31,6 +32,7 @@ open class UploadViewHolder(view: View) : BaseViewHolder(view), OnProgressListen
         des = view.findViewById(R.id.des)
         name = view.findViewById(R.id.name)
         size = view.findViewById(R.id.size)
+        ishitPass = view.findViewById(R.id.ishitPass)
         uploaddir = view.findViewById(R.id.uploaddir)
         rectProgressBar = view.findViewById(R.id.rectProgressBar)
     }
@@ -50,6 +52,11 @@ open class UploadViewHolder(view: View) : BaseViewHolder(view), OnProgressListen
             R.color.green
         }else{
             R.color.red
+        }
+        if (uploadBean.isHitPass == true) {
+            ishitPass?.visibility = View.VISIBLE
+        } else {
+            ishitPass?.visibility = View.GONE
         }
         des?.setTextColor(context.resources.getColor(colorid))
         GlideUtils.loadFile(uploadBean.filePath!!,iv_header!!)
