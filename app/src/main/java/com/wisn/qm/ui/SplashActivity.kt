@@ -8,6 +8,7 @@ import com.library.base.config.GlobalUser
 import com.library.base.utils.NetCheckUtils
 import com.qmuiteam.qmui.arch.QMUIFragmentActivity
 import com.qmuiteam.qmui.kotlin.onClick
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.wisn.qm.R
 import com.wisn.qm.ui.check.NetCheckFragment
 import com.wisn.qm.ui.user.LoginFragment
@@ -24,6 +25,7 @@ class SplashActivity : BaseActivity<NoViewModel>() {
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 //        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        QMUIStatusBarHelper.setStatusBarLightMode(this)
 
         startmain?.onClick {
             startActivity(Intent(this, MainActivity::class.java))

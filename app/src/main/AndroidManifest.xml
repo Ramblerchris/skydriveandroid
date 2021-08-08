@@ -40,7 +40,7 @@
 
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.34" />
+            android:value="4" />
 
         <meta-data
             android:name="notch.config"

@@ -37,6 +37,21 @@ open class UploadListFragment : BaseFragment<UploadListViewModel>(), SwipeRefres
             this?.layoutManager = LinearLayoutManager(context)
             this?.adapter = mAdapter
         }
+        LiveEventBus
+            .get(ConstantKey.updatePhotoList, Int::class.java)
+            .observe(this, Observer {
+                LogUtils.d("updatePhotoList")
+                viewModel.getUploadList()
+            })
+        LiveEventBus
+            .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
+            .observe(this, Observer {
+                if(it.isFinish){
+                    title.text="上传列表"
+                }else{
+                    title.text="上传列表(${it.leftsize}/${it.sum})"
+                }
+            })
         viewModel.getUploadList().observe(this, Observer {
               swiperefresh?.isRefreshing=false
             if (it.isNullOrEmpty()) {
@@ -49,21 +64,8 @@ open class UploadListFragment : BaseFragment<UploadListViewModel>(), SwipeRefres
             }
         })
           swiperefresh?.setOnRefreshListener(this)
-        LiveEventBus
-                .get(ConstantKey.updatePhotoList, Int::class.java)
-                .observe(this, Observer {
-                    LogUtils.d("updatePhotoList")
-                    viewModel.getUploadList()
-                })
-        LiveEventBus
-            .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
-            .observe(this, Observer {
-                if(it.isFinish){
-                    title.text="上传列表"
-                }else{
-                    title.text="上传列表(${it.leftsize}/${it.sum})"
-                }
-            })
+
+
 
     }
 
