@@ -45,18 +45,17 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                 .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
                 .observe(this, Observer {
                     var progress:Int = ((it.sum-it.leftsize).toDouble()/it.sum.toDouble()*100).toInt()
-
                     Log.d("AAABBBCCC"," ${progress} ${it.toString()}")
-                    if(it.isFinish){
+                    if (it.isFinish) {
                         customRootView.globalBtn.visibility = View.VISIBLE
                         customRootView.progressInfo.text = "上传完成"
-                    }else{
-                        if(customRootView.globalBtn.visibility==View.GONE){
-                            customRootView.circleProgressBar.setProgress(progress,false)
+                    } else {
+                        if (customRootView.globalBtn.visibility == View.GONE) {
+                            customRootView.circleProgressBar.setProgress(progress, false)
                             customRootView.globalBtn.visibility = View.VISIBLE
                         }
-                        customRootView.circleProgressBar.setProgress(progress,true)
-                        customRootView.progressInfo.text ="${progress}%"
+                        customRootView.circleProgressBar.setProgress(progress, true)
+                        customRootView.progressInfo.text = "${progress}%"
                     }
                 })
         LiveEventBus
