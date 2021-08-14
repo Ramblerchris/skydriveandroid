@@ -81,6 +81,9 @@ data class MediaInfo(
     override val resourceThumbNailPath: String?
         get() = this.thumbNailPath
 
+    override val resourceSize: Long?
+        get() = this.fileSize
+
     @Ignore
     override var itemType: Int = 0
     get() {

@@ -108,6 +108,9 @@ data class UserDirBean(
                 return FileType.ImageViewItem
             }
         }
+    override val resourceSize: Long?
+        get() = this.size?.toLong()
+
     @Ignore
     var __video_durationStr=""
     fun getVideoDurationFor():String{

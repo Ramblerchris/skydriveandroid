@@ -2,6 +2,7 @@ package com.wisn.qm.ui.preview
 
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +20,8 @@ import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.NoViewModel
 import com.library.base.base.ViewModelFactory
+import com.library.base.config.GlobalConfig
 import com.library.base.glide.FileTarget
-import com.library.base.glide.progress.OnProgressListener
 import com.library.base.glide.progress.ProgressManager
 import com.library.base.utils.*
 import com.qmuiteam.qmui.kotlin.onClick
@@ -42,7 +43,6 @@ import com.wisn.qm.ui.preview.view.NetListVideoController
 import com.wisn.qm.ui.preview.viewholder.PreviewVideoViewHolder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -99,6 +99,7 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSele
             ViewModelProvider(requireActivity(), ViewModelFactory()).get(HomeViewModel::class.java)
         indicator_tv?.text="1/${size}"
         indicator_tv?.setTypeface(Typeface.MONOSPACE)
+        btn_show_origin?.setTypeface(Typeface.MONOSPACE)
         vp_content?.overScrollMode = View.OVER_SCROLL_NEVER
         vp_content?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
@@ -300,25 +301,36 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSele
         Log.d("callBackOnLine","${position} ${mediainfo.resourcePath}")
     }
 
-    private fun dealBottom(position: Int,mediainfo: PreviewImage) {
-        if (mediainfo.itemType == FileType.VideoViewItem) {
+    private fun dealBottom(position: Int, previewImageBean: PreviewImage) {
+        if (previewImageBean.itemType == FileType.VideoViewItem) {
             fl_online?.visibility = View.GONE
             fl_local?.visibility = View.GONE
         } else {
-            if (mediainfo.isLocal) {
+            if (previewImageBean.isLocal) {
                 fl_online?.visibility = View.GONE
                 fl_local?.visibility = View.VISIBLE
             } else {
                 fl_online?.visibility = View.VISIBLE
                 fl_local?.visibility = View.GONE
                 //dodo 是否显示加载原图
-                val originUrl = CacheUrl.getOriginUrl(mediainfo.resourcePath!!)
-                if (originUrl.isNullOrEmpty()) {
-                    btn_show_origin?.visibility = View.VISIBLE
-                    btn_show_origin?.text="加载原图"
-                    btn_show_origin?.setOnClickListener {
-                        downloadOrigin(position,mediainfo,false);
+                val glideCacheFile = GlideUtils.getGlideCacheFile(requireContext(),previewImageBean.resourcePath!!)
+
+                if (glideCacheFile == null || !glideCacheFile.exists()) {
+                    if(GlobalConfig.previewImageOrigin){
+                        downloadOrigin(position,previewImageBean,false);
+                    }else{
+                        btn_show_origin?.visibility = View.VISIBLE
+                        val resourceSizeStr = previewImageBean.getResourceSizeStr()
+                        if (TextUtils.isEmpty(resourceSizeStr)) {
+                            btn_show_origin?.text = "加载原图"
+                        } else {
+                            btn_show_origin?.text = "加载原图(${resourceSizeStr})"
+                        }
+                        btn_show_origin?.setOnClickListener {
+                            downloadOrigin(position,previewImageBean,false);
+                        }
                     }
+
                 } else {
                     btn_show_origin?.visibility = View.GONE
                 }

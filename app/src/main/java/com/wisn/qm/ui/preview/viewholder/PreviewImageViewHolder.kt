@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
@@ -15,6 +16,7 @@ import com.library.base.glide.FileTarget
 import com.library.base.utils.GlideUtils
 import com.library.base.utils.ImageUtils
 import com.qmuiteam.qmui.kotlin.onClick
+import com.wisn.qm.BuildConfig
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.PreviewImage
 import com.wisn.qm.ui.preview.CacheUrl
@@ -25,6 +27,7 @@ import java.io.File
 class PreviewImageViewHolder(var context: Context, view: View, var previewCallback: PreviewMediaCallback) : BasePreviewHolder(view){
     var iv_image: SubsamplingScaleImageView = view.findViewById(R.id.iv_image)
     var gif_view: PhotoView = view.findViewById(R.id.gif_view)
+    var test_info: TextView = view.findViewById(R.id.test_info)
     var progress_view: ProgressBar = view.findViewById(R.id.progress_view)
     var position: Int?=0
     var mediainfo: PreviewImage?=null;
@@ -47,6 +50,9 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
         gif_view.setMinimumScale(1f)
         gif_view.setMaximumScale(5f)
         gif_view.setScaleType(ImageView.ScaleType.FIT_CENTER)
+        if(BuildConfig.DEBUG){
+            test_info.visibility=View.VISIBLE;
+        }
     }
 
     override fun loadImage(position: Int, mediainfo: PreviewImage) {
@@ -68,24 +74,30 @@ class PreviewImageViewHolder(var context: Context, view: View, var previewCallba
                 gif_view.visibility = View.GONE
                 iv_image.setImage(ImageSource.uri(mediainfo.resourcePath!!))
             }
+            test_info.text="本地"+mediainfo.resourcePath!!
         }else{
             gif_view.visibility = View.VISIBLE
-            GlideUtils.loadUrlNoOP(mediainfo.resourceThumbNailPath!!, gif_view)
-            val originUrl = CacheUrl.getOriginUrl(mediainfo.resourcePath!!)
-            if(originUrl.isNullOrEmpty()){
+            val glideCacheFile = GlideUtils.getGlideCacheFile(context, mediainfo.resourcePath!!)
+            if(glideCacheFile==null||!glideCacheFile.exists()){
+                GlideUtils.loadUrlNoOP(mediainfo.resourceThumbNailPath!!, gif_view)
                 iv_image.visibility = View.GONE
+                test_info.text="缩略图"+mediainfo.resourceThumbNailPath
             }else{
-                iv_image.visibility = View.VISIBLE
-                Log.d("setOnImageEventListener","setOnImageEventListenerAAAAAA")
-                iv_image.setOnImageEventListener(object : SimpleOnImageEventListener() {
-                    override fun onReady() {
-                        super.onReady()
-                        Log.d("setOnImageEventListener","setOnImageEventListener")
-                        gif_view.visibility = View.GONE
-                    }
-                })
-                iv_image.setImage(ImageSource.uri(originUrl))
+                //直接加载原图
+                val gifImageWithMime =
+                    ImageUtils.isGifImageWithMime(glideCacheFile.absolutePath, glideCacheFile.absolutePath)
+                if ( gifImageWithMime) {
+                    iv_image.visibility = View.GONE
+                    gif_view.visibility = View.VISIBLE
+                    GlideUtils.loadUrlNoOP(glideCacheFile.absolutePath, gif_view)
+                } else {
+                    iv_image.visibility = View.VISIBLE
+                    gif_view.visibility = View.GONE
+                    iv_image.setImage(ImageSource.uri(glideCacheFile.absolutePath))
+                }
+                test_info.text="原图"+glideCacheFile.absolutePath
             }
+
 
         }
     }

@@ -65,8 +65,8 @@ object GlideUtils {
     fun getGlideCacheFile(context: Context, url: String?): File? {
         try {
             val dataCacheKey = DataCacheKey(GlideUrl(url), EmptySignature.obtain())
-            val safeKeyGenerator = SafeKeyGenerator()
-            val safeKey = safeKeyGenerator.getSafeKey(dataCacheKey)
+//            val safeKeyGenerator = SafeKeyGenerator()
+            val safeKey = SafeKeyGenerator.getSafeKey(dataCacheKey)
             val file = File(context.cacheDir, DiskCache.Factory.DEFAULT_DISK_CACHE_DIR)
             val diskLruCache =
                 DiskLruCache.open(file, 1, 1, DiskCache.Factory.DEFAULT_DISK_CACHE_SIZE.toLong())

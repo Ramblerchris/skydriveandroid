@@ -222,5 +222,7 @@ class VideoBean(var title: String, var thumb: String, var videoUrl: String,var i
         get() {
             return FileType.VideoViewItem
         }
+    override val resourceSize: Long
+        get() = 0
 
 }

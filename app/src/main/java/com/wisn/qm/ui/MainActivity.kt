@@ -237,19 +237,6 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
             progressInfo=globalBtn.findViewById<TextView>(R.id.name)
             circleProgressBar=globalBtn.findViewById<QMUIProgressBar>(R.id.circleProgressBar)
             circleProgressBar?.setMaxValue(100)
-//            globalBtn.setBackgroundResource(R.mipmap.ic_launcher)
-//            globalBtn.scaleType = ImageView.ScaleType.CENTER_INSIDE
-//            globalBtn.setRadiusAndShadow(btnSize / 2,
-//                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
-//            globalBtn.borderWidth = 1
-//            globalBtn.borderColor = QMUIResHelper.getAttrColor(context, R.attr.qmui_skin_support_color_separator)
-//            globalBtn.setRadiusAndShadow(btnSize / 2,
-//                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
-//            globalBtn.setBackgroundColor(QMUIResHelper.getAttrColor(context, R.attr.app_skin_common_background))
-////            globalBtn.setOnClickListener {
-////                //                    showGlobalActionPopup(v);
-////            }
-//            globalBtn.visibility= View.GONE
             val globalBtnLp = LayoutParams(btnSize, btnSize)
             globalBtnLp.gravity = Gravity.BOTTOM or Gravity.RIGHT
             globalBtnLp.bottomMargin = QMUIDisplayHelper.dp2px(context, 60)
@@ -262,9 +249,6 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
             builder.tintColor(R.attr.app_skin_common_img_tint_color)
             QMUISkinHelper.setSkinValue(globalBtn, builder)
             builder.release()
-//           globalBtn.visibility= View.VISIBLE
-//           globalBtn.resources.configuration.fontScale=1f
-//           globalBtn.text = "测试"
             addView(globalBtn, globalBtnLp)
             globalBtn.visibility=View.GONE
             globalBtnOffsetHelper = QMUIViewOffsetHelper(globalBtn)

@@ -11,9 +11,9 @@ import java.security.NoSuchAlgorithmException;
 public class SafeKeyGenerator {
     private static final LruCache<Key, String> loadIdToSafeHash = new LruCache<Key, String>(1000);
 
-    public String getSafeKey(Key key) {
+    public static String getSafeKey(Key key) {
         String safeKey;
-        synchronized (loadIdToSafeHash) {
+        synchronized (SafeKeyGenerator.class) {
             safeKey = loadIdToSafeHash.get(key);
         }
         if (safeKey == null) {
@@ -26,7 +26,7 @@ public class SafeKeyGenerator {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            synchronized (loadIdToSafeHash) {
+            synchronized (SafeKeyGenerator.class) {
                 loadIdToSafeHash.put(key, safeKey);
             }
         }
