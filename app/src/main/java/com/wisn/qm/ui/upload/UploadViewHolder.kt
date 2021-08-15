@@ -60,13 +60,15 @@ open class UploadViewHolder(view: View) : BaseViewHolder(view), OnProgressListen
         }
         des?.setTextColor(context.resources.getColor(colorid))
         GlideUtils.loadFile(uploadBean.filePath!!,iv_header!!)
-      /*  if(uploadBean.uploadStatus==FileType.UPloadStatus_uploading||uploadBean.uploadStatus==FileType.UPloadStatus_Noupload){
-            UploadFileProgressManager.getInstance().addListener("${uploadBean.mediainfoid}",this)
-            rectProgressBar?.visibility=View.VISIBLE
-            rectProgressBar?.setProgress(0,false)
-        }else{
-            rectProgressBar?.visibility=View.GONE
-        }*/
+        rectProgressBar?.visibility=View.GONE
+        if (uploadBean.uploadStatus == FileType.UPloadStatus_uploading || uploadBean.uploadStatus == FileType.UPloadStatus_Noupload) {
+            if (uploadBean.isVideo == true && uploadBean.fileSize!! > 20 * 1024 * 1024) {
+                UploadFileProgressManager.getInstance()
+                    .addListener("${uploadBean.mediainfoid}", this)
+                rectProgressBar?.visibility = View.VISIBLE
+                rectProgressBar?.setProgress(0, false)
+            }
+        }
     }
 
     override fun onProgress(

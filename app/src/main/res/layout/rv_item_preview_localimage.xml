@@ -29,17 +29,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="gone" />
 
-    <ProgressBar
-        android:id="@+id/progress_view"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/test_info"
         android:layout_width="wrap_content"
@@ -52,6 +41,26 @@
         tools:visibility="visible"
         android:textColor="#fff"
         />
+
+
+    <com.qmuiteam.qmui.widget.QMUIProgressBar
+        android:id="@+id/circleProgressBar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:textColor="?attr/qmui_config_color_gray_4"
+        android:textSize="22sp"
+        app:qmui_background_color="?attr/qmui_config_color_gray_8"
+        app:qmui_progress_color="@color/app_color_blue_2"
+        app:qmui_stroke_width="2dp"
+        app:qmui_type="type_fill_circle"
+        app:qmui_skin_background="?attr/app_skin_progress_bar_bg_color"
+        app:qmui_skin_progress_color="?attr/app_skin_progress_bar_progress_color"
+        app:qmui_skin_text_color="?attr/app_skin_progress_bar_text_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
 

@@ -314,10 +314,9 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSele
                 fl_local?.visibility = View.GONE
                 //dodo 是否显示加载原图
                 val glideCacheFile = GlideUtils.getGlideCacheFile(requireContext(),previewImageBean.resourcePath!!)
-
                 if (glideCacheFile == null || !glideCacheFile.exists()) {
                     if(GlobalConfig.previewImageOrigin){
-                        downloadOrigin(position,previewImageBean,false);
+                        btn_show_origin?.visibility = View.GONE
                     }else{
                         btn_show_origin?.visibility = View.VISIBLE
                         val resourceSizeStr = previewImageBean.getResourceSizeStr()
@@ -341,6 +340,15 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSele
     fun downloadOrigin(position: Int,mediainfo: PreviewImage,isSave:Boolean){
         btn_show_origin?.text="加载中"
         Log.d("callBackOnLine","${position} loadOrigin"+mediainfo.resourcePath!!)
+        ProgressManager.addListener(mediainfo.resourcePath!!) { url, isComplete, percentage, bytesRead, totalBytes ->
+            Log.d("addListener",
+                "isComplete:${isComplete} percentage:${percentage} ")
+            if(isComplete){
+
+            }else{
+                btn_show_origin?.text="${percentage}%"
+            }
+        }
         Glide.with(requireContext()).downloadOnly().load(mediainfo.resourcePath!!)
             .into(object : FileTarget() {
                 override fun onLoadStarted(placeholder: Drawable?) {
@@ -369,20 +377,6 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSele
 //                    fl_online?.visibility = View.GONE
                 }
             })
-
-        ProgressManager.addListener(mediainfo.resourcePath!!
-        ) { url, isComplete, percentage, bytesRead, totalBytes ->
-            Log.d("addListener",
-                "isComplete:${isComplete} percentage:${percentage} ")
-            activity?.runOnUiThread {
-
-                if(isComplete){
-
-                }else{
-                    btn_show_origin?.text="${percentage}%"
-                }
-            }
-        }
     }
     override fun playViewPosition(previewVideoViewHolder: PreviewVideoViewHolder, position: Int) {
         playItemView(position, previewVideoViewHolder);
