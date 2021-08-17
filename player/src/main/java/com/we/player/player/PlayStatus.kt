@@ -113,9 +113,9 @@ object PlayStatus {
 /////////////////////////////////////////////////////////
 
     /**
-     * 开始渲染视频画面
+     * 开始渲染视频画面 视频/音频开始渲染
      */
-    const val MEDIA_INFO_VIDEO_RENDERING_START = 3
+    const val MEDIA_INFO_RENDERING_START = 3
 
     /**
      * 缓冲开始

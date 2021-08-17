@@ -97,14 +97,22 @@ class PreviewNetControlView : FrameLayout, IViewItemController, View.OnClickList
 
             }
 
-            PlayStatus.STATE_ERROR,
+            PlayStatus.STATE_ERROR->{
+                //播放错误，重新播放
+                start_play?.visibility = View.VISIBLE
+                thumb?.visibility = View.GONE
+                loading?.visibility = View.GONE
+            }
             PlayStatus.STATE_PREPARED,
-            PlayStatus.STATE_PLAYBACK_COMPLETED,
-            PlayStatus.STATE_BUFFERING -> {
+            PlayStatus.STATE_PLAYBACK_COMPLETED->{
                 start_play?.visibility = View.GONE
                 thumb?.visibility = View.GONE
                 loading?.visibility = View.GONE
-
+            }
+            PlayStatus.STATE_BUFFERING -> {
+                start_play?.visibility = View.GONE
+                thumb?.visibility = View.GONE
+                loading?.visibility = View.VISIBLE
             }
             PlayStatus.STATE_IDLE -> {
                 start_play?.visibility = View.VISIBLE

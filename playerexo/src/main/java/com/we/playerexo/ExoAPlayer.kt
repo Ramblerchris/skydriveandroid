@@ -12,7 +12,6 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.util.Clock
-import com.google.android.exoplayer2.video.VideoListener
 import com.we.player.player.APlayer
 import com.we.player.player.PlayStatus
 
@@ -22,7 +21,7 @@ import com.we.player.player.PlayStatus
  * @Author: Wisn
  * @CreateDate: 2020/11/12 下午7:52
  */
-class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoListener {
+class ExoAPlayer(var app: Application) : APlayer(), Player.Listener {
     val TAG: String = "ExoAPlayer"
     var mMediaSource: MediaSource? = null
     var simpleExoPlayer: SimpleExoPlayer? = null
@@ -51,7 +50,7 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
         ).build()
         simpleExoPlayer?.playWhenReady = true
         simpleExoPlayer?.addListener(this)
-        simpleExoPlayer?.addVideoListener(this)
+//        simpleExoPlayer?.addVideoListener(this)
     }
 
     override fun setDataSource(path: String?, headers: Map<String, String>?) {
@@ -73,6 +72,10 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
         if (mMediaSource == null) {
             return
         }
+        if (mMediaSource == null) return
+        if (this.parameters != null) {
+            simpleExoPlayer?.setPlaybackParameters(this.parameters!!)
+        }
         mIsPreparing = true
         simpleExoPlayer?.setMediaSource(mMediaSource!!)
         simpleExoPlayer?.prepare()
@@ -92,6 +95,7 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
 
     override fun reset() {
         simpleExoPlayer?.stop()
+        simpleExoPlayer?.clearMediaItems()
         simpleExoPlayer?.setVideoSurface(null)
         mIsPreparing = false
     }
@@ -177,7 +181,7 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
     }
 
     override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
-        super.onVideoSizeChanged(width, height, unappliedRotationDegrees, pixelWidthHeightRatio)
+//        super.onVideoSizeChanged(width, height, unappliedRotationDegrees, pixelWidthHeightRatio)
         mPlayerEventListener?.onPlayerEventVideoSizeChanged(width, height)
         if (unappliedRotationDegrees > 0) {
             mPlayerEventListener?.onPlayerEventInfo(PlayStatus.MEDIA_INFO_VIDEO_ROTATION_CHANGED, unappliedRotationDegrees)
@@ -189,25 +193,27 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
         LogUtils.d(TAG, "onSurfaceSizeChanged width$width height$height")
     }
 
-    override fun onRenderedFirstFrame() {
+   /* override fun onRenderedFirstFrame() {
         super.onRenderedFirstFrame()
         if (mPlayerEventListener != null && mIsPreparing) {
             mPlayerEventListener?.onPlayerEventPrepared()
             mPlayerEventListener?.onPlayerEventInfo(PlayStatus.MEDIA_INFO_VIDEO_RENDERING_START, 0)
         }
-    }
+    }*/
 
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-        super.onPlayerStateChanged(playWhenReady, playbackState)
-        LogUtils.d(TAG, "onPlayerStateChanged playWhenReady：$playWhenReady playbackState：$playbackState")
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        super.onPlaybackStateChanged( playbackState)
+        LogUtils.d(TAG, "onPlayerStateChanged playbackState：$playbackState")
         if (mPlayerEventListener == null) {
             return
         }
         if (mIsPreparing) {
             if (playbackState == Player.STATE_READY) {
+                mPlayerEventListener?.onPlayerEventPrepared()
+                mPlayerEventListener?.onPlayerEventInfo(PlayStatus.MEDIA_INFO_RENDERING_START, 0)
                 mIsPreparing = false;
             }
-            return;
+            return
         }
         when (playbackState) {
             Player.STATE_BUFFERING -> {
@@ -224,22 +230,6 @@ class ExoAPlayer(var app: Application) : APlayer(), Player.EventListener, VideoL
             }
             Player.STATE_ENDED -> mPlayerEventListener?.onPlayerEventCompletion()
         }
-//        if (mIsPreparing) return
-       /* if (mLastReportedPlayWhenReady != playWhenReady || mLastReportedPlaybackState != playbackState) {
-            when (playbackState) {
-                Player.STATE_BUFFERING -> {
-                    mPlayerEventListener?.onPlayerEventInfo(PlayStatus.MEDIA_INFO_BUFFERING_START, getBufferedPercentage())
-                    mIsBuffering = true
-                }
-                Player.STATE_READY -> {
-                    mPlayerEventListener?.onPlayerEventInfo(PlayStatus.MEDIA_INFO_BUFFERING_END, getBufferedPercentage())
-                    mIsPreparing = false
-                }
-                Player.STATE_ENDED -> mPlayerEventListener?.onPlayerEventCompletion()
-            }
-            mLastReportedPlaybackState = playbackState
-            mLastReportedPlayWhenReady = playWhenReady
-        }*/
     }
 
     override fun onPlayerError(error: ExoPlaybackException) {

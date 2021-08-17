@@ -224,7 +224,7 @@ class AndroidMediaPlayer(var app: Application) : APlayer() {
     private val onInfoListener = MediaPlayer.OnInfoListener { mp, what, extra -> //解决MEDIA_INFO_VIDEO_RENDERING_START多次回调问题
         Log.d(TAG, " OnInfoListener what,$what extra $extra")
 
-        if (what == PlayStatus.MEDIA_INFO_VIDEO_RENDERING_START) {
+        if (what == PlayStatus.MEDIA_INFO_RENDERING_START) {
             if (mIsPreparing) {
                 mPlayerEventListener?.onPlayerEventInfo(what, extra)
                 mIsPreparing = false
@@ -241,6 +241,23 @@ class AndroidMediaPlayer(var app: Application) : APlayer() {
     private val onPreparedListener = MediaPlayer.OnPreparedListener {
         mPlayerEventListener?.onPlayerEventPrepared()
         start()
+        // 修复播放纯音频时状态出错问题
+        if (!isVideo()) {
+            mPlayerEventListener?.onPlayerEventInfo(PlayStatus.MEDIA_INFO_RENDERING_START, 0)
+        }
+    }
+    private fun isVideo(): Boolean {
+        try {
+            val trackInfo: Array<MediaPlayer.TrackInfo> = mediaPlayer?.getTrackInfo() as Array<MediaPlayer.TrackInfo>
+            for (info in trackInfo) {
+                if (info.trackType == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_VIDEO) {
+                    return true
+                }
+            }
+        } catch (e: java.lang.Exception) {
+            return false
+        }
+        return false
     }
 
     private val onVideoSizeChangedListener = MediaPlayer.OnVideoSizeChangedListener { mp, width, height ->

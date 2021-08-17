@@ -39,7 +39,7 @@ public class PreloadManager {
     private HttpProxyCacheServer mHttpProxyCacheServer;
 
     /**
-     * 预加载的大小，每个视频预加载512KB，这个参数可根据实际情况调整
+     * 预加载的大小，每个视频预加载5M，这个参数可根据实际情况调整
      */
     public static final int PRELOAD_LENGTH = 5*1024 * 1024;
 

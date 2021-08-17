@@ -64,12 +64,12 @@ dependencies {
     api 'com.github.bumptech.glide:okhttp3-integration:4.12.0'
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
-    api 'com.google.android.exoplayer:exoplayer-core:2.14.0'
-    api 'com.google.android.exoplayer:exoplayer-dash:2.14.0'
-    api 'com.google.android.exoplayer:exoplayer-ui:2.14.0'
-    api 'com.google.android.exoplayer:exoplayer-hls:2.14.0'
-    api 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.14.0'
-    api "com.google.android.exoplayer:extension-rtmp:2.14.0"
+    api 'com.google.android.exoplayer:exoplayer-core:2.14.2'
+    api 'com.google.android.exoplayer:exoplayer-dash:2.14.2'
+    api 'com.google.android.exoplayer:exoplayer-ui:2.14.2'
+    api 'com.google.android.exoplayer:exoplayer-hls:2.14.2'
+    api 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.14.2'
+    api "com.google.android.exoplayer:extension-rtmp:2.14.2"
 
     api 'com.tencent:mmkv-static:1.2.7'
 

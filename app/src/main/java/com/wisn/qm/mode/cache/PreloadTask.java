@@ -5,13 +5,21 @@ import android.util.Log;
 import com.danikula.videocache.HttpProxyCacheServer;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 
+
+/**
+ * 原理：主动去请求VideoCache生成的代理地址，触发VideoCache缓存机制
+ * 缓存到 PreloadManager.PRELOAD_LENGTH 的数据之后停止请求，完成预加载
+ * 播放器去播放VideoCache生成的代理地址的时候，VideoCache会直接返回缓存数据，
+ * 从而提升播放速度
+ */
 public class PreloadTask implements Runnable {
     public static final String TAG="PreloadTask";
     /**
@@ -39,6 +47,8 @@ public class PreloadTask implements Runnable {
      */
     private boolean mIsExecuted;
 
+    private final static List<String> blackList = new ArrayList<>();
+
     @Override
     public void run() {
         if (!mIsCanceled) {
@@ -52,7 +62,9 @@ public class PreloadTask implements Runnable {
      * 开始预加载
      */
     private void start() {
-        Log.i(TAG,"开始预加载：" + mPosition);
+        // 如果在小黑屋里不加载
+        if (blackList.contains(mRawUrl)) return;
+        Log.i(TAG,"预加载开始：" + mPosition);
         HttpURLConnection connection = null;
         try {
             //获取HttpProxyCacheServer的代理地址
@@ -69,23 +81,23 @@ public class PreloadTask implements Runnable {
                 read += length;
                 //预加载完成或者取消预加载
                 if (mIsCanceled || read >= PreloadManager.PRELOAD_LENGTH) {
-                    Log.i(TAG,"结束预加载：" + mPosition);
+                    if (mIsCanceled) {
+                        Log.i(TAG,"预加载取消：" + mPosition + " 读取数据：" + read + " Byte");
+                    } else {
+                        Log.i(TAG,"预加载成功：" + mPosition + " 读取数据：" + read + " Byte");
+                    }
                     break;
                 }
             }
-            if (read == -1) { //这种情况一般是预加载出错了，删掉缓存
-                Log.i(TAG,"预加载失败：" +  mPosition);
-                File cacheFile = mCacheServer.getCacheFile(mRawUrl);
-                if (cacheFile.exists()) {
-                    cacheFile.delete();
-                }
-            }
         } catch (Exception e) {
-            Log.i(TAG,"异常结束预加载：" + mPosition);
+            Log.i(TAG,"预加载异常：" + mPosition + " 异常信息："+ e.getMessage());
+            // 关入小黑屋
+            blackList.add(mRawUrl);
         } finally {
             if (connection != null) {
                 connection.disconnect();
             }
+            Log.i(TAG,"预加载结束: " + mPosition);
         }
     }
 

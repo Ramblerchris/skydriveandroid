@@ -373,7 +373,7 @@ class VideoView : FrameLayout, MediaPlayerController, PlayerEventListener {
 
     override fun onPlayerEventInfo(what: Int, extra: Int) {
         when (what) {
-            PlayStatus.MEDIA_INFO_VIDEO_RENDERING_START -> {
+            PlayStatus.MEDIA_INFO_RENDERING_START -> {
                 /**
                  * 开始渲染视频画面
                  */
