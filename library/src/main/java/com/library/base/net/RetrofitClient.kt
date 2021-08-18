@@ -2,7 +2,7 @@ package com.library.base.net
 
 import com.library.BuildConfig
 import com.library.base.config.Constant
-import com.library.base.net.inteceptor.AuthInterceptor
+import com.library.base.net.inteceptor.CommentInterceptor
 import com.library.base.net.inteceptor.HttpLoggingInterceptor
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
@@ -14,7 +14,7 @@ import java.util.logging.Level
 
 class RetrofitClient {
 
-    fun createRetrofit(){
+    private fun createRetrofit(){
         retrofit = Retrofit.Builder()
                 .client(getOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
@@ -23,16 +23,17 @@ class RetrofitClient {
 
     private fun getOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
-                .connectTimeout(20L, TimeUnit.SECONDS)
-                .addNetworkInterceptor(AuthInterceptor());
+            .connectTimeout(Constant.Timeout, TimeUnit.SECONDS)
+            .readTimeout(Constant.Timeout, TimeUnit.SECONDS)
+            .writeTimeout(Constant.Timeout, TimeUnit.SECONDS)
+            .addNetworkInterceptor(CommentInterceptor())
         if (BuildConfig.DEBUG) {
-            var httpLoggingInterceptor = HttpLoggingInterceptor("SkyDriveNet")
+            var httpLoggingInterceptor = HttpLoggingInterceptor(Constant.HttpTAG)
             httpLoggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
             httpLoggingInterceptor.setColorLevel(Level.INFO)
             builder.addNetworkInterceptor(httpLoggingInterceptor)
         }
-        return builder.writeTimeout(300L, TimeUnit.SECONDS)
-                .connectionPool(ConnectionPool(8, 15, TimeUnit.SECONDS))
+        return builder.connectionPool(ConnectionPool(8, 15, TimeUnit.SECONDS))
                 .build()
     }
 

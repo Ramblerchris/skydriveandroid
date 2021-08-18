@@ -4,7 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import com.library.base.BaseApp
 import com.library.base.base.BaseViewModel
 import com.library.base.config.GlobalUser
+import com.library.base.config.SpConstant
 import com.library.base.event.Message
+import com.library.base.utils.KV
 import com.wisn.qm.mode.net.ApiNetWork
 
 class UserViewModel : BaseViewModel() {
@@ -21,6 +23,8 @@ class UserViewModel : BaseViewModel() {
                 if (userInfo.isSuccess()) {
                     GlobalUser.saveUserInfo(userInfo.data)
                     defUi.msgEvent.value = Message(100)
+                    KV.saveStr(SpConstant.Username,phone)
+                    KV.saveStr(SpConstant.Password,password)
                 }
             }else{
                 defUi.toastEvent.value = loginresult.msg()
@@ -45,6 +49,7 @@ class UserViewModel : BaseViewModel() {
             val registerResult = ApiNetWork.newInstance().register(phone, password, password1);
             if (registerResult.isSuccess()) {
                 defUi.msgEvent.value = Message(100)
+                KV.saveStr(SpConstant.Username,phone)
             }else{
                 defUi.toastEvent.value =registerResult.msg()
             }

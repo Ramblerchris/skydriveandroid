@@ -364,14 +364,12 @@ class PreviewMediaFragment(var data: MutableList<out PreviewImage>, var initSele
                     transition: Transition<in File?>?
                 ) {
                     super.onResourceReady(resource, transition)
-                    CacheUrl.addOriginUrl(mediainfo.resourcePath!!,resource.absolutePath)
                     previewMediaAdapter.notifyItemChanged(position)
                     btn_show_origin?.visibility=View.GONE
                     if(isSave){
                         MToastUtils.show("图片已下载到手机")
                         GlobalScope.launch {
                             DownloadImageFileUtils.saveFileAndUpdateAlbum(resource,requireContext())
-                            CacheUrl.addDownloadUrl(mediainfo.resourcePath!!,resource.absolutePath)
                         }
                     }
 //                    fl_online?.visibility = View.GONE

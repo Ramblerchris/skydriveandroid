@@ -8,15 +8,17 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.KeyboardUtils
 import com.library.base.BaseFragment
+import com.library.base.config.SpConstant
+import com.library.base.utils.KV
 import com.library.base.utils.MToastUtils
 import com.qmuiteam.qmui.kotlin.onClick
 import com.wisn.qm.R
 import com.wisn.qm.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.fragment_login.*
-import androidx.core.widget.addTextChangedListener as addTextChangedListener
 
 /**
  * Created by Wisn on 2020/6/6 下午5:06.
@@ -25,7 +27,6 @@ class LoginFragment : BaseFragment<UserViewModel>() {
     private val TAG: String = "LoginFragment"
     override fun initView(views: View) {
         super.initView(views)
-//        viewModel.getResult()?.observe(this, Observer { s -> Toast.makeText(getContext(), s, Toast.LENGTH_LONG).show() })
         login?.setOnClickListener {
             commitDate()
         }
@@ -79,6 +80,20 @@ class LoginFragment : BaseFragment<UserViewModel>() {
                 et_password.setSelection(et_password.text.length)
             }
         }
+        et_phone?.setText( KV.getStr(SpConstant.Username))
+//        et_password?.setText( KV.getStr(SpConstant.Password))
+        et_password?.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+        })
     }
     private var isShowPassword = false
 
@@ -88,15 +103,16 @@ class LoginFragment : BaseFragment<UserViewModel>() {
         var password = et_password?.text.toString()
         if (phone.isNullOrEmpty()) {
             MToastUtils.show("请输入手机号")
-            return;
+            return
         }
         if (password.isNullOrEmpty()) {
             MToastUtils.show("请输入密码")
-            return;
+            return
         }
         //            hideSoftInput(et_password.windowToken,false)
         KeyboardUtils.hideSoftInput(et_password)
         viewModel.login(phone, password)
+
     }
 
     override fun onResume() {

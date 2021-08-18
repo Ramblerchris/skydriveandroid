@@ -1,5 +1,6 @@
 package com.wisn.qm.mode.net
 
+import com.library.base.config.Constant
 import com.wisn.qm.mode.beans.BaseResult
 import com.library.base.config.UserBean
 import com.wisn.qm.mode.ConstantKey
@@ -87,6 +88,7 @@ interface Api {
      * 单文件上传，文件上传
      */
     @Multipart
+    @Headers("${Constant.CONNECT_TIMEOUT}:10000","${Constant.READ_TIMEOUT}:10000","${Constant.WRITE_TIMEOUT}:10000")
     @POST("/userfile/upload")
     suspend fun uploadFile(@Part("sha1") sha1: String, @Part("pid") pid: Long, @Part("isVideo") isVideo: Boolean, @Part("minetype") minetype: String, @Part("videoduration") videoduration: Long, @Part file: MultipartBody.Part): BaseResult<UserDirBean>
 
@@ -174,6 +176,7 @@ interface Api {
      * 单文件上传
      */
     @Multipart
+    @Headers("${Constant.CONNECT_TIMEOUT}:10000","${Constant.READ_TIMEOUT}:10000","${Constant.WRITE_TIMEOUT}:10000")
     @POST("/disk/upload")
     suspend fun uploadDiskFile(@Part("sha1") sha1: String, @Part("pid") pid: Long, @Part("minetype") minetype: String,  @Part file: MultipartBody.Part): BaseResult<UserDirBean>
 

@@ -93,9 +93,6 @@ open class UploadViewHolder(view: View) : BaseViewHolder(view), OnProgressListen
                 }
             }
         }
-
-
-
     }
 
 }

@@ -9,6 +9,8 @@
     android:layout_marginTop="4dp"
     android:layout_marginRight="12dp"
     android:layout_marginBottom="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     android:background="@color/qmui_config_color_white"
     android:clickable="true"
     app:qmui_backgroundColor="@color/qmui_config_color_white"
@@ -48,7 +50,9 @@
         app:layout_constraintTop_toTopOf="@+id/iv_header"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintWidth_default="wrap"
-        tools:text="12345678901234" />
+        android:maxLines="3"
+        android:ellipsize="end"
+        tools:text="12345678901234123456789012341234567890123412345678901234123456789012341234567890123412345678901234123456789012341234567890123412345678901234123456789012341234567890123412345678901234123456789012341234567890123412345678901234123456789012341234567890123412345678901234123456789012341234567890123412345678901234" />
 
     <TextView
         android:id="@+id/des"

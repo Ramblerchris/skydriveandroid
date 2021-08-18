@@ -1,15 +1,16 @@
 package com.wisn.qm.ui.user
 
-import android.graphics.Color
-import android.graphics.Typeface
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.KeyboardUtils
 import com.library.base.BaseFragment
+import com.library.base.config.SpConstant
+import com.library.base.utils.KV
 import com.library.base.utils.MToastUtils
 import com.wisn.qm.R
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.android.synthetic.main.fragment_register.et_password
 import kotlinx.android.synthetic.main.fragment_register.et_phone
@@ -47,6 +48,7 @@ class RegisterFragment : BaseFragment<UserViewModel>() {
             }
             return@OnEditorActionListener false
         })
+        et_phone?.setText( KV.getStr(SpConstant.Username))
     }
 
     private fun commitData() {

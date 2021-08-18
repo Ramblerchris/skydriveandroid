@@ -21,7 +21,6 @@ import com.qmuiteam.qmui.layout.QMUIFrameLayout
 import com.qmuiteam.qmui.skin.QMUISkinHelper
 import com.qmuiteam.qmui.skin.QMUISkinValueBuilder
 import com.qmuiteam.qmui.util.QMUIDisplayHelper
-import com.qmuiteam.qmui.util.QMUIResHelper
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.qmuiteam.qmui.util.QMUIViewOffsetHelper
 import com.qmuiteam.qmui.widget.QMUIProgressBar
@@ -35,67 +34,83 @@ import com.wisn.qm.ui.home.HomeFragment
 @DefaultFirstFragment(HomeFragment::class)
 @LatestVisitRecord
 open class MainActivity : BaseFragmentActivity<MainViewModel>() {
-    private val storagePermissions: Array<String> = arrayOf("android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.ACCESS_WIFI_STATE");
-    private lateinit var  customRootView: CustomRootView
+    private val storagePermissions: Array<String> = arrayOf(
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_WIFI_STATE"
+    )
+    private lateinit var customRootView: CustomRootView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(this, storagePermissions, 1)
         QMUIStatusBarHelper.setStatusBarLightMode(this)
         LiveEventBus
-                .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
-                .observe(this, Observer {
-                    var progress:Int = ((it.sum-it.leftsize).toDouble()/it.sum.toDouble()*100).toInt()
-                    Log.d("AAABBBCCC"," ${progress} ${it.toString()}")
-                    if (it.isFinish) {
+            .get(ConstantKey.uploadingInfo, UploadCountProgress::class.java)
+            .observe(this, Observer {
+                var progress: Int =
+                    ((it.sum - it.leftsize).toDouble() / it.sum.toDouble() * 100).toInt()
+                Log.d("AAABBBCCC", " ${progress} ${it.toString()}")
+                if (it.isFinish) {
+                    customRootView.globalBtn.visibility = View.VISIBLE
+                    customRootView.progressInfo.text = "上传完成"
+                } else {
+                    if (customRootView.globalBtn.visibility == View.GONE) {
+                        customRootView.circleProgressBar.setProgress(progress, false)
                         customRootView.globalBtn.visibility = View.VISIBLE
-                        customRootView.progressInfo.text = "上传完成"
-                    } else {
-                        if (customRootView.globalBtn.visibility == View.GONE) {
-                            customRootView.circleProgressBar.setProgress(progress, false)
-                            customRootView.globalBtn.visibility = View.VISIBLE
-                        }
-                        customRootView.circleProgressBar.setProgress(progress, true)
-                        customRootView.progressInfo.text = "${progress}%"
                     }
-                })
+                    customRootView.circleProgressBar.setProgress(progress, true)
+                    customRootView.progressInfo.text = "${progress}%"
+                }
+            })
         LiveEventBus
-                .get(ConstantKey.updatePhotoList, Int::class.java)
-                .observe(this, Observer {
-                    LogUtils.d("updatePhotoList")
+            .get(ConstantKey.finishUpdatePhotoList, Int::class.java)
+            .observe(this, Observer {
+                LogUtils.d("updatePhotoList")
+                if (customRootView.globalBtn.visibility == View.VISIBLE) {
                     UploadTip.tipVibrate(60)
-                    customRootView.globalBtn.visibility = View.GONE
-                    customRootView.circleProgressBar.setProgress(0,false)
-
-                })
+                }
+                customRootView.globalBtn.visibility = View.GONE
+                customRootView.circleProgressBar.setProgress(0, false)
+            })
+        LiveEventBus
+            .get(ConstantKey.finishUpdateDiskList, Int::class.java)
+            .observe(this, Observer {
+                LogUtils.d("updatePhotoList")
+                if (customRootView.globalBtn.visibility == View.VISIBLE) {
+                    UploadTip.tipVibrate(60)
+                }
+                customRootView.globalBtn.visibility = View.GONE
+                customRootView.circleProgressBar.setProgress(0, false)
+            })
     }
 
     override fun onBackPressed() {
         TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
-        LogUtils.d(" mBackStack(backStackEntryCount):"+supportFragmentManager.backStackEntryCount)
-        LogUtils.d(" mBackStack(fragments size):"+supportFragmentManager.fragments.size)
+        LogUtils.d(" mBackStack(backStackEntryCount):" + supportFragmentManager.backStackEntryCount)
+        LogUtils.d(" mBackStack(fragments size):" + supportFragmentManager.fragments.size)
         val get = supportFragmentManager.fragments.get(0)
         if (get is HomeFragment && !get.Exit()) {
             return
         }
-        if (supportFragmentManager.backStackEntryCount <= 1 ) {
+        if (supportFragmentManager.backStackEntryCount <= 1) {
             val intent = Intent(Intent.ACTION_MAIN)
             intent.addCategory(Intent.CATEGORY_HOME)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
-        }else{
+        } else {
             super.onBackPressed()
         }
     }
 
 
     override fun onCreateRootView(fragmentContainerId: Int): RootView {
-         customRootView=  CustomRootView(this, fragmentContainerId);
-//        customRootView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS)
+        customRootView = CustomRootView(this, fragmentContainerId);
         return customRootView
     }
 
 
-    internal inner class CustomRootView(context: Context?, fragmentContainerId: Int) : RootView(context, fragmentContainerId) {
+    internal inner class CustomRootView(context: Context?, fragmentContainerId: Int) :
+        RootView(context, fragmentContainerId) {
         private val fragmentContainer: FragmentContainerView
         val globalBtn: QMUIFrameLayout
         val progressInfo: TextView
@@ -151,8 +166,10 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                     } else if (gy + dy + gh > h) {
                         dy = h - gh - gy
                     }
-                    globalBtnOffsetHelper.leftAndRightOffset = globalBtnOffsetHelper.leftAndRightOffset + dx
-                    globalBtnOffsetHelper.topAndBottomOffset = globalBtnOffsetHelper.topAndBottomOffset + dy
+                    globalBtnOffsetHelper.leftAndRightOffset =
+                        globalBtnOffsetHelper.leftAndRightOffset + dx
+                    globalBtnOffsetHelper.topAndBottomOffset =
+                        globalBtnOffsetHelper.topAndBottomOffset + dy
                 }
                 lastTouchX = x
                 lastTouchY = y
@@ -204,8 +221,10 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
                     } else if (gy + dy + gh > h) {
                         dy = h - gh - gy
                     }
-                    globalBtnOffsetHelper.leftAndRightOffset = globalBtnOffsetHelper.leftAndRightOffset + dx
-                    globalBtnOffsetHelper.topAndBottomOffset = globalBtnOffsetHelper.topAndBottomOffset + dy
+                    globalBtnOffsetHelper.leftAndRightOffset =
+                        globalBtnOffsetHelper.leftAndRightOffset + dx
+                    globalBtnOffsetHelper.topAndBottomOffset =
+                        globalBtnOffsetHelper.topAndBottomOffset + dy
                 }
                 lastTouchX = x
                 lastTouchY = y
@@ -230,19 +249,25 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
 ////                    SwipeBackLayout.updateLayoutInSwipeBack(getChildAt(i))
 //                }
             }
-            addView(fragmentContainer, LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+            addView(
+                fragmentContainer, LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            )
             globalBtn =
-                LayoutInflater.from(context).inflate(R.layout.item_main_progress_tip, null) as QMUIFrameLayout
-            progressInfo=globalBtn.findViewById<TextView>(R.id.name)
-            circleProgressBar=globalBtn.findViewById<QMUIProgressBar>(R.id.circleProgressBar)
+                LayoutInflater.from(context)
+                    .inflate(R.layout.item_main_progress_tip, null) as QMUIFrameLayout
+            progressInfo = globalBtn.findViewById<TextView>(R.id.name)
+            circleProgressBar = globalBtn.findViewById<QMUIProgressBar>(R.id.circleProgressBar)
             circleProgressBar?.setMaxValue(100)
             val globalBtnLp = LayoutParams(btnSize, btnSize)
             globalBtnLp.gravity = Gravity.BOTTOM or Gravity.RIGHT
             globalBtnLp.bottomMargin = QMUIDisplayHelper.dp2px(context, 60)
             globalBtnLp.rightMargin = QMUIDisplayHelper.dp2px(context, 24)
-            globalBtn.setRadiusAndShadow(btnSize / 2,
-                    QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f)
+            globalBtn.setRadiusAndShadow(
+                btnSize / 2,
+                QMUIDisplayHelper.dp2px(getContext(), 16), 0.4f
+            )
             val builder = QMUISkinValueBuilder.acquire()
             builder.background(R.attr.app_skin_common_background)
             builder.border(R.attr.qmui_skin_support_color_separator)
@@ -250,7 +275,7 @@ open class MainActivity : BaseFragmentActivity<MainViewModel>() {
             QMUISkinHelper.setSkinValue(globalBtn, builder)
             builder.release()
             addView(globalBtn, globalBtnLp)
-            globalBtn.visibility=View.GONE
+            globalBtn.visibility = View.GONE
             globalBtnOffsetHelper = QMUIViewOffsetHelper(globalBtn)
             touchSlop = ViewConfiguration.get(context).scaledTouchSlop
         }

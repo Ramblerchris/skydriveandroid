@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.library.base.BaseApp
 import com.library.base.BaseFragment
 import com.library.base.base.ViewModelFactory
 import com.library.base.config.GlobalUser

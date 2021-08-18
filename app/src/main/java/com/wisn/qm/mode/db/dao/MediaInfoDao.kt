@@ -28,6 +28,10 @@ interface MediaInfoDao {
     @Query("update mediainfo set uploadStatus =:uploadStatus where id=:id")
     suspend fun updateMediaInfoStatusById(id: Long, uploadStatus: Int)
 
+    @Query("update mediainfo set sha1=:sha1 where id=:id")
+    suspend fun updateMediaInfoSha1ById(id: Long, sha1: String)
+
+
     @Query("update mediainfo set uploadStatus =:uploadStatus where sha1=:sha1")
     suspend fun updateMediaInfoStatusBySha1(sha1: String, uploadStatus: Int)
 

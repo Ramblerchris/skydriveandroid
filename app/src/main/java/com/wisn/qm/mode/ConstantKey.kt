@@ -3,8 +3,8 @@ package com.wisn.qm.mode
 object ConstantKey {
     const val updateHomeMedialist: String = "updateHomeMedialist"
     const val updateAlbum: String = "updateAlbum"
-    const val updatePhotoList: String = "updatePhotolist"
-    const val updateDiskList: String = "updateDiskList"
+    const val finishUpdatePhotoList: String = "updatePhotolist"
+    const val finishUpdateDiskList: String = "updateDiskList"
     const val albuminfo: String = "albuminfo"
     const val uploadingInfo: String = "uploadingInfo"
 

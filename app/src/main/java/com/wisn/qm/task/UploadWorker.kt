@@ -7,6 +7,7 @@ import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.LogUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.net.upload.ProgressRequestBody
+import com.library.base.utils.NetCheckUtils
 import com.library.base.utils.SHAMD5Utils
 import com.library.base.utils.UploadTip
 import com.wisn.qm.mode.ConstantKey
@@ -43,6 +44,11 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
                 } catch (e: Exception) {
                     isScanContine = false
                 }
+                //防止无法链接的时候无限循环上传
+                val connectCheckInit = NetCheckUtils.isConnectCheckInit()
+                if (!connectCheckInit) {
+                    isScanContine = false
+                }
             }
             return Result.success()
         } catch (e: Exception) {
@@ -74,7 +80,11 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
                     //如果sha1为null 先生成sha1
                     if (uploadbean.sha1.isNullOrEmpty()) {
                         uploadbean.sha1 = uploadbean.filePath?.let {
+                            LogUtils.d("开始获取sha1" )
                             SHAMD5Utils.getSHA1(uploadbean.filePath)
+                        }
+                        uploadbean.sha1?.let {
+                            upateSha1ById(uploadbean, it)
                         }
                     }
                     if (uploadbean.sha1.isNullOrEmpty()) {
@@ -133,7 +143,7 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
             if (position > 0) {
                 UploadTip.tipRing()
                 LiveEventBus
-                    .get(ConstantKey.updatePhotoList)
+                    .get(ConstantKey.finishUpdatePhotoList)
                     .postDelay(1, 1000)
                 LiveEventBus
                     .get(ConstantKey.updateAlbum)
@@ -199,5 +209,16 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
                 isUpdateMediaInfostatus
             )
         }
+    }
+
+    suspend fun upateSha1ById(uploadbean: UploadBean,sha1:String) {
+        //文件不存在，已经删除
+        AppDataBase.getInstanse().uploadBeanDao?.updateUploadBeanSha1ById(
+            uploadbean.id,
+            sha1
+        )
+        AppDataBase.getInstanse().mediaInfoDao?.updateMediaInfoSha1ById(
+            uploadbean.mediainfoid!!, sha1
+        )
     }
 }

@@ -38,7 +38,7 @@ open class UploadListFragment : BaseFragment<UploadListViewModel>(), SwipeRefres
             this?.adapter = mAdapter
         }
         LiveEventBus
-            .get(ConstantKey.updatePhotoList, Int::class.java)
+            .get(ConstantKey.finishUpdatePhotoList, Int::class.java)
             .observe(this, Observer {
                 LogUtils.d("updatePhotoList")
                 viewModel.getUploadList()

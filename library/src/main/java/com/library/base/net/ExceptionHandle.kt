@@ -1,19 +1,20 @@
 package com.library.base.net
 
+import android.util.Log
 import com.blankj.utilcode.util.LogUtils
 import com.google.gson.JsonParseException
 import com.google.gson.stream.MalformedJsonException
 import com.library.base.BaseApp
+import com.library.base.config.Constant
 import com.library.base.config.GlobalUser
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownServiceException
 import java.text.ParseException
-
 object ExceptionHandle {
-
     fun handleException(e: Throwable): ResponseThrowable {
+        Log.d(Constant.HttpTAG,e.toString())
         val ex: ResponseThrowable
         if (e is ResponseThrowable) {
             ex = e
@@ -35,10 +36,8 @@ object ExceptionHandle {
                 GlobalUser.clearToken()
                 BaseApp.app.loginEvent()
                 ex = ResponseThrowable(ERROR.HTTP_Unauthorized, e)
-
             } else {
                 ex = ResponseThrowable(ERROR.HTTP_ERROR, e)
-
             }
         } else {
             ex = ResponseThrowable(ERROR.UNKNOW, e)

@@ -36,11 +36,12 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
     var titleSub: String = "";
     var total: Int =0;
 
-    var gridLayoutManager: GridLayoutManager? = null;
+    val gridLayoutManager by lazy {
+        GridLayoutManager(requireContext(), 3)
+    }
 
     val albumPictureAdapter by lazy {
-        gridLayoutManager = GridLayoutManager(context, 3)
-        AlbumDetailsAdapter(gridLayoutManager!!, this, this)
+        AlbumDetailsAdapter(gridLayoutManager, this, this)
     }
     val albuminfo by lazy { arguments?.get(ConstantKey.albuminfo) as UserDirBean }
 
@@ -93,6 +94,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
             viewModel.getloadAlbumListResult(albuminfo.id, false)
         }
         albumPictureAdapter.loadMoreModule.loadMoreView = LoadMoreAndFooterView()
+        albumPictureAdapter.loadMoreModule.preLoadNumber=10
         albumPictureAdapter.loadMoreModule.isAutoLoadMore = true
         albumPictureAdapter.loadMoreModule.isEnableLoadMoreIfNotFullPage = false
         with(recyclerView!!) {
@@ -151,7 +153,7 @@ class AlbumDetailsFragment : BaseFragment<AlbumViewModel>(), SwipeRefreshLayout.
 
         })
         LiveEventBus
-            .get(ConstantKey.updatePhotoList, Int::class.java)
+            .get(ConstantKey.finishUpdatePhotoList, Int::class.java)
             .observe(this, Observer {
                 LogUtils.d("updatePhotoList")
                 viewModel.getloadAlbumListResult(albuminfo.id, true)

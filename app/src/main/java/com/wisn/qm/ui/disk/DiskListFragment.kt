@@ -115,7 +115,7 @@ class DiskListFragment : BaseFragment<DiskViewModel>(), ClickItem, SwipeRefreshL
         })
 
         LiveEventBus
-                .get(ConstantKey.updateDiskList, Int::class.java)
+                .get(ConstantKey.finishUpdateDiskList, Int::class.java)
                 .observe(this, Observer {
                     LogUtils.d("updateDiskList")
                     viewModel.refresh()

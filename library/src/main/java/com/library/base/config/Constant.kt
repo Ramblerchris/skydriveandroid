@@ -5,6 +5,11 @@ import com.library.base.utils.KV
 
 object Constant {
     const val TypeDir = 1
+    const val Timeout:Long=3
+    const val HttpTAG:String="SkyDriveNet"
+    const val CONNECT_TIMEOUT = "CONNECT_TIMEOUT"
+    const val READ_TIMEOUT = "READ_TIMEOUT"
+    const val WRITE_TIMEOUT = "WRITE_TIMEOUT"
     const val TypeFile = -1
     var BASE_URL = ""
 
@@ -29,7 +34,6 @@ object Constant {
 
 
     fun initBaseUrl() {
-//        BASE_URL = SPUtils.getInstance().getString(SpConstant.TAGBASE_URL)
         BASE_URL = KV.getStr(SpConstant.TAGBASE_URL)
         LogUtils.d("BASE_URL",BASE_URL)
 

@@ -60,7 +60,7 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
     val previewImageOrigin by lazy {
         groupListView?.createItemView(
             null,
-            "大图自动加载原图",
+            "自动加载原图",
             null,
             QMUICommonListItemView.HORIZONTAL,
             QMUICommonListItemView.ACCESSORY_TYPE_SWITCH
@@ -176,7 +176,7 @@ open class SettingFragment : BaseFragment<UserViewModel>(), View.OnClickListener
             MessageDialogBuilder(activity)
                 .setTitle("关于APP")
                 .setSkinManager(QMUISkinManager.defaultInstance(context))
-                .setMessage("专注家庭内部媒体文件同步的app")
+                .setMessage("局域网媒体文件同步的app")
                 .addAction("取消") { dialog, _ ->
                     dialog.dismiss()
                 }

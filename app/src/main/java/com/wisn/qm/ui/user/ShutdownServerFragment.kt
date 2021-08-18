@@ -17,8 +17,6 @@ import com.qmuiteam.qmui.qqface.QMUIQQFaceView
 import com.qmuiteam.qmui.skin.QMUISkinManager
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog
 import com.wisn.qm.R
-import kotlinx.android.synthetic.main.fragment_netcheck.*
-
 import kotlinx.android.synthetic.main.fragment_server.*
 import kotlinx.android.synthetic.main.fragment_server.result
 import kotlinx.android.synthetic.main.fragment_server.rg_model
@@ -99,8 +97,8 @@ class ShutdownServerFragment : BaseFragment<UserViewModel>() {
                     }
                     .create(R.style.QMUI_Dialog).show()
         }
-        result?.setMovementMethod(ScrollingMovementMethod.getInstance());
-        tv_info?.text = "服务器地址 IP:${Constant.BASE_URL}"
+        result?.setMovementMethod(ScrollingMovementMethod.getInstance())
+        tv_info?.text = "服务器地址:${Constant.BASE_URL}"
         try {
             val split = ipAddressByWifi?.split(".")
             setAdapter(requireContext(), spinner1!!, 1, null, split?.get(0))

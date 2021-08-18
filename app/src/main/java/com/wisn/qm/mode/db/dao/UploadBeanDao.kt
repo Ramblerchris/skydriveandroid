@@ -30,6 +30,9 @@ interface UploadBeanDao {
     @Query("update uploadalbum set uploadStatus =:newuploadStatus where uploadStatus=:oldUploadStatus ")
     suspend fun updateUploadBeanStatusByStatus( oldUploadStatus: Int,newuploadStatus: Int)
 
+    @Query("update uploadalbum set sha1 =:sha1 where id=:id ")
+    suspend fun updateUploadBeanSha1ById(id: Long, sha1: String)
+
     @Query("select * from uploadalbum order by id desc")
     suspend fun getUploadBeanListAll(): MutableList<UploadBean>
 

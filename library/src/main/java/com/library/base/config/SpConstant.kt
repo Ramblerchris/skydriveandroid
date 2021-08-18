@@ -9,5 +9,7 @@ object SpConstant {
     const val previewImageOrigin = "previewImageOrigin"
     const val TokenKey = "Token"
     const val UserInfo = "user"
+    const val Username = "username"
+    const val Password = "password"
 
 }

@@ -84,21 +84,6 @@ class AlbumController(context: Context?, mhomeFragment: HomeFragment?, homeViewM
                 mHomeViewModel.getUserDirlist()
             }
         })
-
-//        mAdapter.callback=setOnItemClickListener { baseQuickAdapter: BaseQuickAdapter<*, *>, view: View, i: Int ->
-//            mHomeControlListener.let {
-//                val albumDetailsFragment = AlbumDetailsPageingFragment()
-//                albumDetailsFragment.arguments = Bundle()
-//                albumDetailsFragment.requireArguments().putSerializable(ConstantKey.albuminfo, mAdapter.getItem(i))
-//                mHomeControlListener.startFragmentByView(albumDetailsFragment)
-//            }
-//        }
-//        mAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
-//            override fun onItemLongClick(adapter: BaseQuickAdapter<*, *>, view: View, position: Int): Boolean {
-//                showGlobalActionPopup(view.findViewById(R.id.name),position)
-//                return true
-//            }
-//        })
         LiveEventBus
                 .get(ConstantKey.updateAlbum, Int::class.java)
                 .observe(mhomeFragment, Observer {

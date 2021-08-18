@@ -44,6 +44,7 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
         leftCancel.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         leftCancel.visibility = View.VISIBLE
         leftCancel.setOnClickListener {
+            KeyboardUtils.hideSoftInput(et_albumName)
             popBackStack()
         }
         var right = topbar?.addRightTextButton("添加", R.id.topbar_right_add_button)!!
@@ -87,9 +88,7 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
 
 
     override fun onDestroyView() {
-//        hideSoftInput(et_albumName?.windowToken,false)
         KeyboardUtils.hideSoftInput(et_albumName)
-
         super.onDestroyView()
     }
 
@@ -103,7 +102,6 @@ class NewAlbumFragment : BaseFragment<AlbumViewModel>(), ClickItem {
 
     override fun click(isadd: Boolean, position: Int, fileBean: MediaInfo) {
         if (isadd) {
-//            hideSoftInput(et_albumName.windowToken,false)
             KeyboardUtils.hideSoftInput(et_albumName)
             val selectPictureFragment = SelectMediaFragment()
             selectPictureFragment.arguments = Bundle()

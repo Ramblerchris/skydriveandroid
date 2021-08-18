@@ -22,7 +22,6 @@ import com.qmuiteam.qmui.widget.QMUIProgressBar
 import com.wisn.qm.BuildConfig
 import com.wisn.qm.R
 import com.wisn.qm.mode.beans.PreviewImage
-import com.wisn.qm.ui.preview.CacheUrl
 import com.wisn.qm.ui.preview.PreviewMediaCallback
 import com.wisn.qm.ui.preview.listener.SimpleOnImageEventListener
 import java.io.File

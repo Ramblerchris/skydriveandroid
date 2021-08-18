@@ -23,6 +23,8 @@ import com.wisn.qm.ui.home.HomeFragment
 import com.wisn.qm.ui.user.LoginFragment
 
 import kotlinx.android.synthetic.main.fragment_netcheck.*
+import kotlinx.android.synthetic.main.fragment_netcheck.topbar
+import kotlinx.android.synthetic.main.fragment_newalbum.*
 
 /**
  * Created by Wisn on 2020/6/6 下午5:08.
@@ -42,6 +44,12 @@ class NetCheckFragment : BaseFragment<NetCheckViewModel>() {
         addLeftBackImageButton?.setColorFilter(Color.BLACK)
         addLeftBackImageButton?.setOnClickListener {
             popBackStack()
+        }
+        var right = topbar?.addRightTextButton("离线模式", R.id.topbar_right_add_button)!!
+        right.setTextColor(Color.BLACK)
+        right.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
+        right.setOnClickListener {
+            startFragment(HomeFragment())
         }
         if(BuildConfig.DEBUG){
             title?.onClick {
