@@ -26,7 +26,7 @@ class CommentInterceptor : Interceptor {
                 chain.withWriteTimeout(writeTimeout, TimeUnit.MILLISECONDS)
             }
 
-           return chain.proceed(chain.request().newBuilder().run {
+            return chain.proceed(chain.request().newBuilder().run {
                 GlobalUser.token?.let {
                     addHeader("token", it)
                 }

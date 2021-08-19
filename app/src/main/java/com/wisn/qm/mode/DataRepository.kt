@@ -53,7 +53,7 @@ class DataRepository private constructor(
             result = ArrayList()
             //db 中已经存在，找出差异
             val same: HashSet<Long> = HashSet()
-            //用来存放DB中的id
+            //用来存放DB中的已经插入的id，放到map 中，然后扫描新的数据，扫描出未插入的数据
             for (mediainfo in mediaInfoListAllNotDeleteFromDB) {
                 if (mediainfo.id != null) {
                     same.add(mediainfo.id!!)
@@ -78,7 +78,7 @@ class DataRepository private constructor(
             } else {
                 result = mediaInfoListAllNotDeleteFromDB as ArrayList<MediaInfo>
             }
-            //todo 检查是否删除
+            //todo 检查已经插入的和新数据是否删除 这个检测是耗时操作，需要优化
             val iterator = result.iterator();
             while (iterator.hasNext()) {
                 val next = iterator.next()

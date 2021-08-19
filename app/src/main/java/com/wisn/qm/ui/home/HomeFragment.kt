@@ -84,7 +84,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
         pictureController = PictureController(requireContext(), this, viewModel)
         pagers[Pager.getPagerByPosition(0)] = pictureController!!
         pagers[Pager.getPagerByPosition(1)] = AlbumController(requireContext(), this, viewModel)
-//        pagers[Pager.getPagerByPosition(2)] = ShareController(requireContext(), this, viewModel)
         pagers[Pager.getPagerByPosition(3)] = MineController(requireContext(), this, viewModel)
         with(pager) {
             this?.adapter = HomePagerAdapter(pagers)
@@ -97,16 +96,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), HomeControlListener {
                 override fun onPageSelected(position: Int) {
                     QMUIStatusBarHelper.setStatusBarLightMode(activity)
                     TaskUitls.exeUploadRequest(Utils.getApp(), TaskUitls.buildUploadRequest())
-
-                    /* if (position == 1 || position == 2 || position == 3) {
-                         QMUIStatusBarHelper.setStatusBarLightMode(activity)
-                     } else {
-                         QMUIStatusBarHelper.setStatusBarDarkMode(activity)
-                     }*/
-                    /* if(position==2){
-                         startFragment(NetCheckFragment())
-
-                     }*/
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {

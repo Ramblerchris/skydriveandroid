@@ -14,11 +14,13 @@ import java.util.ArrayList;
 public class Folder implements MultiItemEntity {
 
     public String name;
+    public int level;
     public ArrayList<MediaInfo> images;
     public int type = FileType.Album;
 
     public Folder(String name) {
         this.name = name;
+        this.level=FolderLevel.getFolderLevel().getLevel(name);
     }
 
     public Folder(String name, ArrayList<MediaInfo> images) {

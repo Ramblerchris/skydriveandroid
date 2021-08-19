@@ -97,7 +97,6 @@ class MediaInfoScanHelper {
             var result = getVideoListByQuery(query,true)
             result
         }
-
     }
 
 
@@ -123,6 +122,9 @@ class MediaInfoScanHelper {
         }
     }
 
+    /**
+     * 获取相册，并排序
+     */
     open fun getFolderByMediaInfoList(mediaImageListNoSha1: ArrayList<MediaInfo>): ArrayList<Folder> {
         val splitFolder = splitFolder("全部相册", mediaImageListNoSha1)
         //按照时间排序
@@ -141,6 +143,20 @@ class MediaInfoScanHelper {
                 }
             })
         }
+        //再次对文件夹排序
+        Collections.sort(splitFolder, kotlin.Comparator { o1, o2 ->
+            return@Comparator when {
+                o1.level == o2.level -> {
+                    0
+                }
+                o1.level > o2.level -> {
+                    1
+                }
+                else -> {
+                    -1
+                }
+            }
+        })
         return splitFolder
     }
 
@@ -343,10 +359,11 @@ class MediaInfoScanHelper {
     ): ArrayList<Folder> {
         val folders = ArrayList<Folder>()
         folders.add(Folder(title, images))
-        if (images != null && !images.isEmpty()) {
-            val size = images.size
-            for (i in 0 until size) {
-                val images1 =images[i];
+        if (!images.isEmpty()) {
+//            val size = images.size
+//            for (i in 0 until size) {
+//            val images1 =images[i]
+            for (images1 in images) {
                 val path: String? = images1.filePath
                 path?.let {
                     val name: String = getFolderName(path)

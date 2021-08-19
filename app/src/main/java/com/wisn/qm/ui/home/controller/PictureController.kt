@@ -72,16 +72,6 @@ class PictureController(context: Context, mhomeFragment: HomeFragment, homeViewM
             adapter = mAdapter
         }
         swiperefresh?.setOnRefreshListener(this)
-       /* mAdapter.run {
-            LogUtils.d(" PictureController .mAdapter.run ")
-
-            mHomeViewModel.selectData().observe(mHomeFragment, Observer {
-                LogUtils.d(" mHomeViewModel.selectData")
-                if (leftCancel.visibility == View.VISIBLE) {
-                    title.text = "已选中${it?.size}项"
-                }
-            })
-        }*/
         mHomeViewModel.titleShow.observe(mHomeFragment, Observer {
             title.text = it
         })
