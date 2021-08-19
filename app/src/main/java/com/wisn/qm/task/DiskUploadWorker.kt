@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.library.base.utils.SHAMD5Utils
 import com.library.base.utils.UploadTip
+import com.wisn.qm.App
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.AppDataBase
@@ -32,6 +33,10 @@ class DiskUploadWorker(context: Context, workerParams: WorkerParameters) :
                 val size = uploadDataList.size
                 var position = 0
                 for (diskUploadbean in uploadDataList) {
+                    if (!App.getInstance().isNetConnect) {
+                        LogUtils.d(TAG, "网络断开，暂停上传")
+                        break
+                    }
                     LogUtils.d("0000doWork" + diskUploadbean.toString())
                     //如果sha1为null 先生成sha1
                     if (diskUploadbean.sha1.isNullOrEmpty()) {

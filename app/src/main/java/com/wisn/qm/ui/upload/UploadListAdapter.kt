@@ -29,11 +29,9 @@ class UploadListAdapter : BaseMultiItemQuickAdapter<UploadBean, BaseViewHolder>(
     }
 
     override fun convert(viewhoder: BaseViewHolder, item: UploadBean) {
-        val adapterPosition = viewhoder.adapterPosition
         if (item.itemType ==FileType.UploadInfoProgressItem) {
           var holder : UploadViewHolder=viewhoder as  UploadViewHolder
             holder.loadInfo(context,item);
         }
-
     }
 }

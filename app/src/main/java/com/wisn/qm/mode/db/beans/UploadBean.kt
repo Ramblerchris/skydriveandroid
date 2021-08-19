@@ -106,7 +106,7 @@ data class UploadBean(
 
     fun getUploadStatusStr(): String {
         if (uploadStatus == FileType.UPloadStatus_uploadSuccess) {
-            return "上传成功"
+            return "已上传"
         } else if (uploadStatus == FileType.UPloadStatus_Noupload) {
             return "未上传"
         } else if (uploadStatus == FileType.UPloadStatus_uploading) {

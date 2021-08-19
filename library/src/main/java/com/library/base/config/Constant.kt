@@ -5,7 +5,7 @@ import com.library.base.utils.KV
 
 object Constant {
     const val TypeDir = 1
-    const val Timeout:Long=3
+    const val Timeout:Long=2
     const val HttpTAG:String="SkyDriveNet"
     const val CONNECT_TIMEOUT = "CONNECT_TIMEOUT"
     const val READ_TIMEOUT = "READ_TIMEOUT"

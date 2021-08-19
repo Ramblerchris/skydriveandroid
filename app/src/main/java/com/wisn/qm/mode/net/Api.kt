@@ -88,7 +88,7 @@ interface Api {
      * 单文件上传，文件上传
      */
     @Multipart
-    @Headers("${Constant.CONNECT_TIMEOUT}:10000","${Constant.READ_TIMEOUT}:10000","${Constant.WRITE_TIMEOUT}:10000")
+    @Headers("${Constant.CONNECT_TIMEOUT}:5","${Constant.READ_TIMEOUT}:5","${Constant.WRITE_TIMEOUT}:5")
     @POST("/userfile/upload")
     suspend fun uploadFile(@Part("sha1") sha1: String, @Part("pid") pid: Long, @Part("isVideo") isVideo: Boolean, @Part("minetype") minetype: String, @Part("videoduration") videoduration: Long, @Part file: MultipartBody.Part): BaseResult<UserDirBean>
 

@@ -10,6 +10,7 @@ import com.library.base.net.upload.ProgressRequestBody
 import com.library.base.utils.NetCheckUtils
 import com.library.base.utils.SHAMD5Utils
 import com.library.base.utils.UploadTip
+import com.wisn.qm.App
 import com.wisn.qm.mode.ConstantKey
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.AppDataBase
@@ -28,6 +29,12 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
             var isScanContine = true
             while (isScanContine) {
                 try {
+                    //防止无法链接的时候无限循环上传
+                    val connectCheckInit = NetCheckUtils.isConnectCheckInit()
+                    if (!connectCheckInit) {
+                        Log.d(TAG, "网络断开, 中断上传")
+                        return Result.failure()
+                    }
                     val Noupload =
                         AppDataBase.getInstanse().uploadBeanDao?.getCountByStatus(FileType.UPloadStatus_Noupload)
                     //数量大于0 的情况下开启
@@ -44,11 +51,6 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
                 } catch (e: Exception) {
                     isScanContine = false
                 }
-                //防止无法链接的时候无限循环上传
-                val connectCheckInit = NetCheckUtils.isConnectCheckInit()
-                if (!connectCheckInit) {
-                    isScanContine = false
-                }
             }
             return Result.success()
         } catch (e: Exception) {
@@ -63,6 +65,10 @@ class UploadWorker(context: Context, workerParams: WorkerParameters) :
             var position = 0
             for (uploadbean in uploadDataList) {
                 try {
+                    if (!App.getInstance().isNetConnect) {
+                        LogUtils.d(TAG, "网络断开，暂停上传")
+                        break
+                    }
                     //查看当前执行的是否已经在其他队列中执行
                     val uploadBeanById =
                         AppDataBase.getInstanse().uploadBeanDao?.getUploadBeanById(uploadbean.id)

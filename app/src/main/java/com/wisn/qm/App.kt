@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.Utils
 import com.library.base.BaseApp
 import com.library.base.config.GlobalUser
+import com.squareup.leakcanary.RefWatcher
 import com.tencent.bugly.crashreport.CrashReport
 import com.wisn.qm.mode.beans.FileType
 import com.wisn.qm.mode.db.AppDataBase
@@ -22,6 +23,11 @@ open class App : BaseApp() {
         super.onCreate()
         CrashReport.initCrashReport(getApplicationContext(), "553ef3762f", false);
         SQLiteOnWeb.init(this).start() //webSqlite
+    }
+    companion object {
+        fun getInstance():App{
+            return app as App
+        }
     }
 
     override fun loginEvent() {
