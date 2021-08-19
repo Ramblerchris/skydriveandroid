@@ -358,6 +358,7 @@ class MediaInfoScanHelper {
         images: ArrayList<MediaInfo>
     ): ArrayList<Folder> {
         val folders = ArrayList<Folder>()
+        val foldersMap = HashMap<String,Folder>()
         folders.add(Folder(title, images))
         if (!images.isEmpty()) {
 //            val size = images.size
@@ -368,8 +369,14 @@ class MediaInfoScanHelper {
                 path?.let {
                     val name: String = getFolderName(path)
                     if (!TextUtils.isEmpty(name)) {
-                        val folder: Folder =getFolder(name, folders)
-                        folder.addImage(images1)
+                        var newFolder = foldersMap.get(name);
+                        if (newFolder == null) {
+                            //如果文件夹不存在，重新生成新的文件夹
+                            newFolder = Folder(name)
+                            folders.add(newFolder)
+                            foldersMap.put(name, newFolder)
+                        }
+                        newFolder.addImage(images1)
                     }
                 }
             }
@@ -394,20 +401,6 @@ class MediaInfoScanHelper {
         return ""
     }
 
-    private fun getFolder(name: String, folders: ArrayList<Folder>): Folder {
-        if (!folders.isEmpty()) {
-            val size = folders.size
-            for (i in 0 until size) {
-                val folder = folders[i]
-                if (name == folder.name) {
-                    return folder
-                }
-            }
-        }
-        val newFolder = Folder(name)
-        folders.add(newFolder)
-        return newFolder
-    }
 
     companion object {
         private var mediaInfo: MediaInfoScanHelper? = null
