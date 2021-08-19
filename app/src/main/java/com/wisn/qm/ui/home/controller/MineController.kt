@@ -1,6 +1,7 @@
 package com.wisn.qm.ui.home.controller
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.text.InputType
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -51,7 +53,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
     val delete = groupListView?.createItemView(null, "回收站", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
     val pan = groupListView?.createItemView(null, "我的网盘", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
     val localvideo = groupListView?.createItemView(null, "离线电影", " ", QMUICommonListItemView.HORIZONTAL, QMUICommonListItemView.ACCESSORY_TYPE_CHEVRON)
-
+    var registerForActivityResult: ActivityResultLauncher<Void>? =null;
     override val layoutId: Int
         get() = R.layout.home_controller_mine
 
@@ -101,6 +103,12 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                 .addTo(groupListView);
 
 
+        registerForActivityResult= mHomeFragment.registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+                it?.let {
+                    mHomeViewModel.updateUserPhoto(it)
+                    Glide.with(this).load(it).into(iv_header)
+                }
+            }
     }
 
     override fun onClick(v: View?) {
@@ -156,13 +164,7 @@ class MineController(context: Context?, mhomeFragment: HomeFragment?, homeViewMo
                         dialog.dismiss()
                         if (position == 0) {
                             //或者可以用更简单的方法
-                            mHomeFragment.registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-                                it?.let {
-                                    mHomeViewModel.updateUserPhoto(it)
-                                    Glide.with(this).load(it).into(iv_header)
-                                }
-//                                GlideUtils.loadUrl(it,iv_header,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar,R.mipmap.ic_default_avatar)
-                            }.launch(null)
+                            registerForActivityResult?.launch(null)
                         } else if (position == 1) {
 //                            MToastUtils.show("开发中")
                            var select: SelectMediaFragment = SelectMediaFragment(1)
