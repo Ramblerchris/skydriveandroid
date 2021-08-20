@@ -49,10 +49,10 @@ class NetCheckFragment : BaseFragment<NetCheckViewModel>() {
         right.setTextColor(Color.BLACK)
         right.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD))
         right.setOnClickListener {
-            startFragment(HomeFragment())
+            startFragmentAndDestroyCurrent(HomeFragment(), false)
         }
         if(BuildConfig.DEBUG){
-            title?.onClick {
+            title.onClick {
                 startFragment(LoginFragment())
             }
         }
