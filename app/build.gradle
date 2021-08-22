@@ -11,8 +11,8 @@ android {
         applicationId "com.we.gallerymanager"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1200
-        versionName "1.2.00"
+        versionCode 1210
+        versionName "1.2.10"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
